@@ -4,5 +4,5 @@ from wtforms.validators import Required
 
 
 class NameForm(FlaskForm):
-    name = StringField('Login', validators=[Required()])
-    submit = SubmitField('Submit')
+    name = StringField('Insert name', validators=[Required()])
+    submit = SubmitField('Search')

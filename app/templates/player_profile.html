@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Ice Hockey World Champtionship{% endblock %}
+
+{% block page_content %}
+<div class="page_header">
+</div>
+<div class="player_profile">
+    {% if player %}
+        <h3>#{{ player.number }} {{ player.name }} {{player.surname }}</h3>
+        <p>Team: {{ player.team.name}}</p>
+        <p>Age: {{ player.age }}</p>
+        <p>Position: {{ player.position }}</p>
+        <p>Club: {{ player.club }}</p>
+    {% else %}
+        <h3>Player not found.</h3>
+    {% endif %}
+</div>
+{% endblock %}
