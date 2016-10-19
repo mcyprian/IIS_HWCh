@@ -24,7 +24,7 @@ def fill_db():
                        role='coach', team=svk)
 
     employee1 = Employee(name='Martin', surname='Novak', date_of_birth=datetime.date(1993, 11, 10),
-                         position='event administrator')
+                         position='event administrator', password='12345')
 
     match = Match(category='group', date=datetime.datetime(2016, 10, 3, 20, 0, 0), arena='Bratislava',
                   home_score=1, away_score=0, fans=10356, overtime=1, group=A, home_team_id=1, away_team_id=2)
