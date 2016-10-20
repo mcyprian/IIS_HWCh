@@ -6,7 +6,7 @@ from flask_bootstrap import Bootstrap
 from flask_moment import Moment
 from flask_login import LoginManager
 
-from config import config_dict
+from config import config_dict, ProductionConfig
 
 bootstrap = Bootstrap()
 moment = Moment()
@@ -19,7 +19,7 @@ login_manager.login_view = 'auth.login'
 
 def create_app(config_mode):
     app = Flask(__name__)
-    app.config.from_object(config_dict[config_mode])
+    app.config.from_object(ProductionConfig)
 
     bootstrap.init_app(app)
     moment.init_app(app)

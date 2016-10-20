@@ -15,7 +15,7 @@ class DevelConfig(Config):
 
 
 class ProductionConfig(Config):
-    SQLALCHEMY_DATABASE_URI = 'postgresql:///iis'
+    SQLALCHEMY_DATABASE_URI = 'postgresql://127.9.205.2:5432'
 
 config_dict = {
     'devel': DevelConfig,
