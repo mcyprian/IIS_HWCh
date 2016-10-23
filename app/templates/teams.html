@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Ice Hockey World Champtionship{% endblock %}
+
+{% block head %}
+	{{super()}}
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='teams.css') }}">
+{% endblock head %}
+
+{% block page_head_content %}
+	<div class="container">
+		<div class="jumbotron">
+			<h1>Teams</h1>
+		</div>
+	</div>
+{% endblock page_head_content %}
+
+{% block page_content %}
+	<div class="list-group">
+		{% for elem in range(10) %}
+		<a href='#' class="list-group-item">team #{{elem}}</a>
+		{% endfor %}
+			
+	</div>
+{% endblock page_content %}

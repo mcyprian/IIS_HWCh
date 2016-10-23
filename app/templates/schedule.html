@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Ice Hockey World Champtionship{% endblock %}
+
+{% block head %}
+	{{super()}}
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='schedule.css') }}">
+{% endblock head %}
+
+{% block page_head_content %}
+<div class="container">
+	<div class="jumbotron">
+		<h1>Schedule</h1>
+	</div>
+</div>
+
+{% endblock page_head_content %}
+
+{% block page_content %}
+<div class="container">
+	<h2>Days</h2>
+	<ul class="nav nav-pills">
+		<li class="active"><a data-toggle="pill" href="#day1">Day 1</a></li>
+		<li><a data-toggle="pill" href="#day2">Day 2</a></li>
+		<li><a data-toggle="pill" href="#day3">Day 3</a></li>
+	</ul>
+
+	<div class="tab-content">
+		<div id="day1" class="tab-pane fade in active">
+			<h3>First day</h3>
+		</div>
+		<div id="day2" class="tab-pane fade">
+			<h3>Second day</h3>
+		</div>
+		<div id="day3" class="tab-pane fade">
+			<h3>Third day</h3>
+		</div>
+	</div>
+</div>
+{% endblock page_content %}

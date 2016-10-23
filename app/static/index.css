@@ -1,0 +1,29 @@
+#myCarousel {
+	margin-top: -20px;
+	margin-bottom: 1%;
+}
+
+.page-head .container-fluid {
+	padding-right: 0;
+	padding-left: 0;
+}
+
+.carousel-content {
+	height: 350px;
+	background-color: #1ac6ff;
+}
+
+.topic {
+	height: 250px;
+	width: 250px;
+}
+
+.row .caption {
+	text-align: center;
+}
+
+.team {
+	width=100px;
+	height=50px;
+	background-color: #1ac6ff;
+}

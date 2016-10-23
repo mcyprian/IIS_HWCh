@@ -15,12 +15,12 @@ def index():
 
 @home.route("/schedule")
 def schedule():
-    return render_template('blank.html', data="Scheduled matches...")
+    return render_template('schedule.html', data="Scheduled matches...")
 
 
 @home.route("/teams")
 def teams():
-    return render_template('blank.html', data="Overview of teams...")
+    return render_template('teams.html', data="Overview of teams...")
 
 
 @home.route("/players", methods=['GET', 'POST'])
