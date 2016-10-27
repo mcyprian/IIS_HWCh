@@ -4,7 +4,7 @@ from app import db
 class Group(db.Model):
     __tablename__ = 'groups'
     id = db.Column(db.Integer, primary_key=True)
-    code = db.Column(db.String(1))
+    code = db.Column(db.String(1), nullable=False)
     teams = db.relationship('Team', backref=db.backref('group'))
     matches = db.relationship('Match', backref=db.backref('group'))
 

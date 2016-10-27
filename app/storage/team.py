@@ -4,8 +4,8 @@ from app import db
 class Team(db.Model):  # TODO property na vyhry, prehry, vyhry po predlzeni body ...
     __tablename__ = 'teams'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64))
-    code = db.Column(db.String(3))
+    name = db.Column(db.String(64), nullable=False, index=True)
+    code = db.Column(db.String(3), nullable=False)
     max_members = (db.Column(db.Integer))
 
     group_id = db.Column(db.Integer, db.ForeignKey('groups.id'))

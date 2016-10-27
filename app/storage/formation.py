@@ -5,7 +5,7 @@ class PlayedIn(db.Model):
     __tablename__ = 'playedin'
     player_id = db.Column(db.Integer, db.ForeignKey('players.id'), primary_key=True)
     formation_id = db.Column(db.Integer, db.ForeignKey('formations.id'), primary_key=True)
-    time = db.Column(db.Time)
+    time = db.Column(db.Time, nullable=False)
     player = db.relationship("Player", backref='playedin')
 
     def __repr__(self):
@@ -15,8 +15,8 @@ class PlayedIn(db.Model):
 class Formation(db.Model):  # TODO property get team home/away
     __tablename__ = 'formations'
     id = db.Column(db.Integer, primary_key=True)
-    match_id = db.Column(db.Integer, db.ForeignKey('matches.id'))
-    team_role = db.Column(db.String(64))
+    match_id = db.Column(db.Integer, db.ForeignKey('matches.id'), nullable=False)
+    team_role = db.Column(db.String(64), nullable=False)
     playedins = db.relationship('PlayedIn', backref='formation')
 
     def __repr__(self):

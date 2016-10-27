@@ -15,9 +15,9 @@ class Controls(db.Model):
 class Referee(db.Model):
     __tablename__ = 'referees'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64))
-    surname = db.Column(db.String(64))
-    date_of_birth = db.Column(db.Date)
+    name = db.Column(db.String(64), nullable=False)
+    surname = db.Column(db.String(64), nullable=False)
+    date_of_birth = db.Column(db.Date, nullable=False)
 
     def __repr__(self):
         return '<Referee {}>'.format(self.name)

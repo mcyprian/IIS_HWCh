@@ -4,7 +4,7 @@ from app import db
 class Match(db.Model):
     __tablename__ = 'matches'
     id = db.Column(db.Integer, primary_key=True)
-    category = db.Column(db.String(64))
+    category = db.Column(db.String(64), nullable=False)
     date = db.Column(db.Date)
     arena = db.Column(db.String(64))
     home_score = db.Column(db.Integer)

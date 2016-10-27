@@ -6,12 +6,12 @@ from app import db
 class Employee(db.Model):
     __tablename__ = 'employees'
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(64))
-    surname = db.Column(db.String(64))
-    date_of_birth = db.Column(db.Date)
+    name = db.Column(db.String(64), nullable=False)
+    surname = db.Column(db.String(64), nullable=False)
+    date_of_birth = db.Column(db.Date, nullable=False)
     position = db.Column(db.String(64))
     events = db.relationship('Event', backref=db.backref('employee'))
-    _password = db.Column(db.String(128))
+    _password = db.Column(db.String(128), nullable=False)
 
     @property
     def password(self):
