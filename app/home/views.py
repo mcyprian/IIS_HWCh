@@ -1,7 +1,9 @@
 from flask import render_template, redirect, url_for
 from datetime import date, timedelta
 
+from app import db
 from app.storage import Team, Player
+from app.queries import get_player_by_surname
 from app.home import home
 from app.home.forms import NameForm
 
@@ -27,16 +29,21 @@ def players():
     if form.validate_on_submit():
         search = form.name.data
         form.name.data = ''
-        return redirect(url_for('.player_profile', player_name=search))
+        return redirect(url_for('.player_profile', player_surname=search))
     return render_template('players.html', form=form)
 
 
-@home.route("/players/<player_name>")
-def player_profile(player_name):
-    player = Player.query.filter_by(surname=player_name).first()
-    if player is not None:
-        player.age = (date.today() - player.date_of_birth) // timedelta(days=365.2425)
-    return render_template('player_profile.html', player=player)
+@home.route("/players/<player_surname>")
+def player_profile(player_surname):
+    player = get_player_by_surname_regex(db, player_surname)
+    if player != []:
+        if len(player) == 1:
+            player = player.pop()
+            player.age = (date.today() - player.date_of_birth) // timedelta(days=365.2425)
+            return render_template('player_profile.html', player=player)
+        else:
+            # TODO render list of players
+            pass
 
 
 @home.route("/standings")

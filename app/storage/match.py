@@ -6,7 +6,7 @@ class Match(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     category = db.Column(db.String(64), nullable=False)
     date = db.Column(db.Date)
-    arena = db.Column(db.String(64))
+    arena = db.Column(db.String(64))  # TODO complete automacally for group??
     home_score = db.Column(db.Integer)
     away_score = db.Column(db.Integer)
     fans = db.Column(db.Integer)

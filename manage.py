@@ -3,6 +3,7 @@ import os
 from flask_script import Manager, Shell
 
 from app import create_app, db
+from app.queries import *
 from app.storage import *
 from db_init import fill_db, recreate_all
 
