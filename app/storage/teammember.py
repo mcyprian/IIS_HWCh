@@ -33,4 +33,4 @@ class Player(TeamMember):
     }
 
     def __repr__(self):
-        return '<Player {}>'.format(self.name)
+        return '<Player {}>'.format(self.surname)

@@ -3,7 +3,7 @@ from datetime import date, timedelta
 
 from app import db
 from app.storage import Team, Player
-from app.queries import get_player_by_surname
+from app.queries import get_player_by_surname_regex
 from app.home import home
 from app.home.forms import NameForm
 
@@ -42,8 +42,8 @@ def player_profile(player_surname):
             player.age = (date.today() - player.date_of_birth) // timedelta(days=365.2425)
             return render_template('player_profile.html', player=player)
         else:
-            # TODO render list of players
-            pass
+            print(player)
+            return render_template('player_profile.html', player=player[0])
 
 
 @home.route("/standings")
