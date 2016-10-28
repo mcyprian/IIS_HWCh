@@ -9,7 +9,7 @@
 
 {% block navbar %}
 <div class="navbar navbar-default navbar-fixed-top">
-	<div class="container-fluid">
+	<div class="container">
 		 <ul class="nav navbar-nav">
 			 <li><a href="/">Home</a></li>
 			 <li><a href="/schedule">Schedule</a></li>
@@ -36,4 +36,15 @@
 {% block scripts %}
 {{ super() }}
 {{ moment.include_moment() }}
-{% endblock %}
+	<script type="text/jsx">
+	  var realPython = React.createClass({
+		render: function() {
+		  return (<h2>Greetings, from Real Python!</h2>);
+		}
+	  });
+
+	  ReactDOM.render(
+		React.createElement(realPython, null), document.getElementById('content')
+	  );
+	</script>
+{% endblock scripts %}
