@@ -115,20 +115,35 @@ def fill_db():
         c3.referee = picked_refs[2]
         matches[m].controls.append(c3)
 
-        events = ['goal', 'penalty', 'shot', 'offside', 'interference']
-        for e in range(randrange(61, 120)):
+        events = ['shot', 'offside', 'interference']
+        for e in range(randrange(50, 110)):
             team = vs[m][randrange(2)]
             event_type = events[randrange(len(events))]
             event_time = match_date + datetime.timedelta(randrange(20))
+            picked_player = players[team][randrange(len(players[team]))]
+            add_row(Event(code=event_type, time=event_time, employee=employee,
+                          player=picked_player, match=matches[-1],
+                          team=team), rows)
+
+        events = ['goal', 'penalty']
+        for e in range(randrange(5, 12)):
+            team = vs[m][randrange(2)]
+            event_type = events[randrange(len(events))]
             # pick participants
             picked_players = sample(players[team], 3)
             if event_type == 'goal':
                 add_row(Event(code='assist', time=event_time, employee=employee,
-                              player=picked_players[1], match=matches[-1]), rows)
+                              player=picked_players[1], match=matches[-1],
+                              team=team), rows)
                 add_row(Event(code='assist', time=event_time, employee=employee,
-                              player=picked_players[2], match=matches[-1]), rows)
+                              player=picked_players[2], match=matches[-1],
+                              team=team), rows)
+                add_row(Event(code='shot', time=event_time, employee=employee,
+                              player=picked_players[0], match=matches[-1],
+                              team=team), rows)
             add_row(Event(code=event_type, time=event_time, employee=employee,
-                          player=picked_players[0], match=matches[-1]), rows)
+                          player=picked_players[0], match=matches[-1],
+                          team=team), rows)
 
         # home formations
         team = vs[m][0]

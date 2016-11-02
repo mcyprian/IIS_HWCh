@@ -13,6 +13,7 @@ class Team(db.Model):  # TODO property na vyhry, prehry, vyhry po predlzeni body
     members = db.relationship('TeamMember', backref=db.backref('team'))
     home_matches = db.relationship('Match', foreign_keys='Match.home_team_id')
     away_matches = db.relationship('Match', foreign_keys='Match.away_team_id')
+    events = db.relationship('Event', backref=db.backref('team'))
 
     def __repr__(self):
         return '<Team {}>'.format(self.name)

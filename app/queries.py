@@ -1,7 +1,7 @@
 import datetime
 
 from app import db
-from app.storage import Player, Team, Match
+from app.storage import Player, Team, Match, Event
 from app.settings import START_DAY
 
 
@@ -48,3 +48,14 @@ def get_matches_by_day(db, day_num):
     return (db.session.query(Match)
                       .filter_by(date=match_date.date())
                       .all())
+
+
+def get_score(db, m, home=True):
+    """Return score of home team in match m if home is true,
+    score of away team otherwise."""
+    attr = 'home_team' if home else 'away_team'
+    return (db.session.query(Event)
+                      .filter_by(match=m)
+                      .filter_by(team=getattr(m, attr))
+                      .filter_by(code='goal')
+                      .count())

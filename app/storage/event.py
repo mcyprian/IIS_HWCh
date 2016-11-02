@@ -11,6 +11,7 @@ class Event(db.Model):
     teammember_id = db.Column(db.Integer, db.ForeignKey('teammembers.id'), nullable=False,
                               index=True)
     match_id = db.Column(db.Integer, db.ForeignKey('matches.id'), nullable=True, index=True)
+    team_id = db.Column(db.Integer, db.ForeignKey('teams.id'), nullable=True, index=True)
 
     def __repr__(self):
         return '<Event {}>'.format(self.id)
