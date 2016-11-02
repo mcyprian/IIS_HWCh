@@ -3,7 +3,7 @@ from datetime import date, timedelta
 
 from app import db
 from app.storage import Team, Player
-from app.queries import get_player_by_surname_regex
+from app.queries import get_player_by_surname, get_player_by_surname_regex
 from app.home import home
 from app.home.forms import NameForm
 
@@ -35,15 +35,18 @@ def players():
 
 @home.route("/players/<player_surname>")
 def player_profile(player_surname):
-    player = get_player_by_surname_regex(db, player_surname)
-    if player != []:
-        if len(player) == 1:
-            player = player.pop()
-            player.age = (date.today() - player.date_of_birth) // timedelta(days=365.2425)
-            return render_template('player_profile.html', player=player)
-        else:
+    player = (get_player_by_surname(db, player_surname)
+              or get_player_by_surname_regex(db, player_surname))
+
+    try:
+        if isinstance(player, list):
             print(player)
-            return render_template('player_profile.html', player=player[0])
+            player = player.pop()
+        player.age = (date.today() - player.date_of_birth) // timedelta(days=365.2425)
+    except IndexError:
+        player = None
+
+    return render_template('player_profile.html', player=player)
 
 
 @home.route("/standings")
