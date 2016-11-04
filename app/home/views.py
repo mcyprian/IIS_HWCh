@@ -1,9 +1,11 @@
-from flask import render_template, redirect, url_for
+from flask import render_template, redirect, url_for, jsonify
 from datetime import date, timedelta
 
 from app import db
 from app.storage import Team, Player
-from app.queries import get_player_by_surname, get_player_by_surname_regex
+from app.queries import (get_player_by_surname,
+                         get_player_by_surname_regex,
+                         get_teams)
 from app.home import home
 from app.home.forms import NameForm
 
@@ -21,6 +23,11 @@ def schedule():
 @home.route("/teams")
 def teams():
     return render_template('teams.html', data="Overview of teams...")
+
+
+@home.route("/teams/list.json")
+def teams_list():
+    return jsonify([t.name for t in get_teams(db)])
 
 
 @home.route("/players", methods=['GET', 'POST'])
