@@ -10,6 +10,21 @@ def load_employee(employee_id):
     return db.session.query(Employee).get(int(employee_id))
 
 
+def get_all_arenas(db):
+    """Return list of all arenas."""
+    return (db.session.query(Match.arena.distinct())
+                      .all())
+
+
+def get_matches_for_arena_by_day(db, arena, day_num):
+    """Return all matches scheduled for day day_num inspecific arena."""
+    match_date = START_DAY + datetime.timedelta(day_num - 1)
+    return (db.session.query(Match)
+                      .filter_by(arena=arena)
+                      .filter_by(date=match_date.date())
+                      .all())
+
+
 def get_player_by_surname(db, player_surname):
     """Return list of Player objects matching surname regex."""
     return (db.session.query(Player)
