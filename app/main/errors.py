@@ -1,13 +1,13 @@
 from flask import render_template
 
-from app.home import home
+from app.main import main
 
 
-@home.app_errorhandler(404)
+@main.app_errorhandler(404)
 def page_not_found(e):
     return render_template('404.html'), 404
 
 
-@home.app_errorhandler(500)
+@main.app_errorhandler(500)
 def page_not_found(e):
     return render_template('500.html'), 500

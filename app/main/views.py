@@ -8,31 +8,31 @@ from app.storage import Team, Player
 from app.queries import (get_player_by_surname,
                          get_player_by_surname_regex,
                          get_teams)
-from app.home import home
-from app.home.forms import NameForm
+from app.main import main
+from app.main.forms import NameForm
 
 
-@home.route('/')
+@main.route('/')
 def index():
     return render_template('index.html')
 
 
-@home.route("/schedule")
+@main.route("/schedule")
 def schedule():
     return render_template('schedule.html', data="Scheduled matches...")
 
 
-@home.route("/teams")
+@main.route("/teams")
 def teams():
     return render_template('teams.html', data="Overview of teams...")
 
 
-@home.route("/teams/list.json")
+@main.route("/teams/list.json")
 def teams_list():
     return jsonify([t.name for t in get_teams(db)])
 
 
-@home.route("/players", methods=['GET', 'POST'])
+@main.route("/players", methods=['GET', 'POST'])
 def players():
     form = NameForm()
     if form.validate_on_submit():
@@ -42,7 +42,7 @@ def players():
     return render_template('players.html', form=form)
 
 
-@home.route("/players/<player_surname>")
+@main.route("/players/<player_surname>")
 def player_profile(player_surname):
     player = (get_player_by_surname(db, player_surname)
               or get_player_by_surname_regex(db, player_surname))
@@ -58,12 +58,12 @@ def player_profile(player_surname):
     return render_template('player_profile.html', player=player)
 
 
-@home.route("/standings")
+@main.route("/standings")
 def standings():
     return render_template('blank.html', data="Various standings...")
 
 
-@home.route("/secret")
+@main.route("/secret")
 @login_required
 def secret():
     print(current_user.is_authenticated)
