@@ -1,5 +1,7 @@
-from flask import render_template, redirect, url_for, jsonify
 from datetime import date, timedelta
+
+from flask import render_template, redirect, url_for, jsonify
+from flask_login import login_required, current_user
 
 from app import db
 from app.storage import Team, Player
@@ -59,3 +61,10 @@ def player_profile(player_surname):
 @home.route("/standings")
 def standings():
     return render_template('blank.html', data="Various standings...")
+
+
+@home.route("/secret")
+@login_required
+def secret():
+    print(current_user.is_authenticated)
+    return render_template('blank.html', data="Secret content for logged in users...")

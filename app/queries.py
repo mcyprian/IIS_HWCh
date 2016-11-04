@@ -1,8 +1,13 @@
 import datetime
 
-from app import db
-from app.storage import Player, Team, Match, Event
+from app import db, login_manager
+from app.storage import Player, Team, Match, Event, Employee
 from app.settings import START_DAY
+
+
+@login_manager.user_loader
+def load_employee(employee_id):
+    return db.session.query(Employee).get(int(employee_id))
 
 
 def get_player_by_surname(db, player_surname):

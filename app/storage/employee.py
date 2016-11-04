@@ -1,13 +1,15 @@
+from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 
 from app import db
 
 
-class Employee(db.Model):
+class Employee(UserMixin, db.Model):
     __tablename__ = 'employees'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False)
     surname = db.Column(db.String(64), nullable=False)
+    login = db.Column(db.String(64), nullable=False, unique=True, index=True)
     date_of_birth = db.Column(db.Date, nullable=False)
     position = db.Column(db.String(64))
     events = db.relationship('Event', backref=db.backref('employee'))

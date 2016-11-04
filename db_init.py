@@ -72,11 +72,16 @@ def fill_db():
                            date_of_birth=fake_date(fake), role='coach', team=team_obj), rows)
 
     # Add employees data
-    fake = Factory.create('cs_CZ')
+    fake = Factory.create('en_US')
     employees = []
     for e in range(10):
-        employees.append(add_row(Employee(name=fake.first_name(), surname=fake.last_name(),
-                                          date_of_birth=fake_date(fake), position='event administrator', password='12345'), rows))
+        name = fake.first_name()
+        surname = fake.last_name()
+        login = name[0].lower() + surname.lower()
+        employees.append(add_row(Employee(name=name, surname=surname, login=login,
+                                          date_of_birth=fake_date(fake),
+                                          position='event administrator',
+                                          password='12345'), rows))
 
     # Add referees data
     referees = []
