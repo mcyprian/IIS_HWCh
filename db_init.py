@@ -94,14 +94,19 @@ def fill_db():
 
     # Add matches data
     matches = []
+    match_date = START_DAY
     for m in range(10):
         employee = employees[randrange(len(employees))]
         home_score = randrange(6)
         away_score = randrange(6)
         overtime = randrange(1, 3) if home_score == away_score else 0
-        match_date = START_DAY + datetime.timedelta(m)
+        if m & 1:
+            match_date = match_date.replace(hour=16)
+            match_date += datetime.timedelta(1)
+        else:
+            match_date = match_date.replace(hour=20)
 
-        matches.append(add_row(Match(category='group', date=match_date,
+        matches.append(add_row(Match(category='group', datetime=match_date,
                                      arena='Bratislava' if values[m] else 'Kosice', home_score=home_score,
                                      away_score=away_score, fans=randrange(3000, 18000), overtime=overtime, group=A
                                      if values[m] else B, home_team=vs[m][0], away_team=vs[m][1]), rows))

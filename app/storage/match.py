@@ -5,7 +5,7 @@ class Match(db.Model):
     __tablename__ = 'matches'
     id = db.Column(db.Integer, primary_key=True)
     category = db.Column(db.String(64), nullable=False)
-    date = db.Column(db.Date)
+    datetime = db.Column(db.DateTime)
     arena = db.Column(db.String(64))  # TODO complete automacally for group??
     home_score = db.Column(db.Integer)
     away_score = db.Column(db.Integer)

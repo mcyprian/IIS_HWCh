@@ -16,12 +16,24 @@ def get_all_arenas(db):
                       .all())
 
 
+def get_matches_by_day(db, day_num):
+    """Return all matches scheduled for day day_num of the tournament."""
+    match_date = START_DAY + datetime.timedelta(day_num - 1)
+    next_day = (match_date + datetime.timedelta(1)).replace(hour=0, minute=0)
+    return (db.session.query(Match)
+                      .filter(Match.datetime >= match_date)
+                      .filter(Match.datetime < next_day)
+                      .all())
+
+
 def get_matches_for_arena_by_day(db, arena, day_num):
     """Return all matches scheduled for day day_num inspecific arena."""
     match_date = START_DAY + datetime.timedelta(day_num - 1)
+    next_day = (match_date + datetime.timedelta(1)).replace(hour=0, minute=0)
     return (db.session.query(Match)
                       .filter_by(arena=arena)
-                      .filter_by(date=match_date.date())
+                      .filter(Match.datetime >= match_date)
+                      .filter(Match.datetime < next_day)
                       .all())
 
 
@@ -60,14 +72,6 @@ def get_players_from_team(db, team_name):
                           .filter_by(team=t)
                           .all())
     return None
-
-
-def get_matches_by_day(db, day_num):
-    """Return all matches scheduled for day day_num of the tournament."""
-    match_date = START_DAY + datetime.timedelta(day_num - 1)
-    return (db.session.query(Match)
-                      .filter_by(date=match_date.date())
-                      .all())
 
 
 def get_score(db, m, home=True):
