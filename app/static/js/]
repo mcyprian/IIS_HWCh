@@ -1,0 +1,7 @@
+export default function getData(URLpath){
+	const url = document.URL;
+	const full_path = url+URLpath;
+	var data;
+	data = $.getJSON(full_path,null).then(data=data)
+	return data;
+}

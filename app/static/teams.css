@@ -1,0 +1,5 @@
+[id^=teamId] {
+	display: none;
+	background-color: "green";
+	height: auto;
+}
