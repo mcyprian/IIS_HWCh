@@ -12,8 +12,8 @@ def load_employee(employee_id):
 
 def get_all_arenas(db):
     """Return list of all arenas."""
-    return (db.session.query(Match.arena.distinct())
-                      .all())
+    return [i[0] for i in (db.session.query(Match.arena.distinct())
+                           .all())]
 
 
 def get_matches_by_day(db, day_num):

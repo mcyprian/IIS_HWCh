@@ -1,0 +1,39 @@
+#nav-day {
+    border: 1px solid;
+    border-radius: 5px;
+    border-color: #D3D3D3;
+}
+
+#heading h2 { display: inline; }
+
+#matches {
+	margin-top: 5%;
+	    border: 1px solid;
+    border-radius: 5px;
+    border-color: #D3D3D3;
+    width: 90%;
+    height: 100%;
+    
+}
+.panel{
+	width: 90%;
+margin-top: auto;
+margin-bottom: 2%;	
+margin-right:auto;
+margin-left:auto;
+height: 100%;
+
+}
+
+.img-circle{
+	width: 50px;
+	height: 50px;
+}
+
+h2,h3 {
+  text-align: center;
+}
+
+h2 {
+	margin-bottom: 5%;
+}

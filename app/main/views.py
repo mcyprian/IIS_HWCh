@@ -1,5 +1,4 @@
 from datetime import date, timedelta
-
 from flask import render_template, redirect, url_for, jsonify
 from flask_login import login_required, current_user
 
@@ -7,7 +6,10 @@ from app import db
 from app.storage import Team, Player
 from app.queries import (get_player_by_surname,
                          get_player_by_surname_regex,
-                         get_teams)
+                         get_teams,
+                         get_all_arenas,
+                         get_matches_for_arena_by_day,
+                         get_score)
 from app.main import main
 from app.main.forms import NameForm
 
@@ -17,9 +19,21 @@ def index():
     return render_template('index.html')
 
 
-@main.route("/schedule")
-def schedule():
-    return render_template('schedule.html', data="Scheduled matches...")
+@main.route("/schedule/<day_num>")
+def schedule(day_num):
+    day_num = int(day_num)
+    arenas = get_all_arenas(db)
+    data = {}
+    print (arenas)
+    for arena in arenas:
+        data[arena] = get_matches_for_arena_by_day(db, arena, day_num)
+        print(data)
+        for m in data[arena]:
+            m.home_score = get_score(db, m, home=True)
+            m.away_score = get_score(db, m, home=False)
+            m.match_date = str(m.datetime.time())
+
+    return render_template('schedule.html', data=data, day=day_num)
 
 
 @main.route("/teams")
@@ -51,7 +65,8 @@ def player_profile(player_surname):
         if isinstance(player, list):
             print(player)
             player = player.pop()
-        player.age = (date.today() - player.date_of_birth) // timedelta(days=365.2425)
+        player.age = (
+            date.today() - player.date_of_birth) // timedelta(days=365.2425)
     except IndexError:
         player = None
 

@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}Ice Hockey World Champtionship{% endblock %}
+{% block title %}Ice Hockey World Championship{% endblock %}
 
 {% block head %}
 	{{super()}}
@@ -16,26 +16,77 @@
 </div>
 
 {% endblock page_head_content %}
-
 {% block page_content %}
-<div class="container">
-	<h2>Days</h2>
-	<ul class="nav nav-pills">
-		<li class="active"><a data-toggle="pill" href="#day1">Day 1</a></li>
-		<li><a data-toggle="pill" href="#day2">Day 2</a></li>
-		<li><a data-toggle="pill" href="#day3">Day 3</a></li>
-	</ul>
 
-	<div class="tab-content">
-		<div id="day1" class="tab-pane fade in active">
-			<h3>First day</h3>
-		</div>
-		<div id="day2" class="tab-pane fade">
-			<h3>Second day</h3>
-		</div>
-		<div id="day3" class="tab-pane fade">
-			<h3>Third day</h3>
-		</div>
-	</div>
+
+<div class="container">
+
+		<div class="row">
+			<div class="col-md-5">
+				<h2>Day</h2>
+			</div>
+				<div class="col-md-5">
+					<div class="tab-content">
+							{% for j in range(1, 11) %}
+							{% if loop.index == 1 %}
+							<div id="day1" class="tab-pane fade in active">
+								<h2></h2>
+							</div>
+							{% else %}
+							<div id="day{{loop.index}}" class="tab-pane fade">
+								<h2>{{j}}</h2>
+							</div>
+							{% endif %}
+							{% endfor %}
+						</div>
+					</div>
+				</div>
+
+			<ul id="nav-day" class="nav nav-pills">
+				{% for j in range(1, 11) %}
+				{% if j == day %}
+				<li class="active"><a href="/schedule/{{j}}">{{loop.index}}</a></li>
+				{% else %}
+				<li><a href="/schedule/{{j}}">{{loop.index}}</a></li>
+				{% endif %}
+				{% endfor %}
+			</ul>
+
+
 </div>
+
+
+{% for arena, matches in data.items() %}
+{% if matches %}
+<div class="container fill" id="matches">
+  <h2 class="center-text"><b>{{arena}}</b></h2>	
+  <div class="row">
+
+
+
+	  {% for match in matches %}
+	    <div class="panel panel-default">
+	  <div class="panel-heading">
+	  	<div class="row">
+	            <div class="col-sm-2"><img src="https://s-media-cache-ak0.pinimg.com/originals/6f/b7/fe/6fb7fe3e6455a64f1d3cb5f6c4f63fc1.jpg" class="img-circle center-block"></div>
+	            <div class="col-sm-3" ><h3  class="text-center">{{match.home_team.name}}</h3></div>
+	            <div class="col-sm-2" ><h3  class="text-center">{{match.home_score|default('--')}} : {{match.away_score|default('--')}}</h3></div>
+	            <div class="col-sm-3"><h3  class="text-center">{{match.away_team.name}}</h3></div>
+	            <div class="col-sm-2" ><img src="http://s1.ticketm.net/tm/en-us/dam/a/f29/3e179cab-8920-4fe4-bf97-f3dff1e70f29_112641_CUSTOM.jpg" class="img-circle center-block"></div>
+	        </div> 
+	  </div>
+	  <div class="panel-body">
+	  	<div class="row">
+	  		<div class="col-lg-6"><h3 class="text-center">Group: {{match.group.code}}</h3></div>
+	  		<div class="col-lg-6"><h3 class="text-center">Time: {{match.match_date}}</h3></div>
+	  	</div>
+	  </div>
+	</div>
+	  </div>
+	</div>
+	{% endfor %}
+{% endif %}
+{% endfor %}
+
+
 {% endblock page_content %}
