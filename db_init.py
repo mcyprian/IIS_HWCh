@@ -73,6 +73,11 @@ def fill_db():
 
     # Add employees data
     fake = Factory.create('en_US')
+    add_row(Employee(name=fake.first_name(), surname=fake.last_name(),
+                     login='user', date_of_birth=fake_date(fake),
+                     position='event administrator',
+                     password='12345'), rows)
+
     employees = []
     for e in range(10):
         name = fake.first_name()
@@ -97,9 +102,6 @@ def fill_db():
     match_date = START_DAY
     for m in range(10):
         employee = employees[randrange(len(employees))]
-        home_score = randrange(6)
-        away_score = randrange(6)
-        overtime = randrange(1, 3) if home_score == away_score else 0
         if m & 1:
             match_date = match_date.replace(hour=16)
             match_date += datetime.timedelta(1)
@@ -107,9 +109,10 @@ def fill_db():
             match_date = match_date.replace(hour=20)
 
         matches.append(add_row(Match(category='group', datetime=match_date,
-                                     arena='Bratislava' if values[m] else 'Kosice', home_score=home_score,
-                                     away_score=away_score, fans=randrange(3000, 18000), overtime=overtime, group=A
-                                     if values[m] else B, home_team=vs[m][0], away_team=vs[m][1]), rows))
+                                     arena='Bratislava' if values[m] else 'Kosice',
+                                     fans=randrange(3000, 18000),
+                                     group=A if values[m] else B,
+                                     home_team=vs[m][0], away_team=vs[m][1]), rows))
 
         # Add referees
         picked_refs = sample(referees, 3)
@@ -125,55 +128,65 @@ def fill_db():
         c3.referee = picked_refs[2]
         matches[m].controls.append(c3)
 
-        events = ['shot', 'offside', 'interference']
-        for e in range(randrange(50, 110)):
-            team = vs[m][randrange(2)]
-            event_type = events[randrange(len(events))]
-            event_time = match_date + datetime.timedelta(randrange(20))
-            picked_player = players[team][randrange(len(players[team]))]
-            add_row(Event(code=event_type, time=event_time, employee=employee,
-                          player=picked_player, match=matches[-1],
-                          team=team), rows)
+        if m < 6:
+            home_score = 0
+            away_score = 0
+            events = ['shot', 'offside', 'interference']
+            for e in range(randrange(50, 110)):
+                team = vs[m][randrange(2)]
+                event_type = events[randrange(len(events))]
+                event_time = match_date + datetime.timedelta(randrange(20))
+                picked_player = players[team][randrange(len(players[team]))]
+                add_row(Event(code=event_type, time=event_time, employee=employee,
+                              player=picked_player, match=matches[-1],
+                              team=team), rows)
 
-        events = ['goal', 'penalty']
-        for e in range(randrange(5, 12)):
-            team = vs[m][randrange(2)]
-            event_type = events[randrange(len(events))]
-            # pick participants
-            picked_players = sample(players[team], 3)
-            if event_type == 'goal':
-                add_row(Event(code='assist', time=event_time, employee=employee,
-                              player=picked_players[1], match=matches[-1],
-                              team=team), rows)
-                add_row(Event(code='assist', time=event_time, employee=employee,
-                              player=picked_players[2], match=matches[-1],
-                              team=team), rows)
-                add_row(Event(code='shot', time=event_time, employee=employee,
+            events = ['goal', 'penalty']
+            for e in range(randrange(5, 12)):
+                team = vs[m][randrange(2)]
+                event_type = events[randrange(len(events))]
+                # pick participants
+                picked_players = sample(players[team], 3)
+                if event_type == 'goal':
+                    if team == vs[m][0]:
+                        home_score += 1
+                    else:
+                        away_score += 1
+                    add_row(Event(code='assist', time=event_time, employee=employee,
+                                  player=picked_players[1], match=matches[-1],
+                                  team=team), rows)
+                    add_row(Event(code='assist', time=event_time, employee=employee,
+                                  player=picked_players[2], match=matches[-1],
+                                  team=team), rows)
+                    add_row(Event(code='shot', time=event_time, employee=employee,
+                                  player=picked_players[0], match=matches[-1],
+                                  team=team), rows)
+                add_row(Event(code=event_type, time=event_time, employee=employee,
                               player=picked_players[0], match=matches[-1],
                               team=team), rows)
-            add_row(Event(code=event_type, time=event_time, employee=employee,
-                          player=picked_players[0], match=matches[-1],
-                          team=team), rows)
 
-        # home formations
-        team = vs[m][0]
-        player_range = sample(players[team], 16)
-        for f in range(4):
-            formation = add_row(Formation(team_role='home', match=matches[-1]), rows)
-            for n in range(4):
-                p1 = add_row(PlayedIn(time=datetime.time(0, randrange(5, 20), randrange(60))), rows)
-                p1.player = player_range.pop()
-                formation.playedins.append(p1)
+            matches[m].overtime = randrange(1, 3) if home_score == away_score else 0
+            # home formations
+            team = vs[m][0]
+            player_range = sample(players[team], 16)
+            for f in range(4):
+                formation = add_row(Formation(team_role='home', match=matches[-1]), rows)
+                for n in range(4):
+                    p1 = add_row(PlayedIn(time=datetime.time(
+                        0, randrange(5, 20), randrange(60))), rows)
+                    p1.player = player_range.pop()
+                    formation.playedins.append(p1)
 
-        # away formations
-        team = vs[m][1]
-        player_range = sample(players[team], 16)
-        for f in range(4):
-            formation = add_row(Formation(team_role='away', match=matches[-1]), rows)
-            for n in range(4):
-                p1 = add_row(PlayedIn(time=datetime.time(0, randrange(5, 20), randrange(60))), rows)
-                p1.player = player_range.pop()
-                formation.playedins.append(p1)
+            # away formations
+            team = vs[m][1]
+            player_range = sample(players[team], 16)
+            for f in range(4):
+                formation = add_row(Formation(team_role='away', match=matches[-1]), rows)
+                for n in range(4):
+                    p1 = add_row(PlayedIn(time=datetime.time(
+                        0, randrange(5, 20), randrange(60))), rows)
+                    p1.player = player_range.pop()
+                    formation.playedins.append(p1)
 
    # Add special data
     zdeno = add_row(Player(name='Zdeno', surname='Chara', date_of_birth=datetime.date(1977, 3, 18),
