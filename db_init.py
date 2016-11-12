@@ -6,6 +6,7 @@ from itertools import combinations
 from app import db
 from app.storage import *
 from app.settings import START_DAY
+from app.roles import roles
 
 
 def fake_name(fake):
@@ -74,8 +75,18 @@ def fill_db():
     # Add employees data
     fake = Factory.create('en_US')
     add_row(Employee(name=fake.first_name(), surname=fake.last_name(),
+                     login='admin', date_of_birth=fake_date(fake),
+                     role=roles['ADMINISTRATOR'],
+                     password='12345'), rows)
+
+    add_row(Employee(name=fake.first_name(), surname=fake.last_name(),
+                     login='manager', date_of_birth=fake_date(fake),
+                     role=roles['MANAGER'],
+                     password='12345'), rows)
+
+    add_row(Employee(name=fake.first_name(), surname=fake.last_name(),
                      login='user', date_of_birth=fake_date(fake),
-                     position='event administrator',
+                     role=roles['EMPLOYEE'],
                      password='12345'), rows)
 
     employees = []
@@ -85,7 +96,7 @@ def fill_db():
         login = name[0].lower() + surname.lower()
         employees.append(add_row(Employee(name=name, surname=surname, login=login,
                                           date_of_birth=fake_date(fake),
-                                          position='event administrator',
+                                          role=roles['EMPLOYEE'],
                                           password='12345'), rows))
 
     # Add referees data

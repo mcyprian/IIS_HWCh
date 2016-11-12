@@ -11,7 +11,7 @@ class Employee(UserMixin, db.Model):
     surname = db.Column(db.String(64), nullable=False)
     login = db.Column(db.String(64), nullable=False, unique=True, index=True)
     date_of_birth = db.Column(db.Date, nullable=False)
-    position = db.Column(db.String(64))
+    role = db.Column(db.Integer)
     events = db.relationship('Event', backref=db.backref('employee'))
     _password = db.Column(db.String(128), nullable=False)
 
