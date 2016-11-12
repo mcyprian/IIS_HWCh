@@ -1,5 +1,12 @@
+.panel-heading {
+	margin:-1px;
+}
+.team-logo-heading{
+	width: 2%;
+	height: 2%;
+}
+
 [id^=teamId] {
 	display: none;
-	background-color: "green";
 	height: auto;
 }
