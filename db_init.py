@@ -212,7 +212,27 @@ def fill_db():
                           role='player', number=8, position='forward', club='Washington Capitals',
                           team=rus), rows)
 
-    goal = add_row(Event(code='goal', time=datetime.datetime.now(), employee=employees[0], player=zdeno,
+    goal = add_row(Event(code='goal', time=datetime.datetime.now() + datetime.timedelta(randrange(20)),
+                         employee=employees[0], player=alex,
                          match=matches[0]), rows)
+
+    goal = add_row(Event(code='goal', time=datetime.datetime.now() + datetime.timedelta(randrange(20)),
+                         employee=employees[0], player=alex,
+                         match=matches[0]), rows)
+
+    goal = add_row(Event(code='goal', time=datetime.datetime.now() + datetime.timedelta(randrange(20)),
+                         employee=employees[0], player=alex,
+                         match=matches[0]), rows)
+
+    goal = add_row(Event(code='goal', time=datetime.datetime.now() + datetime.timedelta(randrange(20)),
+                         employee=employees[0], player=alex,
+                         match=matches[0]), rows)
+
+    goal = add_row(Event(code='assist', time=datetime.datetime.now() + datetime.timedelta(randrange(20)),
+                         employee=employees[0], player=alex,
+                         match=matches[0]), rows)
+
+
+
 
     db.session.add_all(rows)

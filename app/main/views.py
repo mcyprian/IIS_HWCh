@@ -3,13 +3,14 @@ from flask import render_template, redirect, url_for, jsonify
 from flask_login import login_required
 
 from app import db
-from app.storage import Player
 from app.queries import (get_player_by_surname,
                          get_player_by_surname_regex,
                          get_teams,
                          get_all_arenas,
                          get_matches_for_arena_by_day,
-                         get_score)
+                         get_score,
+                         get_most_productive,
+                         get_num_of)
 
 from app.roles import requires_role
 from app.main import main
@@ -53,7 +54,12 @@ def players():
         search = form.name.data
         form.name.data = ''
         return redirect(url_for('.player_profile', player_surname=search))
-    return render_template('players.html', form=form)
+    top_players = {}
+    for player, points in get_most_productive(db)[:9]:
+        top_players[player] = (points,
+                               get_num_of(db, player, 'goal'),
+                               get_num_of(db, player, 'assist'))
+    return render_template('players.html', form=form, top_players=top_players)
 
 
 @main.route("/players/<player_surname>")
@@ -82,7 +88,7 @@ def standings():
 def secret():
     return render_template(
         'blank.html',
-     data="Secret content for logged in users...")
+        data="Secret content for logged in users...")
 
 
 @main.route("/championship_management")

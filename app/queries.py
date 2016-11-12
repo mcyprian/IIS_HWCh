@@ -1,4 +1,5 @@
 import datetime
+from sqlalchemy import func, desc, or_
 
 from app import db, login_manager
 from app.storage import Player, Team, Match, Event, Employee
@@ -82,4 +83,22 @@ def get_score(db, m, home=True):
                       .filter_by(match=m)
                       .filter_by(team=getattr(m, attr))
                       .filter_by(code='goal')
+                      .count())
+
+
+def get_most_productive(db):
+    """Return ordered list of the most productive players."""
+    return (db.session.query(Player, func.count(Player.events))
+                      .join(Event)
+                      .filter(or_(Event.code == 'goal', Event.code == 'assist'))
+                      .group_by(Player)
+                      .order_by(desc(func.sum(Player.events)))
+                      .all())
+
+
+def get_num_of(db, player, what):
+    """Return number of events of type what for selected player."""
+    return (db.session.query(Event)
+                      .filter_by(code=what)
+                      .filter_by(player=player)
                       .count())
