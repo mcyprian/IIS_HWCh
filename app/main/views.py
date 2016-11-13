@@ -10,7 +10,8 @@ from app.queries import (get_player_by_surname,
                          get_matches_for_arena_by_day,
                          get_score,
                          get_most_productive,
-                         get_num_of)
+                         get_num_of,
+                         get_num_of_games)
 from app.roles import requires_role, check_current_user
 from app.main import main
 from app.main.forms import NameForm
@@ -72,7 +73,6 @@ def players(user=None):
 def player_profile(player_surname, user=None):
     player = (get_player_by_surname(db, player_surname)
               or get_player_by_surname_regex(db, player_surname))
-    print(player)
     if isinstance(player, list):
         if player !=  []:
             return render_template('player_search.html',
@@ -85,9 +85,13 @@ def player_profile(player_surname, user=None):
         try:
             player.age = (
                 date.today() - player.date_of_birth) // timedelta(days=365.2425)
+            player.games = get_num_of_games(db, player)
+            player.goals = get_num_of(db, player, 'goal')
+            player.assists = get_num_of(db, player, 'assist')
+            player.penalties = get_num_of(db, player, 'penalty')
+            player.points = player.goals + player.assists
         except AttributeError:
             player = None
-
     return render_template('player_profile.html', player=player, user=user)
 
 

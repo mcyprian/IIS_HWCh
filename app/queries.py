@@ -2,7 +2,13 @@ import datetime
 from sqlalchemy import func, desc, or_
 
 from app import db, login_manager
-from app.storage import Player, Team, Match, Event, Employee
+from app.storage import (Player,
+                         Team,
+                         Match,
+                         Event,
+                         Employee,
+                         Formation,
+                         PlayedIn)
 from app.settings import START_DAY
 
 
@@ -101,4 +107,13 @@ def get_num_of(db, player, what):
     return (db.session.query(Event)
                       .filter_by(code=what)
                       .filter_by(player=player)
+                      .count())
+
+
+def get_num_of_games(db, player):
+    """Return number of games selected player participated in."""
+    return (db.session.query(Formation)
+                      .join(PlayedIn)
+                      .filter(PlayedIn.player == player)
+                      .distinct(Formation.match)
                       .count())

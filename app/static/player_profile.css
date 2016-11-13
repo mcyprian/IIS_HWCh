@@ -1,0 +1,13 @@
+.panel{
+	width: 90%;
+    margin-top: auto;
+    margin-bottom: 2%;	
+    margin-right:auto;
+    margin-left:auto;
+    height: 100%;
+    padding-left: 10px;
+}
+
+h2 {
+   text-align: center;
+}
