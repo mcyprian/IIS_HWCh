@@ -92,7 +92,7 @@ def get_most_productive(db):
                       .join(Event)
                       .filter(or_(Event.code == 'goal', Event.code == 'assist'))
                       .group_by(Player)
-                      .order_by(desc(func.sum(Player.events)))
+                      .order_by(desc(func.count(Player.events)))
                       .all())
 
 
