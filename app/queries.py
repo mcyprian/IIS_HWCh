@@ -115,5 +115,5 @@ def get_num_of_games(db, player):
     return (db.session.query(Formation)
                       .join(PlayedIn)
                       .filter(PlayedIn.player == player)
-                      .distinct(Formation.match)
+                      .distinct(Formation.match_id)
                       .count())
