@@ -18,7 +18,7 @@ def fake_surname(fake):
 
 
 def fake_date(fake):
-    return fake.date_time_between(start_date='-40y', end_date='-18y').date()
+    return fake.date_time_between(start_date='-38y', end_date='-18y').date()
 
 
 def fake_num():
@@ -26,7 +26,7 @@ def fake_num():
 
 
 def fake_club(fake):
-    return fake.city() + fake.company().split()[0]
+    return fake.city()
 
 
 def recreate_all():
@@ -52,7 +52,7 @@ def fill_db():
     fin = add_row(Team(name='Finland', code='FIN', max_members=30, group=B), rows)
     usa = add_row(Team(name='USA', code='USA', max_members=30, group=B), rows)
     can = add_row(Team(name='Canada', code='CAN', max_members=30, group=B), rows)
-    ger = add_row(Team(name='Gernamy', code='GER', max_members=30, group=B), rows)
+    ger = add_row(Team(name='Germany', code='GER', max_members=30, group=B), rows)
 
     # Add players and couches data
     players = {}
