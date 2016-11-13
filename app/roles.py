@@ -19,3 +19,15 @@ def requires_role(role):
             return f(*args, **kwargs)
         return wrapped
     return wrapper
+
+
+def check_current_user(f):
+    @wraps(f)
+    def wrapped(*args, **kwargs):
+        try:
+            user = current_user.login
+        except AttributeError:
+            user = None
+        kwargs['user'] = user
+        return f(*args, **kwargs)
+    return wrapped

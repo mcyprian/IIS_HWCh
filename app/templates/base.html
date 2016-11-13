@@ -19,7 +19,12 @@
 			 <li><a href="/standings">Standings</a></li>
 		 </ul>
 		 <ul class="nav navbar-nav navbar-right">
+         {% if user %}
+         <li><a href="/logout"><span class="logout"></span>{{ user }} | Logout</a></li>
+         {% else %}
 			 <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+         {% endif %}
+
 		 </ul>
 	</div>
 </div>
