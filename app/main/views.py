@@ -72,14 +72,21 @@ def players(user=None):
 def player_profile(player_surname, user=None):
     player = (get_player_by_surname(db, player_surname)
               or get_player_by_surname_regex(db, player_surname))
-
-    try:
-        if isinstance(player, list):
-            player = player.pop()
-        player.age = (
-            date.today() - player.date_of_birth) // timedelta(days=365.2425)
-    except IndexError:
-        player = None
+    print(player)
+    if isinstance(player, list):
+        if player !=  []:
+            return render_template('player_search.html',
+                                   players=player,
+                                   name=player_surname,
+                                   user=user)
+        else:
+            player = None
+    else:
+        try:
+            player.age = (
+                date.today() - player.date_of_birth) // timedelta(days=365.2425)
+        except AttributeError:
+            player = None
 
     return render_template('player_profile.html', player=player, user=user)
 
