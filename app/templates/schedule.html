@@ -68,11 +68,13 @@
 	    <div class="panel panel-default">
 	  <div class="panel-heading">
 	  	<div class="row">
-	            <div class="col-sm-2"><img src="https://s-media-cache-ak0.pinimg.com/originals/6f/b7/fe/6fb7fe3e6455a64f1d3cb5f6c4f63fc1.jpg" class="img-circle center-block"></div>
+            <div class="col-sm-2"><img
+                src="https://mcyprian.fedorapeople.org/flags/{{match.home_team.code}}" class="img-circle center-block"></div>
 	            <div class="col-sm-3" ><h3  class="text-center">{{match.home_team.name}}</h3></div>
 	            <div class="col-sm-2" ><h3  class="text-center">{{match.home_score|default('--')}} : {{match.away_score|default('--')}}</h3></div>
 	            <div class="col-sm-3"><h3  class="text-center">{{match.away_team.name}}</h3></div>
-	            <div class="col-sm-2" ><img src="http://s1.ticketm.net/tm/en-us/dam/a/f29/3e179cab-8920-4fe4-bf97-f3dff1e70f29_112641_CUSTOM.jpg" class="img-circle center-block"></div>
+                <div class="col-sm-2" ><img
+                    src="https://mcyprian.fedorapeople.org/flags/{{match.away_team.code}}" class="img-circle center-block"></div>
 	        </div> 
 	  </div>
 	  <div class="panel-body">
