@@ -18,10 +18,13 @@
 			 <li><a href="/teams">Teams</a></li>
 			 <li><a href="/players">Players</a></li>
 			 <li><a href="/standings">Standings</a></li>
+             {% if user and user.role %}
+             <li><a href="/championship_management">Settings</a></li>
+             {% endif %}
 		 </ul>
 		 <ul class="nav navbar-nav navbar-right">
          {% if user %}
-         <li><a href="/logout"><span class="logout"></span>{{ user }} | Logout</a></li>
+         <li><a href="/logout"><span class="logout"></span>{{ user.login }} | Logout</a></li>
          {% else %}
 			 <li><a href="/login"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
          {% endif %}

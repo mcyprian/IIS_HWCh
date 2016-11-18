@@ -24,9 +24,8 @@ def requires_role(role):
 def check_current_user(f):
     @wraps(f)
     def wrapped(*args, **kwargs):
-        try:
-            user = current_user.login
-        except AttributeError:
+        user = current_user
+        if not hasattr(user, 'login'):
             user = None
         kwargs['user'] = user
         return f(*args, **kwargs)
