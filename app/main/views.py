@@ -175,3 +175,12 @@ def employee_list():
         }
         employees.append(employee)
     return jsonify(employees)
+
+
+def employee_management():
+    return render_template('blank.html', data="Content for admins.")
+
+
+@main.route("/teams/<team_name>")
+def team_profile(team_name):
+    return render_template('team_profile.html', team=team_name)

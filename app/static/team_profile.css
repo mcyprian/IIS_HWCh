@@ -1,0 +1,59 @@
+#team{
+	margin-top: 3%;
+
+}
+
+
+
+p.outset {
+	border-style: outset;
+	border-width: 5px;
+	width: 150px;
+	height: 150px;
+}
+
+h2 {
+
+	margin-top: 25%;
+	font-size: 40px;
+
+}
+#team_info {
+	margin-top: 5%;
+}
+
+#coach {
+	margin:0 auto;
+	height: 500px;
+	width:  450px;
+}
+
+
+.caption {
+	text-align: center;
+}
+
+.imgBorder {
+
+  margin-top: 7%;
+  margin-bottom: 7%;
+  padding: 15px 15px 0;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
+  -moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4);
+  -webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
+}
+
+#marg {
+	margin-top: 10%;
+	margin-bottom: 10%;
+}
+
+#others {
+	height: 350px;
+	width: 300px;
+}
+
+#progress {
+	width: 500px;
+}
