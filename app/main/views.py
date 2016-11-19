@@ -160,6 +160,11 @@ def championship_management(user=None):
                            user=user)
 
 
+@main.route("/settings")
+def settings(user=None):
+    return redirect(url_for(".employee_management"))
+
+
 @main.route("/employee_management")
 @login_required
 @check_current_user
@@ -182,10 +187,6 @@ def employee_list():
         }
         employees.append(employee)
     return jsonify(employees)
-
-
-def employee_management():
-    return render_template('blank.html', data="Content for admins.")
 
 
 @main.route("/teams/<team_name>")
