@@ -1,0 +1,11 @@
+.panel-heading {
+	margin: -1px;
+}
+
+.emp-data {
+    padding-left: 50px;
+}
+
+.emp-name {
+    font-weight: bold;
+}

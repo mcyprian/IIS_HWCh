@@ -196,3 +196,9 @@ def get_num_of_received(db, team):
         received += get_score(db, m, home=home)
 
     return received
+
+
+def get_all_employees(db):
+    """Return list of all employees."""
+    return (db.session.query(Employee)
+                      .all())

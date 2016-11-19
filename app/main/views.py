@@ -13,7 +13,8 @@ from app.queries import (get_player_by_surname,
                          get_num_of,
                          get_num_of_games,
                          get_all_players,
-                         get_total_time)
+                         get_total_time,
+                         get_all_employees)
 from app.roles import requires_role, check_current_user
 from app.main import main
 from app.main.forms import NameForm
@@ -148,4 +149,20 @@ def championship_management(user=None):
 @check_current_user
 @requires_role('ADMINISTRATOR')
 def employee_management(user=None):
-    return render_template('blank.html', data="Content for admins.", user=user)
+    return render_template('employee_management.html',
+                           data="Content for admins.",
+                           user=user)
+
+
+@main.route("/employee_management/list.json")
+def employee_list():
+    employees = []
+    for emp in get_all_employees(db):
+        employee = {
+            "name": emp.name,
+            "surname": emp.surname,
+            "login": emp.login,
+            "role": emp.role
+        }
+        employees.append(employee)
+    return jsonify(employees)

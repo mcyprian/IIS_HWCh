@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}HWCh - Employee management{% endblock %}
+
+{% block head %}
+    {{super()}}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='employee_management.css')}}">
+{% endblock head %}
+
+{% block page_content %}
+    <div class="list-group">
+    </div>
+{% endblock page_content %}
