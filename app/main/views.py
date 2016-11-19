@@ -11,7 +11,9 @@ from app.queries import (get_player_by_surname,
                          get_score,
                          get_most_productive,
                          get_num_of,
-                         get_num_of_games)
+                         get_num_of_games,
+                         get_all_players,
+                         get_total_time)
 from app.roles import requires_role, check_current_user
 from app.main import main
 from app.main.forms import NameForm
@@ -71,10 +73,10 @@ def players(user=None):
 @main.route("/players/<player_surname>")
 @check_current_user
 def player_profile(player_surname, user=None):
-    player = (get_player_by_surname(db, player_surname)
-              or get_player_by_surname_regex(db, player_surname))
+    player = (get_player_by_surname(db, player_surname) or
+              get_player_by_surname_regex(db, player_surname))
     if isinstance(player, list):
-        if player !=  []:
+        if player != []:
             return render_template('player_search.html',
                                    players=player,
                                    name=player_surname,
@@ -99,6 +101,25 @@ def player_profile(player_surname, user=None):
 @check_current_user
 def standings(user=None):
     return render_template('blank.html', data="Various standings...", user=user)
+
+
+@main.route("/standings/data.json")
+def standings_data():
+    players = []
+    for player in get_all_players(db):
+        player_data = {
+            'name': player.name,
+            'team': player.team.code,
+            'position': player.position,
+            'points': (get_num_of(db, player, 'goal') +
+                       get_num_of(db, player, 'assist')),
+            'goals': get_num_of(db, player, 'goal'),
+            'assists': get_num_of(db, player, 'assist'),
+            'penalties': get_num_of(db, player, 'penalty'),
+            'time': get_total_time(db, player) // 60
+        }
+        players.append(player_data)
+    return jsonify(players)
 
 
 @main.route("/secret")

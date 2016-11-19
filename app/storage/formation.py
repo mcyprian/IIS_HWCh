@@ -5,7 +5,7 @@ class PlayedIn(db.Model):
     __tablename__ = 'playedin'
     player_id = db.Column(db.Integer, db.ForeignKey('players.id'), primary_key=True)
     formation_id = db.Column(db.Integer, db.ForeignKey('formations.id'), primary_key=True)
-    time = db.Column(db.Time, nullable=False)
+    time = db.Column(db.Interval, nullable=False)
     player = db.relationship("Player", backref='playedin')
 
     def __repr__(self):

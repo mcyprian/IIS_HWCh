@@ -44,6 +44,12 @@ def get_matches_for_arena_by_day(db, arena, day_num):
                       .all())
 
 
+def get_all_players(db):
+    """Returns list of all players."""
+    return (db.session.query(Player)
+            .all())
+
+
 def get_player_by_surname(db, player_surname):
     """Return list of Player objects matching surname regex."""
     return (db.session.query(Player)
@@ -112,6 +118,18 @@ def get_num_of(db, player, what):
                       .count())
 
 
+def get_total_time(db, player):
+    """Return total time spent on ice in seconds."""
+    query = (db.session.query(PlayedIn.time)
+                       .filter_by(player=player)
+                       .all())
+
+    total = datetime.timedelta()
+    for t in query:
+        total += t[0]
+    return total.seconds
+
+
 def get_num_of_games(db, player):
     """Return number of games selected player participated in."""
     return (db.session.query(Formation)
@@ -126,13 +144,12 @@ def get_matches_for_team(db, team):
     return (db.session.query(Match)
                       .filter(or_(Match.home_team == team,
                                   Match.away_team == team)
-                      .filter_by(overtime=overtime)
-                      .all())
+                              .all()))
 
 
 def get_wins(db, team, overtime=0):
     "Return number of matches won by team"
-    num=0
+    num = 0
     for m in get_matches_for_team(db, team):
         if m.home_team == team:
             if get_score(db, m, home=True) > get_score(db, m, home=False):
@@ -145,8 +162,8 @@ def get_wins(db, team, overtime=0):
 
 def get_losses(db, team, overtime=0):
     "Return number of matches won by team"
-    num=0
-    for m in get_member_from_team(db, team)
+    num = 0
+    for m in get_member_from_team(db, team):
         if m.home_team == team:
             if get_score(db, m, home=True) < get_score(db, m, home=False):
                 num += 1
@@ -154,7 +171,6 @@ def get_losses(db, team, overtime=0):
             if get_score(db, m, home=True) > get_score(db, m, home=False):
                 num += 1
     return num
-
 
 
 def get_num_of_scored(db, team):
@@ -167,14 +183,14 @@ def get_num_of_scored(db, team):
 
 def get_num_of_received(db, team):
     "Return number of goals received by team"
-    received=0
-    matches_query=(db.session.query(Match)
-                               .filter(or_(Match.home_team == team,
-                                           Match.away_team == team))
-                               .all())
+    received = 0
+    matches_query = (db.session.query(Match)
+                     .filter(or_(Match.home_team == team,
+                                 Match.away_team == team))
+                     .all())
 
     for m in matches_query:
-        home=False if m.home_team == team else True
+        home = False if m.home_team == team else True
         received += get_score(db, m, home=home)
 
     return received

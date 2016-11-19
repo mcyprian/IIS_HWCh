@@ -219,8 +219,8 @@ def fill_db():
             for f in range(4):
                 formation = add_row(Formation(team_role='home', match=matches[-1]), rows)
                 for n in range(4):
-                    p1 = add_row(PlayedIn(time=datetime.time(
-                        0, randrange(5, 20), randrange(60))), rows)
+                    p1 = add_row(PlayedIn(time=datetime.timedelta(
+                        minutes=randrange(5, 20), seconds=randrange(60))), rows)
                     p1.player = player_range.pop()
                     formation.playedins.append(p1)
 
@@ -230,8 +230,8 @@ def fill_db():
             for f in range(4):
                 formation = add_row(Formation(team_role='away', match=matches[-1]), rows)
                 for n in range(4):
-                    p1 = add_row(PlayedIn(time=datetime.time(
-                        0, randrange(5, 20), randrange(60))), rows)
+                    p1 = add_row(PlayedIn(time=datetime.timedelta(
+                        minutes=randrange(5, 20), seconds=randrange(60))), rows)
                     p1.player = player_range.pop()
                     formation.playedins.append(p1)
 
