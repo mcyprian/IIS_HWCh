@@ -70,6 +70,14 @@ def fill_db():
                                                     position=position, club=fake_club(fake), team=team_obj), rows))
 
         add_row(TeamMember(name=fake_name(fake), surname=fake_surname(fake),
+                           date_of_birth=fake_date(fake), role='assistant', team=team_obj), rows)
+
+
+        add_row(TeamMember(name=fake_name(fake), surname=fake_surname(fake),
+                           date_of_birth=fake_date(fake), role='assistant', team=team_obj), rows)
+
+
+        add_row(TeamMember(name=fake_name(fake), surname=fake_surname(fake),
                            date_of_birth=fake_date(fake), role='coach', team=team_obj), rows)
 
     # Add employees data
@@ -105,13 +113,13 @@ def fill_db():
         referees.append(add_row(Referee(name=fake_name(fake), surname=fake_surname(fake),
                                         date_of_birth=fake_date(fake)), rows))
 
-    values = [x % 4 < 2 for x in range(10)]
+    values = [x % 4 < 2 for x in range(18)]
     vs = list(combinations([svk, rus, cze, swe], 2)) + list(combinations([fin, usa, can, ger], 2))
 
     # Add matches data
     matches = []
     match_date = START_DAY
-    for m in range(10):
+    for m in range(18):
         employee = employees[randrange(len(employees))]
         if m & 1:
             match_date = match_date.replace(hour=16)
@@ -119,11 +127,21 @@ def fill_db():
         else:
             match_date = match_date.replace(hour=20)
 
+        if  m < 10:
+            sel_teams = vs[randrange(len(vs))]
+            vs.remove(sel_teams)
+            group=A if values[m] else B
+        else:
+            sel_teams = [None, None]
+            group=None
         matches.append(add_row(Match(category='group', datetime=match_date,
                                      arena='Bratislava' if values[m] else 'Kosice',
                                      fans=randrange(3000, 18000),
-                                     group=A if values[m] else B,
-                                     home_team=vs[m][0], away_team=vs[m][1]), rows))
+                                     group=group,
+                                     home_team=sel_teams[0],
+                                     away_team=sel_teams[1]), rows))
+
+        matches[m].overtime = 0
 
         # Add referees
         picked_refs = sample(referees, 3)
@@ -144,7 +162,7 @@ def fill_db():
             away_score = 0
             events = ['shot', 'offside', 'interference']
             for e in range(randrange(50, 110)):
-                team = vs[m][randrange(2)]
+                team = sel_teams[randrange(2)]
                 event_type = events[randrange(len(events))]
                 event_time = match_date + datetime.timedelta(randrange(20))
                 picked_player = players[team][randrange(len(players[team]))]
@@ -154,12 +172,12 @@ def fill_db():
 
             events = ['goal', 'penalty']
             for e in range(randrange(5, 12)):
-                team = vs[m][randrange(2)]
+                team = sel_teams[randrange(2)]
                 event_type = events[randrange(len(events))]
                 # pick participants
                 picked_players = sample(players[team], 3)
                 if event_type == 'goal':
-                    if team == vs[m][0]:
+                    if team == sel_teams[0]:
                         home_score += 1
                     else:
                         away_score += 1
@@ -176,9 +194,27 @@ def fill_db():
                               player=picked_players[0], match=matches[-1],
                               team=team), rows)
 
-            matches[m].overtime = randrange(1, 3) if home_score == away_score else 0
+            if home_score == away_score:
+                matches[m].overtime = randrange(1, 3)
+                event_time = match_date + datetime.timedelta(randrange(20, 30))
+                team = sel_teams[randrange(2)]
+                picked_players = sample(players[team], 3)
+                add_row(Event(code='assist', time=event_time, employee=employee,
+                              player=picked_players[1], match=matches[-1],
+                              team=team), rows)
+                add_row(Event(code='assist', time=event_time, employee=employee,
+                              player=picked_players[2], match=matches[-1],
+                              team=team), rows)
+                add_row(Event(code='shot', time=event_time, employee=employee,
+                              player=picked_players[0], match=matches[-1],
+                              team=team), rows)
+                add_row(Event(code='shot', time=event_time, employee=employee,
+                              player=picked_players[0], match=matches[-1],
+                              team=team), rows)
+
+
             # home formations
-            team = vs[m][0]
+            team = sel_teams[0]
             player_range = sample(players[team], 16)
             for f in range(4):
                 formation = add_row(Formation(team_role='home', match=matches[-1]), rows)
@@ -189,7 +225,7 @@ def fill_db():
                     formation.playedins.append(p1)
 
             # away formations
-            team = vs[m][1]
+            team = sel_teams[1]
             player_range = sample(players[team], 16)
             for f in range(4):
                 formation = add_row(Formation(team_role='away', match=matches[-1]), rows)

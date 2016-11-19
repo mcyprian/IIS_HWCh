@@ -71,12 +71,13 @@ def get_team_by_name(db, team_name):
                       .first())
 
 
-def get_players_from_team(db, team_name):
+def get_member_from_team(db, team_name, role='player'):
     """Return all players of team."""
     t = get_team_by_name(db, team_name)
     if t is not None:
         return (db.session.query(Player)
                           .filter_by(team=t)
+                          .filter_by(role=role)
                           .all())
     return None
 
@@ -96,7 +97,8 @@ def get_most_productive(db):
     """Return ordered list of the most productive players."""
     return (db.session.query(Player, func.count(Player.events))
                       .join(Event)
-                      .filter(or_(Event.code == 'goal', Event.code == 'assist'))
+                      .filter(or_(Event.code == 'goal',
+                                  Event.code == 'assist'))
                       .group_by(Player)
                       .order_by(desc(func.count(Player.events)))
                       .all())
@@ -117,3 +119,62 @@ def get_num_of_games(db, player):
                       .filter(PlayedIn.player == player)
                       .distinct(Formation.match_id)
                       .count())
+
+
+def get_matches_for_team(db, team):
+    """Return all matches the team participates in."""
+    return (db.session.query(Match)
+                      .filter(or_(Match.home_team == team,
+                                  Match.away_team == team)
+                      .filter_by(overtime=overtime)
+                      .all())
+
+
+def get_wins(db, team, overtime=0):
+    "Return number of matches won by team"
+    num=0
+    for m in get_matches_for_team(db, team):
+        if m.home_team == team:
+            if get_score(db, m, home=True) > get_score(db, m, home=False):
+                num += 1
+        else:
+            if get_score(db, m, home=True) < get_score(db, m, home=False):
+                num += 1
+    return num
+
+
+def get_losses(db, team, overtime=0):
+    "Return number of matches won by team"
+    num=0
+    for m in get_member_from_team(db, team)
+        if m.home_team == team:
+            if get_score(db, m, home=True) < get_score(db, m, home=False):
+                num += 1
+        else:
+            if get_score(db, m, home=True) > get_score(db, m, home=False):
+                num += 1
+    return num
+
+
+
+def get_num_of_scored(db, team):
+    "Return number of goals scored by team"
+    return (db.session.query(Event)
+                      .filter_by(code='goal')
+                      .filter_by(team=team)
+                      .count())
+
+
+def get_num_of_received(db, team):
+    "Return number of goals received by team"
+    received=0
+    matches_query=(db.session.query(Match)
+                               .filter(or_(Match.home_team == team,
+                                           Match.away_team == team))
+                               .all())
+
+    for m in matches_query:
+        home=False if m.home_team == team else True
+        received += get_score(db, m, home=home)
+
+    return received
