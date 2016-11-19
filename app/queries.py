@@ -77,7 +77,7 @@ def get_team_by_name(db, team_name):
                       .first())
 
 
-def get_member_from_team(db, team_name, role='player'):
+def get_members_of_team(db, team_name, role='player'):
     """Return all players of team."""
     t = get_team_by_name(db, team_name)
     if t is not None:
@@ -139,18 +139,19 @@ def get_num_of_games(db, player):
                       .count())
 
 
-def get_matches_for_team(db, team):
+def get_matches_for_team(db, team, overtime=0):
     """Return all matches the team participates in."""
     return (db.session.query(Match)
                       .filter(or_(Match.home_team == team,
-                                  Match.away_team == team)
-                              .all()))
+                                  Match.away_team == team))
+                      .filter_by(overtime=overtime)
+            .all())
 
 
 def get_wins(db, team, overtime=0):
     "Return number of matches won by team"
     num = 0
-    for m in get_matches_for_team(db, team):
+    for m in get_matches_for_team(db, team, overtime):
         if m.home_team == team:
             if get_score(db, m, home=True) > get_score(db, m, home=False):
                 num += 1
@@ -163,7 +164,7 @@ def get_wins(db, team, overtime=0):
 def get_losses(db, team, overtime=0):
     "Return number of matches won by team"
     num = 0
-    for m in get_member_from_team(db, team):
+    for m in get_matches_for_team(db, team, overtime):
         if m.home_team == team:
             if get_score(db, m, home=True) < get_score(db, m, home=False):
                 num += 1
