@@ -8,7 +8,8 @@ from app.storage import (Player,
                          Event,
                          Employee,
                          Formation,
-                         PlayedIn)
+                         PlayedIn,
+                         TeamMember)
 from app.settings import START_DAY
 
 
@@ -81,7 +82,7 @@ def get_members_of_team(db, team_name, role='player'):
     """Return all players of team."""
     t = get_team_by_name(db, team_name)
     if t is not None:
-        return (db.session.query(Player)
+        return (db.session.query(TeamMember)
                           .filter_by(team=t)
                           .filter_by(role=role)
                           .all())
