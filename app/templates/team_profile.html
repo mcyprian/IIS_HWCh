@@ -17,41 +17,63 @@
 
 {% endblock page_head_content %}
 {% block page_content %}
-
+{% if team %}
 <div class="container" id="team">
 	<div class="container">
 		<div class="row">
-			<div class="col-sm-3"><p class="outset ">TEAM ICON</p></div>
-			<div class="col-sm-3" class="text-center"><h2>{{team}}</h2></div>
+			<div class="col-md-2"><img id="icon" src="https://mcyprian.fedorapeople.org/flags/{{team.code}}" class="img-circle center-block"></div>
+			<div class="col-md-2" class="text-center"><h2 id="name">{{team.name}}</h2></div>
 		</div>
 	</div>
 </div>
 
 <div>
-	<div class="row">
+	<div class="row" id="team_stats">
 		<div class="col-sm-6">
-			<div class="container" id="team_info">
-				<p>Group: A</p>
-				<p>Points: 9</p>
-				<p>Position: 1.</p>
-				<p>Wins: 3</p>
-				<p>Lost: 0</p>
-				<p>Draw: 0</p>
-				<p>Team members: 34</p>
+			<div class="panel panel-primary" id="team_info">
+				<div class="row">
+					<div class="col-sm-6">
+						<p><b>Group:</b> {{team.group.code}}</p>
+						<p><b>Points:</b> {{score}}</p>
+						<p><b>Team members:</b> {{data["num_of_mem"]}}</p>
+					</div>
+					<div class="col-sm-6">
+						<p><b style="color:green;">Wins:</b> {{wins}}</p>
+						<p><b style="color:orange;">Wins overtime:</b> {{wins_o}}</p>
+						<p><b style="color:red;">Losses:</b> {{losses}}</p>
+						<p><b style="color:orange;">Losses overtime:</b> {{losses_o}}</p>
+					</div>
+				</div>  
 			</div>
 		</div>
 		<div class="col-sm-6"> 
-			<p>Goals</p>
+			<h3>Goals</h3>
 			<div class="progress">
-			  <div class="progress-bar progress-bar-success" style="width: 60%">
+			  <div class="progress-bar progress-bar-success" style="width: {{per_s}}%">
 			    <span class="sr-only">35% Complete (success)</span>
 			  </div>
-			  <div class="progress-bar progress-bar-danger" style="width: 40%">
+			  <div class="progress-bar progress-bar-danger" style="width: {{per_r}}%">
 			    <span class="sr-only">10% Complete (danger)</span>
 			  </div>
 			</div>
-				<p>Green Rozdane goly: 6</p>
-				<p>Dostane goly: 4</p>
+			<div class="row">
+				<div class="col-sm-1">
+					<div id="circle-green"></div>
+				</div>
+				<div class="col-sm-4">
+					<p><b>Scored:</b> {{scored}}</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-1">
+					<div id="circle-red"></div>
+				</div>
+				<div class="col-sm-4">
+					<p><b>Received:</b> {{received}}</p>
+				</div>
+			</div>
+
+
 		</div>
 	</div>
 </div>
@@ -71,53 +93,51 @@
 	<div class="row" id="marg" >
 			<div class="thumbnail" id="coach">
 				
-				<img src="http://vignette2.wikia.nocookie.net/uncyclopedia/images/4/44/White_square.png/revision/latest?cb=20061003200043" class="imgBorder" width="300" height="300" >
+				<img src="https://mcyprian.fedorapeople.org/avatar.png" class="imgBorder" width="300" height="300">
 				<div class="caption">
-					<h3>Name Surname</h3>
-					<a href="#" class="btn btn-primary" role="button">Search</a>
+					<h3>{{data["coachs"][0].name}} {{data["coachs"][0].surname}}</h3>
 				</div>
 			</div>
 	</div>
-
   </div>
+
   <div id="Assistents" class="tab-pane fade">
   		<div class="row" id="marg">
-	{% for topic in range(3) %}
+	{% for assistant in data["assistants"] %}
 		<div class="col-md-4">
 				<div class="thumbnail" id="others">
 				
-				<img src="http://vignette2.wikia.nocookie.net/uncyclopedia/images/4/44/White_square.png/revision/latest?cb=20061003200043" class="imgBorder" width="200" height="200" >
+				<img src="https://mcyprian.fedorapeople.org/avatar.png" class="imgBorder" width="200" height="200" >
 				<div class="caption">
-					<h3>Name Surname</h3>
-					<a href="#" class="btn btn-primary" role="button">Search</a>
+					<h3>{{assistant.name}} {{assistant.surname}}</h3>
 				</div>
 			</div>
 		</div>
 	{% endfor %}
 	</div>
   </div>
-  <div id="Players" class="tab-pane fade">
 
-  {% for t in range(2) %}
+  <div id="Players" class="tab-pane fade">
   	<div class="row" id="marg">
-	{% for topic in range(3) %}
+	  {% for player in data["players"] %}
 		<div class="col-md-4">
 				<div class="thumbnail" id="others">
 				
-				<img src="http://vignette2.wikia.nocookie.net/uncyclopedia/images/4/44/White_square.png/revision/latest?cb=20061003200043" class="imgBorder" width="200" height="200" >
+				<img src="https://mcyprian.fedorapeople.org/avatar.png" class="imgBorder" width="200" height="200" >
 				<div class="caption">
-					<h3>Name Surname</h3>
-					<a href="#" class="btn btn-primary" role="button">Search</a>
+					<h3>{{player.name}} {{player.surname}}</h3>
+					<a href="/players/{{ player.surname }}" class="btn btn-primary" role="button">Search</a>
 				</div>
 			</div>
 		</div>
 	{% endfor %}
 	</div>
- {% endfor %}
 
 
   </div>
 </div>
-
+{% else %}
+    <h1>Team not found.</h1>
+{% endif %}
 
 {% endblock page_content %}

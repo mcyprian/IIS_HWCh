@@ -3,14 +3,10 @@
 
 }
 
-
-
-p.outset {
-	border-style: outset;
-	border-width: 5px;
-	width: 150px;
-	height: 150px;
+#name{
+	margin-right: 50%;
 }
+
 
 h2 {
 
@@ -18,7 +14,22 @@ h2 {
 	font-size: 40px;
 
 }
+
+#icon {
+	margin-top: 25%;
+	margin-left: 60%;
+}
+
+h3 {
+	text-align: center;
+}
+#team_stats {
+	margin-top: 5%;
+	margin-bottom: 10%;
+}
+
 #team_info {
+	width: 80%;
 	margin-top: 5%;
 }
 
@@ -42,6 +53,7 @@ h2 {
   box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
   -moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4);
   -webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
+
 }
 
 #marg {
@@ -56,4 +68,18 @@ h2 {
 
 #progress {
 	width: 500px;
+}
+
+#circle-red {
+    background-color: #c71c22;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+}
+
+#circle-green {
+    background-color: #73a839;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
 }

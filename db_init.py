@@ -208,7 +208,7 @@ def fill_db():
                 add_row(Event(code='shot', time=event_time, employee=employee,
                               player=picked_players[0], match=matches[-1],
                               team=team), rows)
-                add_row(Event(code='shot', time=event_time, employee=employee,
+                add_row(Event(code='goal', time=event_time, employee=employee,
                               player=picked_players[0], match=matches[-1],
                               team=team), rows)
 

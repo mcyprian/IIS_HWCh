@@ -15,7 +15,14 @@ from app.queries import (get_player_by_surname,
                          get_num_of_games,
                          get_all_players,
                          get_total_time,
-                         get_all_employees)
+                         get_all_employees,
+                         get_team_by_name,
+                         get_losses,
+                         get_wins,
+                         get_num_of_scored,
+                         get_num_of_received,
+                         get_members_of_team)
+
 from app.roles import requires_role, check_current_user
 from app.main import main
 from app.main.forms import NameForm
@@ -183,4 +190,46 @@ def employee_management():
 
 @main.route("/teams/<team_name>")
 def team_profile(team_name):
-    return render_template('team_profile.html', team=team_name)
+    team = get_team_by_name(db, team_name)
+    if team is not None:
+        wins = get_wins(db, team, 0)
+        wins_o = get_wins(db, team, 1)
+        losses = get_losses(db, team, 0)
+        losses_o = get_losses(db, team, 1)
+        received = get_num_of_received(db, team)
+        scored = get_num_of_scored(db, team)
+        data = {
+            "players": get_members_of_team(db, team.name, 'player'),
+            "coachs": get_members_of_team(db, team.name, 'coach'),
+            "assistants": get_members_of_team(db, team.name, 'assistant')
+        }
+        data["num_of_mem"] = len(
+            data["players"]) + len(data["coachs"]) + len(data["assistants"])
+
+        score = (wins*3) + (wins_o*2) + (losses_o)
+        print (data)
+
+        if ((scored+received) > 0):
+            percents = 100/(scored+received)
+            per_s = scored*percents
+            per_r = received*percents
+        else:
+            per_s = 0
+            per_r = 0
+
+        return render_template('team_profile.html',
+                               team=team,
+                               scored=scored,
+                               received=received,
+                               data=data,
+                               wins=wins,
+                               losses=losses,
+                               wins_o=wins_o,
+                               losses_o=losses_o,
+                               score=score,
+                               per_s=per_s,
+                               per_r=per_r)
+
+    else:
+        team = None
+        return render_template('team_profile.html', team=team)
