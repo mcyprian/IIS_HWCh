@@ -109,6 +109,7 @@ def standings_data():
     for player in get_all_players(db):
         player_data = {
             'name': player.name,
+            'surname': player.surname,
             'team': player.team.code,
             'position': player.position,
             'points': (get_num_of(db, player, 'goal') +
