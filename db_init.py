@@ -244,6 +244,14 @@ def fill_db():
                              role='player', number=12, position='defender', club='Calgary Flames', team=usa),
                       rows)
 
+    zdeno = add_row(Player(name='Marcel', surname='Hossa', date_of_birth=datetime.date(1981, 10, 12),
+                           role='player', number=18, position='forward', club='Dukla Trencin', team=svk),
+                    rows)
+
+    zdeno = add_row(Player(name='Marian', surname='Hossa', date_of_birth=datetime.date(1979, 1, 12),
+                           role='player', number=81, position='forward', club='Chicago Blackhawks', team=svk),
+                    rows)
+
     alex = add_row(Player(name='Alex', surname='Ovechkin', date_of_birth=datetime.date(1985, 9, 17),
                           role='player', number=8, position='forward', club='Washington Capitals',
                           team=rus), rows)

@@ -55,7 +55,7 @@ def get_player_by_surname(db, player_surname):
     """Return list of Player objects matching surname regex."""
     return (db.session.query(Player)
                       .filter_by(surname=player_surname)
-                      .first())
+                      .all())
 
 
 def get_player_by_surname_regex(db, player_surname):
@@ -63,6 +63,13 @@ def get_player_by_surname_regex(db, player_surname):
     return (db.session.query(Player)
                       .filter(Player.surname.like('%' + player_surname + '%'))
                       .all())
+
+
+def get_player_by_id(db, player_id):
+    """Return object of Player or None if not present."""
+    return (db.session.query(Player)
+                      .filter_by(id=player_id)
+                      .first())
 
 
 def get_teams(db):
