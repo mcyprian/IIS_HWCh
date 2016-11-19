@@ -122,6 +122,10 @@ def standings_data():
         players.append(player_data)
     return jsonify(players)
 
+def standings():
+    return render_template('standings.html', data="Various standings...")
+>>>>>>> Create base for standings
+
 
 @main.route("/secret")
 @check_current_user

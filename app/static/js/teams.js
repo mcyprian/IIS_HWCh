@@ -1,5 +1,5 @@
 import getData from "./data"
-import { keys,values } from "underscore"
+import { keys } from "underscore"
 
 export function teams(){
 	getData("/list.json",createTeamList);
@@ -8,9 +8,10 @@ export function teams(){
 function createTeamList(data){
 	let team;
 	for(let i=0;i<data.length;i++) {
+		let flagUrl = getFlag(data[i]);
 		team = `<div class="panel panel-primary">
 		<div class="panel-heading team-in-list" id="${i}">
-				<img class="team-logo-heading" src="http://emojipedia-us.s3.amazonaws.com/cache/8a/62/8a620e7379c29b55d5af4bdda77c6141.png">
+				<img class="team-logo-heading" src="${flagUrl}">
 				${data[i]}
 		</div>
 		<div class="panel-body"
@@ -29,4 +30,23 @@ function toggleTeamInfo(){
 		var id = $(this).attr("id");
 		$("#teamId"+id).slideToggle("slow");
 	});
+}
+
+function getFlag(country) {
+	const flags = {
+		Canada: "https://mcyprian.fedorapeople.org/flags/CAN",
+		Slovakia: "https://mcyprian.fedorapeople.org/flags/SVK",
+		Finland: "https://mcyprian.fedorapeople.org/flags/FIN",
+		USA: "https://mcyprian.fedorapeople.org/flags/USA",
+		Germany: "https://mcyprian.fedorapeople.org/flags/GER",
+		Czech: "https://mcyprian.fedorapeople.org/flags/CZE",
+		Russia: "https://mcyprian.fedorapeople.org/flags/RUS",
+		Sweden: "https://mcyprian.fedorapeople.org/flags/SWE"
+	};
+	const key_flags = keys(flags);
+
+	for(let i=0;i<key_flags.length;i++){
+		if(country.indexOf(key_flags[i])!== -1)
+			return flags[key_flags[i]];
+	}
 }

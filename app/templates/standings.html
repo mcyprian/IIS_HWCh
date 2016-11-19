@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block head %}
+	{{super()}}
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='standings.css') }}">
+{% endblock head %}
+
+{% block page_content %}
+<div id="filter-bar">
+	<select class="filter-select" id="filter-select1">
+		<option seleced="selected" value="ChooseFilter">Choose Filter</option>
+		<option value="Goals">Goals</option>
+		<option value="Points">Points</option>
+	</select>
+</div>
+	<div class="panel panel-default">
+		<div class="panel-heading">Table of players</div>
+		<div id="table-wrap"></div>
+	</div>
+</div>
+{% endblock %}

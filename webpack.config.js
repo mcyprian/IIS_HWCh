@@ -5,7 +5,7 @@ var path = require('path');
 module.exports = {
 	context: path.join(__dirname, "app"),
   devtool: debug ? "inline-sourcemap" : null,
-	entry: "./static/js/main.js",
+	entry: ["./static/js/main.js"],
   module: {
     loaders: [
       {
@@ -13,8 +13,8 @@ module.exports = {
         exclude: /(node_modules|bower_components)/,
         loader: 'babel-loader',
         query: {
-          presets: [ 'es2015', 'stage-0'],
-          plugins: ['transform-decorators-legacy', 'transform-class-properties'],
+			presets: [ 'es2015', 'stage-0'],
+			plugins: ['transform-decorators-legacy', 'transform-class-properties'],
         }
       }
     ]
