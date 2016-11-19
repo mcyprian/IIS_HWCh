@@ -208,9 +208,8 @@ def team_profile(team_name):
             data["players"]) + len(data["coachs"]) + len(data["assistants"])
 
         score = (wins*3) + (wins_o*2) + (losses_o)
-        print (data)
 
-        if ((scored+received) > 0):
+        if ((scored + received) > 0):
             percents = 100/(scored+received)
             per_s = scored*percents
             per_r = received*percents

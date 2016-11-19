@@ -26,7 +26,7 @@
         ('/settings', 'Settings')
     ] -%}
 
-    {% set navigation_bar = extended_nav_bar if user else standard_nav_bar %}
+    {% set navigation_bar = extended_nav_bar if user and user.role else standard_nav_bar %}
     {% set current = request.path.split('/')[1] %}
     {% set active_page = 'home' if current == '' else current -%}
  
