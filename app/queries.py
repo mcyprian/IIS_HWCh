@@ -8,7 +8,8 @@ from app.storage import (Player,
                          Event,
                          Employee,
                          Formation,
-                         PlayedIn)
+                         PlayedIn,
+                         TeamMember)
 from app.settings import START_DAY
 
 
@@ -54,7 +55,7 @@ def get_player_by_surname(db, player_surname):
     """Return list of Player objects matching surname regex."""
     return (db.session.query(Player)
                       .filter_by(surname=player_surname)
-                      .first())
+                      .all())
 
 
 def get_player_by_surname_regex(db, player_surname):
@@ -62,6 +63,13 @@ def get_player_by_surname_regex(db, player_surname):
     return (db.session.query(Player)
                       .filter(Player.surname.like('%' + player_surname + '%'))
                       .all())
+
+
+def get_player_by_id(db, player_id):
+    """Return object of Player or None if not present."""
+    return (db.session.query(Player)
+                      .filter_by(id=player_id)
+                      .first())
 
 
 def get_teams(db):
@@ -81,7 +89,7 @@ def get_members_of_team(db, team_name, role='player'):
     """Return all players of team."""
     t = get_team_by_name(db, team_name)
     if t is not None:
-        return (db.session.query(Player)
+        return (db.session.query(TeamMember)
                           .filter_by(team=t)
                           .filter_by(role=role)
                           .all())
@@ -195,3 +203,9 @@ def get_num_of_received(db, team):
         received += get_score(db, m, home=home)
 
     return received
+
+
+def get_all_employees(db):
+    """Return list of all employees."""
+    return (db.session.query(Employee)
+                      .all())

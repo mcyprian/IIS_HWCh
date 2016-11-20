@@ -14,7 +14,7 @@
 }
 
 .topic {
-	height: 250px;
+	height: 265px;
 	width: 250px;
 }
 
@@ -26,4 +26,42 @@
 	width=100px;
 	height=50px;
 	background-color: #1ac6ff;
+}
+
+.imgBorder {
+
+  margin-top: 7%;
+  margin-bottom: 7%;
+  padding: 15px 15px 0;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
+  -moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4);
+  -webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
+
+}
+
+.thumbnail{
+	width: 350px;
+	height: 370px;
+}
+
+#team_name {
+	margin-right: 50%;
+}
+
+#icon {
+	 margin-left: 65%;
+}
+
+#teams {
+	margin-top: 30%;
+
+}
+
+#team_caption {
+	margin-top: 35%;
+}
+
+#head{
+	margin-top: 2%;
 }

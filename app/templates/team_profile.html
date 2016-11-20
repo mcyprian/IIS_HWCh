@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Ice Hockey World Championship{% endblock %}
+
+{% block head %}
+	{{super()}}
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='team_profile.css') }}">
+{% endblock head %}
+
+{% block page_head_content %}
+<div class="container">
+	<div class="jumbotron">
+		<h1>Team profile</h1>
+	</div>
+</div>
+
+{% endblock page_head_content %}
+{% block page_content %}
+{% if team %}
+<div class="container" id="team">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-2"><img id="icon" src="https://mcyprian.fedorapeople.org/flags/{{team.code}}" class="img-circle center-block"></div>
+			<div class="col-md-2" class="text-center"><h2 id="name">{{team.name}}</h2></div>
+		</div>
+	</div>
+</div>
+
+<div>
+	<div class="row" id="team_stats">
+		<div class="col-sm-6">
+			<div class="panel panel-primary" id="team_info">
+				<div class="row">
+					<div class="col-sm-6">
+						<p><b>Group:</b> {{team.group.code}}</p>
+						<p><b>Points:</b> {{score}}</p>
+						<p><b>Team members:</b> {{data["num_of_mem"]}}</p>
+					</div>
+					<div class="col-sm-6">
+						<p><b style="color:green;">Wins:</b> {{wins}}</p>
+						<p><b style="color:orange;">Wins overtime:</b> {{wins_o}}</p>
+						<p><b style="color:red;">Losses:</b> {{losses}}</p>
+						<p><b style="color:orange;">Losses overtime:</b> {{losses_o}}</p>
+					</div>
+				</div>  
+			</div>
+		</div>
+		<div class="col-sm-6"> 
+			<h3>Goals</h3>
+			<div class="progress">
+			  <div class="progress-bar progress-bar-success" style="width: {{per_s}}%">
+			    <span class="sr-only">35% Complete (success)</span>
+			  </div>
+			  <div class="progress-bar progress-bar-danger" style="width: {{per_r}}%">
+			    <span class="sr-only">10% Complete (danger)</span>
+			  </div>
+			</div>
+			<div class="row">
+				<div class="col-sm-1">
+					<div id="circle-green"></div>
+				</div>
+				<div class="col-sm-4">
+					<p><b>Scored:</b> {{scored}}</p>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-sm-1">
+					<div id="circle-red"></div>
+				</div>
+				<div class="col-sm-4">
+					<p><b>Received:</b> {{received}}</p>
+				</div>
+			</div>
+
+
+		</div>
+	</div>
+</div>
+
+
+<ul class="nav nav-tabs nav-justified">
+  <li role="presentation" class="active"><a data-toggle="tab" href="#Coach">Coach</a></li>
+  <li role="presentation"><a data-toggle="tab" href="#Assistents">Assistents</a></li>
+  <li role="presentation"><a data-toggle="tab" href="#Players">Players</a></li>
+</ul>
+
+
+
+<div class="tab-content">
+  <div id="Coach" class="tab-pane fade in active">
+
+	<div class="row" id="marg" >
+			<div class="thumbnail" id="coach">
+				
+				<img src="https://mcyprian.fedorapeople.org/avatar.png" class="imgBorder" width="300" height="300">
+				<div class="caption">
+					<h3>{{data["coachs"][0].name}} {{data["coachs"][0].surname}}</h3>
+				</div>
+			</div>
+	</div>
+  </div>
+
+  <div id="Assistents" class="tab-pane fade">
+  		<div class="row" id="marg">
+	{% for assistant in data["assistants"] %}
+		<div class="col-md-4">
+				<div class="thumbnail" id="others">
+				
+				<img src="https://mcyprian.fedorapeople.org/avatar.png" class="imgBorder" width="200" height="200" >
+				<div class="caption">
+					<h3>{{assistant.name}} {{assistant.surname}}</h3>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+	</div>
+  </div>
+
+  <div id="Players" class="tab-pane fade">
+  	<div class="row" id="marg">
+	  {% for player in data["players"] %}
+		<div class="col-md-4">
+				<div class="thumbnail" id="others">
+				
+				<img src="https://mcyprian.fedorapeople.org/avatar.png" class="imgBorder" width="200" height="200" >
+				<div class="caption">
+					<h3>{{player.name}} {{player.surname}}</h3>
+					<a href="/players/{{ player.surname }}" class="btn btn-primary" role="button">Search</a>
+				</div>
+			</div>
+		</div>
+	{% endfor %}
+	</div>
+
+
+  </div>
+</div>
+{% else %}
+    <h1>Team not found.</h1>
+{% endif %}
+
+{% endblock page_content %}

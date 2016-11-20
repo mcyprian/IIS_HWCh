@@ -1,0 +1,85 @@
+#team{
+	margin-top: 3%;
+
+}
+
+#name{
+	margin-right: 50%;
+}
+
+
+h2 {
+
+	margin-top: 25%;
+	font-size: 40px;
+
+}
+
+#icon {
+	margin-top: 25%;
+	margin-left: 60%;
+}
+
+h3 {
+	text-align: center;
+}
+#team_stats {
+	margin-top: 5%;
+	margin-bottom: 10%;
+}
+
+#team_info {
+	width: 80%;
+	margin-top: 5%;
+}
+
+#coach {
+	margin:0 auto;
+	height: 500px;
+	width:  450px;
+}
+
+
+.caption {
+	text-align: center;
+}
+
+.imgBorder {
+
+  margin-top: 7%;
+  margin-bottom: 7%;
+  padding: 15px 15px 0;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
+  -moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4);
+  -webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
+
+}
+
+#marg {
+	margin-top: 10%;
+	margin-bottom: 10%;
+}
+
+#others {
+	height: 350px;
+	width: 300px;
+}
+
+#progress {
+	width: 500px;
+}
+
+#circle-red {
+    background-color: #c71c22;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+}
+
+#circle-green {
+    background-color: #73a839;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+}
