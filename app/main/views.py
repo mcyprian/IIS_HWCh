@@ -100,7 +100,7 @@ def player_profile(player_surname, user=None):
 @main.route("/standings")
 @check_current_user
 def standings(user=None):
-    return render_template('blank.html', data="Various standings...", user=user)
+    return render_template('standings.html', data="Various standings...", user=user)
 
 
 @main.route("/standings/data.json")
@@ -121,11 +121,6 @@ def standings_data():
         }
         players.append(player_data)
     return jsonify(players)
-
-def standings():
-    return render_template('standings.html', data="Various standings...")
->>>>>>> Create base for standings
-
 
 @main.route("/secret")
 @check_current_user

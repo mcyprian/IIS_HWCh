@@ -1,15 +1,8 @@
 #filter-bar {
 	padding: 4px;
 	margin-bottom: 20px;
-	line-height: 1.42857143;
 	background-color: #ffffff;
-	border: 1px solid #dddddd;
-	border-radius: 4px;
 	height: 45px;
-}
-
-.filter-select {
-	float: right;
 }
 
 #result-div {
@@ -19,4 +12,13 @@
 .person-foto {
 	height: 100%;
 	width: 100%;
+}
+
+#filter-bar>select {
+	float: left
+}
+
+#range input {
+	margin-left:1%;
+	margin-right:0.5%;
 }

@@ -7,12 +7,21 @@
 {% endblock head %}
 
 {% block page_content %}
+<h2> Standings filter </h2>
 <div id="filter-bar">
 	<select class="filter-select" id="filter-select1">
 		<option seleced="selected" value="ChooseFilter">Choose Filter</option>
 		<option value="Goals">Goals</option>
 		<option value="Points">Points</option>
+		<option value="Assists">Assists</option>
+		<option value="Time">Played Time</option>
+		<option value="Penalties">Penalties</option>
 	</select>
+	<form id="range">
+		<input type="radio" name="range" value="ALL" checked><b>Show All</b>
+		<input type="radio" name="range" value="5" ><b>Show Top 5</b>
+		<input type="radio" name="range" value="25" ><b>Show Top 25</b>
+	</form>
 </div>
 	<div class="panel panel-default">
 		<div class="panel-heading">Table of players</div>
