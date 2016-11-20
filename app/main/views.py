@@ -64,10 +64,16 @@ def teams_list():
         coach = get_members_of_team(db, t, role='coach').pop()
         print(t)
         (mvp, points) = get_mvp(db, t)
-        teams[t.name] = [
-            {"mvp": [mvp.id, points, "{} {}".format(mvp.name, mvp.surname)],
-             "coach": "{} {}".format(coach.name, coach.surname)}]
-
+        teams[t.name] = {
+             "mvp": {
+                 "id": mvp.id,
+                 "points": points,
+                 "full_name": "{} {}".format(mvp.name, mvp.surname)
+             },
+             "coach": {
+                 "full_name": "{} {}".format(coach.name, coach.surname)
+             }
+        }
     return jsonify(teams)
 
 
