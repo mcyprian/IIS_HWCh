@@ -30,28 +30,6 @@ function showTable() {
 	}
 }
 
-function but() {
-	const button = document.getElementById("button-filter");
-	button.addEventListener("click", forwardData, false);
-	console.log("registered");
-}
-
-function forwardData() {
-	console.log("getting data");
-	getData("/list.json", filterData);
-}
-
-function filterData(data) {
-	const filterString = $("#text-filter").val();
-	if (filterString) {
-		data = data.filter((value)=>{
-			if(value.indexOf(filterString)!== -1)
-				return value;
-		});
-		$("#result-div").append(data);
-	}
-}
-
 function createStandingTable(data) {
 	STANDINGS_DATA = data
 	window.data = STANDINGS_DATA;
