@@ -85,7 +85,7 @@ def get_team_by_name(db, team_name):
                       .first())
 
 
-def get_members_of_team(db, team_name, role='player'):
+def get_members_of_team_by_name(db, team_name, role='player'):
     """Return all players of team."""
     t = get_team_by_name(db, team_name)
     if t is not None:
@@ -94,6 +94,14 @@ def get_members_of_team(db, team_name, role='player'):
                           .filter_by(role=role)
                           .all())
     return None
+
+
+def get_members_of_team(db, team, role='player'):
+    """Return all players of team."""
+    return (db.session.query(TeamMember)
+            .filter_by(team=team)
+            .filter_by(role=role)
+            .all())
 
 
 def get_score(db, m, home=True):
@@ -116,6 +124,23 @@ def get_most_productive(db):
                       .group_by(Player)
                       .order_by(desc(func.count(Player.events)))
                       .all())
+
+
+def get_mvp(db, team):
+    """Return ordered list of the most productive players."""
+    mvp = (db.session.query(Player, func.count(Player.events))
+                     .join(Event)
+                     .filter(Player.team == team)
+                     .filter(or_(Event.code == 'goal',
+                                 Event.code == 'assist'))
+                     .group_by(Player)
+                     .order_by(desc(func.count(Player.events)))
+                     .first())
+    if mvp is None:
+        first = (db.session.query(Player)
+                           .filter_by(team=team)
+                           .first())
+    return mvp or (first, 0)
 
 
 def get_num_of(db, player, what):

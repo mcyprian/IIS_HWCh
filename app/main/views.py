@@ -21,7 +21,8 @@ from app.queries import (get_player_by_surname,
                          get_wins,
                          get_num_of_scored,
                          get_num_of_received,
-                         get_members_of_team)
+                         get_members_of_team,
+                         get_mvp)
 
 from app.roles import requires_role, check_current_user
 from app.main import main
@@ -58,7 +59,16 @@ def teams(user=None):
 
 @main.route("/teams/list.json")
 def teams_list():
-    return jsonify([t.name for t in get_teams(db)])
+    teams = {}
+    for t in get_teams(db):
+        coach = get_members_of_team(db, t, role='coach').pop()
+        print(t)
+        (mvp, points) = get_mvp(db, t)
+        teams[t.name] = [
+            {"mvp": [mvp.id, points, "{} {}".format(mvp.name, mvp.surname)],
+             "coach": "{} {}".format(coach.name, coach.surname)}]
+
+    return jsonify(teams)
 
 
 @main.route("/players", methods=['GET', 'POST'])
@@ -126,6 +136,7 @@ def standings_data():
     players = []
     for player in get_all_players(db):
         player_data = {
+            'id': player.id,
             'name': player.name,
             'surname': player.surname,
             'team': player.team.code,
@@ -200,9 +211,9 @@ def team_profile(team_name):
         received = get_num_of_received(db, team)
         scored = get_num_of_scored(db, team)
         data = {
-            "players": get_members_of_team(db, team.name, 'player'),
-            "coachs": get_members_of_team(db, team.name, 'coach'),
-            "assistants": get_members_of_team(db, team.name, 'assistant')
+            "players": get_members_of_team(db, team, 'player'),
+            "coachs": get_members_of_team(db, team, 'coach'),
+            "assistants": get_members_of_team(db, team, 'assistant')
         }
         data["num_of_mem"] = len(
             data["players"]) + len(data["coachs"]) + len(data["assistants"])
