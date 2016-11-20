@@ -37,9 +37,6 @@
                 <li {% if entry.lower() == active_page %}class="active" {% endif %}>
                     <a href="{{ href|e }}">{{ entry|e }}</a></li>
                  {% endfor %}
-                 {% if user and user.role %}
-                 <li><a href="/championship_management">Settings</a></li>
-                 {% endif %}
     		 </ul>
     		 <ul class="nav navbar-nav navbar-right">
              {% if user %}
