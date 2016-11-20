@@ -230,6 +230,13 @@ def get_num_of_received(db, team):
     return received
 
 
+def get_employee(db, login):
+    """Return selected employee."""
+    return (db.session.query(Employee)
+                      .filter_by(login=login)
+                      .first())
+
+
 def get_all_employees(db):
     """Return list of all employees."""
     return (db.session.query(Employee)

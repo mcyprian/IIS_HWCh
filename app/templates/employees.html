@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}HWCh - Employee management{% endblock %}
+
+{% block head %}
+    {{super()}}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='employees.css')}}">
+{% endblock head %}
+
+{% block page_content %}
+    {% set roles = {
+        0: "employee",
+        1: "manager",
+        2: "administrator"
+    } -%}
+    <div class="list-group">
+        {% for emp in employees %}
+        <div class="panel panel-primary" id={{ emp.id }}>
+                <div class="panel-heading employee-list" id=ph{{ emp.id }}>
+                    <span class="emp-name">{{ emp.name }} {{ emp.surname }}</span>
+                    <span class="emp-login">login: {{ emp.login }}</span>
+                    <span class="emp-position">position: {{ roles[emp.role] }}</span>
+                </div>
+                <div class="panel-body" id="pb{{emp.id}}">
+                        <button type="button" id={{ emp.login }} class="btn btn-primary">Update</button>
+                        <button type="button" id={{ emp.login }} class="btn btn-success
+                        {% if emp.role == 2 %}disabled{% endif %}"
+                        {% if emp.role == 2 %}disabled{% endif %}>Promote</button>
+                        <button type="button" id={{ emp.login }} class="btn btn-warning
+                        {% if not emp.role %}disabled{% endif %}"
+                        {% if not emp.role %}disabled{% endif %}>Demote</button>                
+                        <button type="button" id={{ emp.login }} class="btn btn-danger">Remove</button>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock page_content %}

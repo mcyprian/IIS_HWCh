@@ -15,6 +15,7 @@ from app.queries import (get_player_by_surname,
                          get_num_of_games,
                          get_all_players,
                          get_total_time,
+                         get_employee,
                          get_all_employees,
                          get_team_by_name,
                          get_losses,
@@ -24,7 +25,7 @@ from app.queries import (get_player_by_surname,
                          get_members_of_team,
                          get_mvp)
 
-from app.roles import requires_role, check_current_user
+from app.roles import requires_role, check_current_user, roles
 from app.main import main
 from app.main.forms import NameForm
 
@@ -64,14 +65,14 @@ def teams_list():
         coach = get_members_of_team(db, t, role='coach').pop()
         (mvp, points) = get_mvp(db, t)
         teams[t.name] = {
-             "mvp": {
-                 "id": mvp.id,
-                 "points": points,
-                 "full_name": "{} {}".format(mvp.name, mvp.surname)
-             },
-             "coach": {
-                 "full_name": "{} {}".format(coach.name, coach.surname)
-             }
+            "mvp": {
+                "id": mvp.id,
+                "points": points,
+                "full_name": "{} {}".format(mvp.name, mvp.surname)
+            },
+            "coach": {
+                "full_name": "{} {}".format(coach.name, coach.surname)
+            }
         }
     return jsonify(teams)
 
@@ -180,20 +181,21 @@ def championship_management(user=None):
 
 @main.route("/settings")
 def settings(user=None):
-    return redirect(url_for(".employee_management"))
+    return redirect(url_for(".employees"))
 
 
-@main.route("/employee_management")
+@main.route("/employees")
 @login_required
 @check_current_user
 @requires_role('ADMINISTRATOR')
-def employee_management(user=None):
-    return render_template('employee_management.html',
-                           data="Content for admins.",
-                           user=user)
+def employees(user=None):
+    employees = get_all_employees(db)
+    return render_template('employees.html',
+                           user=user,
+                           employees=employees)
 
 
-@main.route("/employee_management/list.json")
+@main.route("/employees/list.json")
 def employee_list():
     employees = []
     for emp in get_all_employees(db):
@@ -205,6 +207,40 @@ def employee_list():
         }
         employees.append(employee)
     return jsonify(employees)
+
+
+@main.route("/employees/manage.json", methods=["GET", "POST"])
+def manage_employees():
+    data = request.get_json()
+    print(data["login"], data["action"])
+    emp = get_employee(db, login=data["login"])
+    if emp is not None:
+        if data["action"] == "update":
+            pass
+        elif data["action"] == "promote":
+            print("action promote")
+            if emp.role < roles['ADMINISTRATOR']:
+                emp.role += 1
+        elif data["action"] == "demote":
+            if emp.role > roles["EMPLOYEE"]:
+                emp.role -= 1
+        elif data["action"] == "remove":
+            pass
+
+        db.session.commit()
+        response_data = {
+            "status": "success",
+            "id": emp.id,
+            "name": emp.name,
+            "surname": emp.surname,
+            "login": emp.login,
+            "role": emp.role
+        }
+    else:
+        response_data = {
+            "status": "failure"
+        }
+    return jsonify(response_data)
 
 
 @main.route("/teams/<team_name>")
@@ -225,12 +261,12 @@ def team_profile(team_name):
         data["num_of_mem"] = len(
             data["players"]) + len(data["coachs"]) + len(data["assistants"])
 
-        score = (wins*3) + (wins_o*2) + (losses_o)
+        score = (wins * 3) + (wins_o * 2) + (losses_o)
 
         if ((scored + received) > 0):
-            percents = 100/(scored+received)
-            per_s = scored*percents
-            per_r = received*percents
+            percents = 100 / (scored + received)
+            per_s = scored * percents
+            per_r = received * percents
         else:
             per_s = 0
             per_r = 0
@@ -251,8 +287,3 @@ def team_profile(team_name):
     else:
         team = None
         return render_template('team_profile.html', team=team)
-
-
-@main.route("/delete.json", methods=["POST"])
-def delete(data):
-    print(request.json)

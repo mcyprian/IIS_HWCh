@@ -6,7 +6,7 @@ from flask_login import current_user
 roles = {
     'EMPLOYEE': 0x0,
     'MANAGER': 0x1,
-    'ADMINISTRATOR': 0xff
+    'ADMINISTRATOR': 0x2
 }
 
 
