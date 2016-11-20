@@ -1,3 +1,13 @@
+hr {
+	border: 0;
+	height: 1px;
+	background-image: linear-gradient(to right, #ffffff, #178ACC, #ffffff);
+}
+
+.panel-body {
+	padding: 0px;
+}
+
 .panel-heading {
 	margin:-1px;
 }
@@ -6,7 +16,21 @@
 	height: 2%;
 }
 
+.avatar-img {
+	height: 70%;
+	width: 70%;
+}
+
 [id^=teamId] {
+	margin: 15px;
 	display: none;
 	height: auto;
+}
+
+.team-header-link > * {
+	display: inline;
+}
+
+.team-header-link > a {
+	float: right;
 }
