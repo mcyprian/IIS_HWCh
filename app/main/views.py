@@ -1,5 +1,5 @@
 from datetime import date, timedelta
-from flask import render_template, redirect, url_for, jsonify
+from flask import render_template, request, redirect, url_for, jsonify
 from flask_login import login_required
 
 from app import db
@@ -62,7 +62,6 @@ def teams_list():
     teams = {}
     for t in get_teams(db):
         coach = get_members_of_team(db, t, role='coach').pop()
-        print(t)
         (mvp, points) = get_mvp(db, t)
         teams[t.name] = {
              "mvp": {
@@ -98,8 +97,10 @@ def players(user=None):
 @main.route("/players/search/<player_surname>")
 @check_current_user
 def player_search(player_surname, user=None):
-    player = (get_player_by_surname(db, player_surname) or
-              get_player_by_surname_regex(db, player_surname))
+    if ' ' in player_surname:
+        player_surname = player_surname.split()[-1]
+    player = (get_player_by_surname(db, player_surname.title()) or
+              get_player_by_surname_regex(db, player_surname.title()))
     if len(player) == 1:
         return redirect(url_for('.player_profile', player_id=player.pop().id))
     elif player == []:
@@ -250,3 +251,8 @@ def team_profile(team_name):
     else:
         team = None
         return render_template('team_profile.html', team=team)
+
+
+@main.route("/delete.json", methods=["POST"])
+def delete(data):
+    print(request.json)
