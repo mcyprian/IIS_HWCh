@@ -34,7 +34,7 @@ function createStandingTable(data) {
 	STANDINGS_DATA = data
 	window.data = STANDINGS_DATA;
 	const filterString = $("#filter-select1").val().toLowerCase()
-	STANDINGS_DATA = sortBy(STANDINGS_DATA, 'name').reverse()
+	STANDINGS_DATA = sortBy(STANDINGS_DATA, 'surname').reverse()
 	STANDINGS_DATA = sortBy(STANDINGS_DATA, filterString).reverse()
 	$("#table-wrap").html(finalTable())
 	$("#pos-toggle").click( () => {
@@ -71,7 +71,7 @@ function wrapPlayerData(pos, player_data) {
 	const filter_select =  $("#filter-select1").val().toLowerCase()
 	return `<tr>
 	<td>${pos}</td>
-	<td>${player_data.name}</td>
+	<td>${player_data.name} ${player_data.surname}</td>
 	<td>${player_data.team}</td>
 	<td>${player_data.position}</td>
 	<td>${player_data[filter_select]}</td>
