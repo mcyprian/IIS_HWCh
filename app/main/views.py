@@ -225,10 +225,11 @@ def manage_employees():
             if emp.role > roles["EMPLOYEE"]:
                 emp.role -= 1
         elif data["action"] == "remove":
-            pass
+            db.session.delete(emp)
 
         db.session.commit()
         response_data = {
+            "action": data["action"],
             "status": "success",
             "id": emp.id,
             "name": emp.name,
@@ -238,6 +239,7 @@ def manage_employees():
         }
     else:
         response_data = {
+            "action": data["action"],
             "status": "failure"
         }
     return jsonify(response_data)

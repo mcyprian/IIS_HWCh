@@ -43,19 +43,23 @@ var callback = function updatePanel(result) {
     let panel = document.getElementById(result.id);
     let head = panel.childNodes[1];
     let body = panel.childNodes[3];
-    head.childNodes[1].innerHTML = result.name + ' ' + result.surname;
-    head.childNodes[3].innerHTML = "login: " + result.login;
-    head.childNodes[5].innerHTML = "position: " + roles[result.role];
-    if (result.role  == 0) {
-        body.childNodes[5].disabled = true;
-        body.childNodes[5].className = "btn btn-warning disabled";
-    } else if (result.role == 2) {
-        body.childNodes[3].disabled = true;
-        body.childNodes[3].className = "btn btn-success disabled";
-    } else {
-        body.childNodes[3].disabled = false;
-        body.childNodes[3].className = "btn btn-success";
-        body.childNodes[5].disabled = false;
-        body.childNodes[5].className = "btn btn-warning";
+    if (result.action == "promote" || result.action == "demote") {
+        head.childNodes[1].innerHTML = result.name + ' ' + result.surname;
+        head.childNodes[3].innerHTML = "login: " + result.login;
+        head.childNodes[5].innerHTML = "position: " + roles[result.role];
+        if (result.role  == 0) {
+            body.childNodes[5].disabled = true;
+            body.childNodes[5].className = "btn btn-warning disabled";
+        } else if (result.role == 2) {
+            body.childNodes[3].disabled = true;
+            body.childNodes[3].className = "btn btn-success disabled";
+        } else {
+            body.childNodes[3].disabled = false;
+            body.childNodes[3].className = "btn btn-success";
+            body.childNodes[5].disabled = false;
+            body.childNodes[5].className = "btn btn-warning";
+        }
+    } else if (result.action == "remove") {
+        panel.remove();
     }
 }

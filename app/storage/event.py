@@ -7,7 +7,7 @@ class Event(db.Model):
     code = db.Column(db.String(64), nullable=False)
     time = db.Column(db.Date, nullable=False, index=True)
     information = db.Column(db.String(255))  # TODO: remove this?
-    employee_id = db.Column(db.Integer, db.ForeignKey('employees.id'), nullable=False)
+    employee_id = db.Column(db.Integer, db.ForeignKey('employees.id'))
     teammember_id = db.Column(db.Integer, db.ForeignKey('teammembers.id'), nullable=False,
                               index=True)
     match_id = db.Column(db.Integer, db.ForeignKey('matches.id'), nullable=True, index=True)
