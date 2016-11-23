@@ -20,12 +20,22 @@ function initList() {
             let empData = { login: buttons[j].id, action: options[i].action };
             buttons[j].addEventListener("click", 
                                         function() {
-                                            postData("/employees/manage.json",
-                                                     empData,
-                                                     callback)
+                                            rmConfirm("/employees/manage.json",
+                                                      empData,
+                                                      callback)
                                         },
                                         false);
         }
+    }
+}
+
+function rmConfirm(url, data, callback) {
+    if (data.action == 'remove') {
+        if (confirm("Are you sure you want to remove account of" + data.login + "?")) {
+            postData(url, data, callback);
+        }
+    } else {
+        postData(url, data, callback);
     }
 }
 
