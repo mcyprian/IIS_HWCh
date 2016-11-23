@@ -18,6 +18,13 @@ function initList() {
         buttons = document.getElementsByClassName(options[i].className);
         for (let j = 0; j < buttons.length; j++) {
             let empData = { login: buttons[j].id, action: options[i].action };
+            if (options[i].action == "update") {
+                buttons[j].addEventListener("click",
+                                            function() {
+                                                updateRedirect(buttons[j].id)
+                                            },
+                                            false);
+            } else {
             buttons[j].addEventListener("click", 
                                         function() {
                                             rmConfirm("/employees/manage.json",
@@ -25,8 +32,13 @@ function initList() {
                                                       callback)
                                         },
                                         false);
+            }
         }
     }
+}
+
+function updateRedirect(login) {
+    window.location="/employees/update/" + login;
 }
 
 function rmConfirm(url, data, callback) {

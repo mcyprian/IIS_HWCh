@@ -1,5 +1,6 @@
 from datetime import date, timedelta
-from flask import render_template, request, redirect, url_for, jsonify
+from flask import (render_template, request, redirect, url_for,
+                   jsonify, flash, abort)
 from flask_login import login_required
 
 from app import db
@@ -27,7 +28,7 @@ from app.queries import (get_player_by_surname,
 
 from app.roles import requires_role, check_current_user, roles
 from app.main import main
-from app.main.forms import NameForm
+from app.main.forms import NameForm, UpdateEmployeeForm
 
 
 @main.route('/')
@@ -195,6 +196,28 @@ def employees(user=None):
                            employees=employees)
 
 
+@main.route("/employees/update/<login>", methods=['GET', 'POST'])
+@login_required
+@check_current_user
+@requires_role('ADMINISTRATOR')
+def update_employee(login, user=None):
+    form = UpdateEmployeeForm()
+    emp = get_employee(db, login=login)
+    if not emp:
+        return abort(404)
+    if form.validate_on_submit():
+        for attr in ("name", "surname", "login", "password"):
+            value = getattr(form, attr, None)
+            if value and value.data:
+                setattr(emp, attr, value.data)
+        db.session.commit()
+        flash("Employee data successfuly updated.")
+        return redirect(url_for(".employees"))
+    return render_template("employee_update.html",
+                           user=user,
+                           form=form)
+
+
 @main.route("/employees/list.json")
 def employee_list():
     employees = []
@@ -212,13 +235,9 @@ def employee_list():
 @main.route("/employees/manage.json", methods=["GET", "POST"])
 def manage_employees():
     data = request.get_json()
-    print(data["login"], data["action"])
     emp = get_employee(db, login=data["login"])
     if emp is not None:
-        if data["action"] == "update":
-            pass
-        elif data["action"] == "promote":
-            print("action promote")
+        if data["action"] == "promote":
             if emp.role < roles['ADMINISTRATOR']:
                 emp.role += 1
         elif data["action"] == "demote":

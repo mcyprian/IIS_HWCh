@@ -7,7 +7,6 @@ from app.roles import check_current_user
 @main.app_errorhandler(404)
 @check_current_user
 def page_not_found(e, user=None):
-    print(user)
     return render_template('404.html', user=user), 404
 
 
