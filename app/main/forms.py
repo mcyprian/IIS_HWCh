@@ -1,6 +1,9 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
+from wtforms import StringField, SubmitField, PasswordField, ValidationError
 from wtforms.validators import Required, Length, EqualTo
+
+from app import db
+from app.queries import get_employee
 
 
 class NameForm(FlaskForm):
@@ -16,3 +19,7 @@ class UpdateEmployeeForm(FlaskForm):
         EqualTo('confirm', message='Passwords must match')])
     confirm = PasswordField('Repeat Password')
     submit = SubmitField('Submit')
+
+    def validate_login(self, field):
+        if field.data != self.login and get_employee(db, self.login.data):
+            raise ValidationError("Login already exist.")

@@ -43,7 +43,7 @@ function updateRedirect(login) {
 
 function rmConfirm(url, data, callback) {
     if (data.action == 'remove') {
-        if (confirm("Are you sure you want to remove account of" + data.login + "?")) {
+        if (confirm("Are you sure you want to remove account of " + data.login + "?")) {
             postData(url, data, callback);
         }
     } else {
