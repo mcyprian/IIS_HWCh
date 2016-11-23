@@ -20,6 +20,7 @@ function showTable() {
 	if( $("#filter-select1").val() !== "ChooseFilter")
 	{
 		if (STANDINGS_DATA === undefined) {
+			showLoading("#table-wrap");
 			getData("/data.json", data => {
 				createStandingTable(data) 
 			});
@@ -32,7 +33,6 @@ function showTable() {
 
 function createStandingTable(data) {
 	STANDINGS_DATA = data
-	window.data = STANDINGS_DATA;
 	const filterString = $("#filter-select1").val().toLowerCase()
 	STANDINGS_DATA = sortBy(STANDINGS_DATA, 'surname').reverse()
 	STANDINGS_DATA = sortBy(STANDINGS_DATA, filterString).reverse()
@@ -107,4 +107,9 @@ function finalTable() {
 		</tbody>
 	</table>`;
 	return table_core;
+}
+
+function showLoading(html_location) {
+	$(html_location).html(
+		`<img class="loading" alt="loding-gif" src="https://mcyprian.fedorapeople.org/loading.gif">`);
 }
