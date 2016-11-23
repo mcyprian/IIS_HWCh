@@ -72,6 +72,13 @@ def get_player_by_id(db, player_id):
                       .first())
 
 
+def get_player_rand(db):
+    """Return random player."""
+    return (db.session.query(Player)
+                      .order_by(func.random())
+                      .first())
+
+
 def get_teams(db):
     """Return list of all Teams."""
     return (db.session.query(Team)
@@ -82,6 +89,13 @@ def get_team_by_name(db, team_name):
     """Return first Team object matching team_name."""
     return (db.session.query(Team)
                       .filter_by(name=team_name)
+                      .first())
+
+
+def get_team_rand(db):
+    """Return random team."""
+    return (db.session.query(Team)
+                      .order_by(func.random())
                       .first())
 
 
