@@ -185,11 +185,6 @@ def championship_management(user=None):
                            user=user)
 
 
-@main.route("/settings")
-def settings(user=None):
-    return redirect(url_for(".employees"))
-
-
 @main.route("/employees")
 @login_required
 @check_current_user
