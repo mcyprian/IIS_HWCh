@@ -254,4 +254,5 @@ def get_employee(db, login):
 def get_all_employees(db):
     """Return list of all employees."""
     return (db.session.query(Employee)
+                      .order_by(Employee.login)
                       .all())
