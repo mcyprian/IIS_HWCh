@@ -45,7 +45,12 @@ def redirect_to_first_day():
 @main.route("/schedule/<day_num>")
 @check_current_user
 def schedule(day_num, user=None):
-    day_num = int(day_num)
+    try:
+        day_num = int(day_num)
+        if day_num > 10:
+            raise ValueError
+    except ValueError:
+        return abort(404)
     arenas = get_all_arenas(db)
     data = {}
     for arena in arenas:
