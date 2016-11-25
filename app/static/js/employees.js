@@ -10,15 +10,12 @@ var roles = ['employee', 'manager', 'administrator'];
 
 function initList() {
     let buttons;
-    let options = [{className: "btn-primary", action: "update" }, 
-                   {className: "btn-success", action: "promote"},
-                   {className: "btn-warning", action: "demote"},
-                   {className: "btn-danger", action: "remove"}];
+    let options = ["update", "promote", "demote", "remove"];
     for (let i = 0; i < options.length; i++) {
-        buttons = document.getElementsByClassName(options[i].className);
+        buttons = document.getElementsByClassName(options[i]);
         for (let j = 0; j < buttons.length; j++) {
-            let empData = { login: buttons[j].id, action: options[i].action };
-            if (options[i].action == "update") {
+            let empData = { login: buttons[j].id, action: options[i] };
+            if (options[i] == "update") {
                 buttons[j].addEventListener("click",
                                             function() {
                                                 updateRedirect(buttons[j].id)
@@ -61,15 +58,15 @@ var callback = function updatePanel(result) {
         head.childNodes[5].innerHTML = "position: " + roles[result.role];
         if (result.role  == 0) {
             body.childNodes[5].disabled = true;
-            body.childNodes[5].className = "btn btn-warning disabled";
+            body.childNodes[5].className = "btn btn-warning demote disabled";
         } else if (result.role == 2) {
             body.childNodes[3].disabled = true;
-            body.childNodes[3].className = "btn btn-success disabled";
+            body.childNodes[3].className = "btn btn-success promote disabled";
         } else {
             body.childNodes[3].disabled = false;
-            body.childNodes[3].className = "btn btn-success";
+            body.childNodes[3].className = "btn btn-success promote";
             body.childNodes[5].disabled = false;
-            body.childNodes[5].className = "btn btn-warning";
+            body.childNodes[5].className = "btn btn-warning demote";
         }
     } else if (result.action == "remove") {
         panel.remove();

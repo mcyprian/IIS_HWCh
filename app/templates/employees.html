@@ -14,6 +14,7 @@
         1: "manager",
         2: "administrator"
     } -%}
+    <a href="/employees/new" id="add-employee" class="btn btn-primary add_emp">Add employee</a>
     <div class="list-group">
         {% for emp in employees %}
         <div class="panel panel-primary" id={{ emp.id }}>
@@ -24,14 +25,14 @@
                 </div>
                 <div class="panel-body" id="pb{{emp.id}}">
                     {% if user.login != emp.login %}
-                        <button type="button" id={{ emp.login }} class="btn btn-primary">Update</button>
-                        <button type="button" id={{ emp.login }} class="btn btn-success
+                        <button type="button" id={{ emp.login }} class="btn btn-primary update">Update</button>
+                        <button type="button" id={{ emp.login }} class="btn btn-success promote
                         {% if emp.role == 2 %}disabled{% endif %}"
                         {% if emp.role == 2 %}disabled{% endif %}>Promote</button>
-                        <button type="button" id={{ emp.login }} class="btn btn-warning
+                        <button type="button" id={{ emp.login }} class="btn btn-warning demote 
                         {% if not emp.role %}disabled{% endif %}"
                         {% if not emp.role %}disabled{% endif %}>Demote</button>                
-                        <button type="button" id={{ emp.login }} class="btn btn-danger">Remove</button>
+                        <button type="button" id={{ emp.login }} class="btn btn-danger remove">Remove</button>
                     {% else %}
                     <p>Data of currently logged in user cannot be modified.</p>
                     {% endif %}

@@ -9,3 +9,17 @@
 .emp-name {
     font-weight: bold;
 }
+
+.panel {
+    display: inline-block;
+    width: 35%;
+    position: relative;
+}
+
+.add_emp {
+    margin: auto;
+}
+
+.row {
+    margin-left: 8%;
+}

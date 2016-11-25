@@ -20,7 +20,6 @@
 
 
 <div class="container">
-
 		<div class="row">
 			<div class="col-md-5">
 				<h2>Day</h2>
@@ -51,18 +50,13 @@
 				{% endif %}
 				{% endfor %}
 			</ul>
-
-
 </div>
-
 
 {% for arena, matches in data.items() %}
 {% if matches %}
 <div class="container fill" id="matches">
   <h2 class="center-text"><b>{{arena}}</b></h2>	
   <div class="row">
-
-
 
 	  {% for match in matches %}
 	    <div class="panel panel-default">
@@ -86,6 +80,10 @@
 	  		<div class="col-lg-6"><h3 class="text-center">Playoff</h3></div>
             {% endif %}
 	  		<div class="col-lg-6"><h3 class="text-center">Time: {{match.match_date}}</h3></div>
+            {% if user %}
+            <a href="/schedule/events/{{match.id}}" id={{match.id}} class="btn
+                btn-primary">Events</a>
+            {% endif %}
 	  	</div>
 	  </div>
 	</div>

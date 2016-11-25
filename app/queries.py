@@ -272,3 +272,11 @@ def get_all_employees(db):
     return (db.session.query(Employee)
                       .order_by(Employee.login)
                       .all())
+
+
+def get_events_of_match(db, match_id):
+    """Return list of events for selected match."""
+    return (db.session.query(Event)
+                      .filter_by(match_id=match_id)
+                      .order_by(Event.id)
+                      .all())

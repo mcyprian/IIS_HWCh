@@ -1,4 +1,4 @@
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 from flexmock import flexmock
 from flask import (render_template, request, redirect, url_for,
                    jsonify, flash, abort)
@@ -11,7 +11,6 @@ from app.queries import (get_player_by_surname,
                          get_teams,
                          get_all_arenas,
                          get_matches_for_arena_by_day,
-                         get_score,
                          get_score_or_none,
                          get_most_productive,
                          get_num_of,
@@ -26,11 +25,13 @@ from app.queries import (get_player_by_surname,
                          get_num_of_scored,
                          get_num_of_received,
                          get_members_of_team,
+                         get_events_of_match,
                          get_mvp)
 
+from app.storage import Employee
 from app.roles import requires_role, check_current_user, roles
 from app.main import main
-from app.main.forms import NameForm, UpdateEmployeeForm
+from app.main.forms import NameForm, UpdateEmployeeForm, NewEmployeeForm
 
 
 @main.route('/')
@@ -73,8 +74,20 @@ def schedule(day_num, user=None):
                 m._home_team = m.home_team
                 m._away_team = m.away_team
 
-
     return render_template('schedule.html', data=data, day=day_num, user=user)
+
+
+@main.route("/schedule/events/<match_id>")
+@check_current_user
+@requires_role('EMPLOYEE')
+def match_events(match_id, user=None):
+    try:
+        match_id = int(match_id)
+    except ValueError:
+        return abort(404)
+    events = get_events_of_match(db, match_id)
+    return render_template('events.html', events=events,
+                           match_id=match_id, user=user)
 
 
 @main.route("/teams")
@@ -231,6 +244,30 @@ def update_employee(login, user=None):
                 setattr(emp, attr, value.data)
         db.session.commit()
         flash("Employee data successfuly updated.")
+        return redirect(url_for(".employees"))
+    return render_template("employee_update.html",
+                           user=user,
+                           form=form)
+
+
+@main.route("/employees/new", methods=['GET', 'POST'])
+@login_required
+@check_current_user
+@requires_role('ADMINISTRATOR')
+def new_employee(user=None):
+    form = NewEmployeeForm()
+    if form.validate_on_submit():
+        print(form.date_of_birth.data)
+        role = roles[form.role.data]
+        emp = Employee(name=form.name.data,
+                       surname=form.surname.data,
+                       login=form.login.data,
+                       date_of_birth=form.date_of_birth.data,
+                       role=roles[form.role.data],
+                       password=form.password.data)
+
+        db.session.add(emp)
+        db.session.commit()
         return redirect(url_for(".employees"))
     return render_template("employee_update.html",
                            user=user,
