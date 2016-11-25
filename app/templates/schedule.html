@@ -69,17 +69,22 @@
 	  <div class="panel-heading">
 	  	<div class="row">
             <div class="col-sm-2"><img
-                src="https://mcyprian.fedorapeople.org/flags/{{match.home_team.code}}" class="img-circle center-block"></div>
-	            <div class="col-sm-3" ><h3  class="text-center">{{match.home_team.name}}</h3></div>
-	            <div class="col-sm-2" ><h3  class="text-center">{{match.home_score|default('--')}} : {{match.away_score|default('--')}}</h3></div>
-	            <div class="col-sm-3"><h3  class="text-center">{{match.away_team.name}}</h3></div>
+                src="https://mcyprian.fedorapeople.org/flags/{{match._home_team.code}}" class="img-circle center-block"></div>
+	            <div class="col-sm-3" ><h3  class="text-center">{{match._home_team.name}}</h3></div>
+	            <div class="col-sm-2" ><h3  class="text-center">{{match._home_score|default('--')}} : {{match._away_score|default('--')}}{% if match.overtime %}p{% endif %}</h3></div>
+
+                <div class="col-sm-3"><h3  class="text-center">{{match._away_team.name}}</h3></div>
                 <div class="col-sm-2" ><img
-                    src="https://mcyprian.fedorapeople.org/flags/{{match.away_team.code}}" class="img-circle center-block"></div>
+                    src="https://mcyprian.fedorapeople.org/flags/{{match._away_team.code}}" class="img-circle center-block"></div>
 	        </div> 
 	  </div>
 	  <div class="panel-body">
 	  	<div class="row">
+            {% if match.group %}
 	  		<div class="col-lg-6"><h3 class="text-center">Group: {{match.group.code}}</h3></div>
+            {% else %}
+	  		<div class="col-lg-6"><h3 class="text-center">Playoff</h3></div>
+            {% endif %}
 	  		<div class="col-lg-6"><h3 class="text-center">Time: {{match.match_date}}</h3></div>
 	  	</div>
 	  </div>

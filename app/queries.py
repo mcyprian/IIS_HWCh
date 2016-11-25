@@ -129,6 +129,22 @@ def get_score(db, m, home=True):
                       .count())
 
 
+def get_score_or_none(db, m, home=True):
+    """Return score of home team in match m if home is true,
+    score of away team otherwise. Return None if match not
+    finished."""
+    attr = 'home_team' if home else 'away_team'
+    if not (db.session.query(Event)
+                      .filter_by(match=m)
+                      .all()):
+        return None
+    return (db.session.query(Event)
+                      .filter_by(match=m)
+                      .filter_by(team=getattr(m, attr))
+                      .filter_by(code='goal')
+                      .count())
+
+
 def get_most_productive(db):
     """Return ordered list of the most productive players."""
     return (db.session.query(Player, func.count(Player.events))

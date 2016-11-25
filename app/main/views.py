@@ -1,4 +1,5 @@
 from datetime import date, timedelta
+from flexmock import flexmock
 from flask import (render_template, request, redirect, url_for,
                    jsonify, flash, abort)
 from flask_login import login_required
@@ -11,6 +12,7 @@ from app.queries import (get_player_by_surname,
                          get_all_arenas,
                          get_matches_for_arena_by_day,
                          get_score,
+                         get_score_or_none,
                          get_most_productive,
                          get_num_of,
                          get_num_of_games,
@@ -45,6 +47,7 @@ def redirect_to_first_day():
 @main.route("/schedule/<day_num>")
 @check_current_user
 def schedule(day_num, user=None):
+    playoffs = [('A1', 'B4'), ('A2', 'B3'), ('A3', 'B2'), ('A4', 'B1')]
     try:
         day_num = int(day_num)
         if day_num > 10:
@@ -56,9 +59,20 @@ def schedule(day_num, user=None):
     for arena in arenas:
         data[arena] = get_matches_for_arena_by_day(db, arena, day_num)
         for m in data[arena]:
-            m.home_score = get_score(db, m, home=True)
-            m.away_score = get_score(db, m, home=False)
+            m.home_score = get_score_or_none(db, m, home=True)
+            m.away_score = get_score_or_none(db, m, home=False)
             m.match_date = str(m.datetime.time())
+            if m.home_score is not None:
+                m._home_score = m.home_score
+                m._away_score = m.away_score
+            if not m.home_team:
+                pair = playoffs.pop()
+                m._home_team = flexmock(name=pair[0], code='EMP')
+                m._away_team = flexmock(name=pair[1], code='EMP')
+            else:
+                m._home_team = m.home_team
+                m._away_team = m.away_team
+
 
     return render_template('schedule.html', data=data, day=day_num, user=user)
 
