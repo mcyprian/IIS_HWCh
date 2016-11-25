@@ -23,6 +23,7 @@
                     <span class="emp-position">position: {{ roles[emp.role] }}</span>
                 </div>
                 <div class="panel-body" id="pb{{emp.id}}">
+                    {% if user.login != emp.login %}
                         <button type="button" id={{ emp.login }} class="btn btn-primary">Update</button>
                         <button type="button" id={{ emp.login }} class="btn btn-success
                         {% if emp.role == 2 %}disabled{% endif %}"
@@ -31,6 +32,9 @@
                         {% if not emp.role %}disabled{% endif %}"
                         {% if not emp.role %}disabled{% endif %}>Demote</button>                
                         <button type="button" id={{ emp.login }} class="btn btn-danger">Remove</button>
+                    {% else %}
+                    <p>Data of currently logged in user cannot be modified.</p>
+                    {% endif %}
                 </div>
             </div>
         {% endfor %}
