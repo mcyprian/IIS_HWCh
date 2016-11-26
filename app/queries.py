@@ -255,3 +255,10 @@ def get_all_employees(db):
     """Return list of all employees."""
     return (db.session.query(Employee)
                       .all())
+
+
+def get_tm_by_id(db, tm_id):
+    """Return object of TeamMember or None if not present."""
+    return (db.session.query(TeamMember)
+            .filter_by(id=tm_id)
+            .first())

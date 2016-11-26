@@ -10,23 +10,21 @@
 
 {% block page_head_content %}
 <div class="container">
-	<div class="jumbotron">
-		<h1>Team profile</h1>
-	</div>
-</div>
-
-{% endblock page_head_content %}
-{% block page_content %}
-{% if team %}
-<div class="container" id="team">
-	<div class="container">
-		<div class="row">
-			<div class="col-md-2"><img id="icon" src="https://mcyprian.fedorapeople.org/flags/{{team.code}}" class="img-circle center-block"></div>
-			<div class="col-md-2" class="text-center"><h2 id="name">{{team.name}}</h2></div>
+	<div class="container" id="team">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-2"><img id="icon" src="https://mcyprian.fedorapeople.org/flags/{{team.code}}" class="img-circle center-block"></div>
+				<div class="col-md-2" class="text-center"><h2 id="name">{{team.name}}</h2></div>
+			</div>
 		</div>
 	</div>
 </div>
-
+{% endblock page_head_content %}
+{% block page_content %}
+{% if user %}
+	<a href="/team_management/{{team.name}}" class="btn btn-primary">Edit this team</a>
+{% endif %}
+{% if team %}
 <div>
 	<div class="row" id="team_stats">
 		<div class="col-sm-6">
@@ -77,7 +75,6 @@
 		</div>
 	</div>
 </div>
-
 
 <ul class="nav nav-tabs nav-justified">
   <li role="presentation" class="active"><a data-toggle="tab" href="#Coach">Coach</a></li>

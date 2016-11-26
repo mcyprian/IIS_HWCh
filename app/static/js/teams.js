@@ -10,8 +10,6 @@ function createTeamList(data){
 	let html_result;
 	let flagUrl;
 	let team_body =  "";
-	window.data = data;
-
 	for(let i = 0; i < teams.length; i++) {
 		let country_name = teams[i];
 		flagUrl = getCountryFlag(getCountryCode(country_name));
@@ -34,7 +32,6 @@ function createTeamList(data){
 }	
 
 function createTeamBody(country_data, country_name) {
-	console.log("IN team body ",country_data)
 	const county_header = getCountryHeader(country_name);
 	const mvp_player = createPersonDiv(country_data, "mvp");
 	const coach = createPersonDiv(country_data, "coach");
@@ -51,7 +48,6 @@ function createTeamBody(country_data, country_name) {
 }
 
 function createPersonDiv (country_data, position) {
-	console.log("IN person div ",country_data)
 	const mvp_or_coach = (position === "mvp" ? "The Most Valuable Player": "Coach");
 	const name = (position === "mvp" ? country_data.mvp.full_name : country_data.coach.full_name);
 	let link = "";
@@ -68,12 +64,12 @@ function createPersonDiv (country_data, position) {
 		<div class="thumbnail">
 			<div class="caption">
 				<div class="row">
-					<div class="col-md-6">
+					<div class="col-md-6 person-text">
 						<h3>${name}</h3>
 						${points}
 						${link}
 					</div>
-					<div class="col-md-6">
+					<div class="col-md-6 person-avatar">
 						<img src="https://mcyprian.fedorapeople.org/avatar.png" class="avatar-img">
 					</div>
 				</div>

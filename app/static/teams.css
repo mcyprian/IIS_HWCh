@@ -17,8 +17,20 @@ hr {
 }
 
 .avatar-img {
-	height: 70%;
-	width: 70%;
+	max-height:200px;
+	max-width: 200px;
+	height: auto;
+	width: auto;
+}
+
+.person-text {
+	float: left;
+	display: inline;
+}
+
+.person-avatar {
+	float: right;
+	display: inline;
 }
 
 [id^=teamId] {

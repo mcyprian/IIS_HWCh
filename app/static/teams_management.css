@@ -1,0 +1,28 @@
+.row {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.member {
+	position: relative;
+	display: inline-block;
+	padding: 4px;
+	margin: 5px;
+	margin-bottom: 20px;
+	background-color: #ffffff;
+	border: 1px solid #dddddd;
+	border-radius: 4px;
+	min-width: 17.5%;
+}
+
+.member-edit {
+	float: right;
+	margin-left: auto;
+}
+.remove-button {
+	border: none;
+	background: none;
+	padding: 0%;
+	display: block;
+}

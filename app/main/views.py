@@ -24,11 +24,15 @@ from app.queries import (get_player_by_surname,
                          get_num_of_scored,
                          get_num_of_received,
                          get_members_of_team,
+                         get_tm_by_id,
                          get_mvp)
 
 from app.roles import requires_role, check_current_user, roles
 from app.main import main
-from app.main.forms import NameForm, UpdateEmployeeForm
+from app.main.forms import (NameForm, UpdateEmployeeForm,
+                            NewPlayer, NewTeamMember)
+
+from app.storage import Player, TeamMember
 
 
 @main.route('/')
@@ -56,7 +60,7 @@ def schedule(day_num, user=None):
 @main.route("/teams")
 @check_current_user
 def teams(user=None):
-    return render_template('teams.html', data="Overview of teams...", user=user)
+    return render_template('teams.html', user=user)
 
 
 @main.route("/teams/list.json")
@@ -138,6 +142,123 @@ def player_profile(player_id, user=None):
 def standings(user=None):
     return render_template('standings.html', data="Various standings...",
                            user=user)
+
+
+@main.route("/team_management/<team_name>", methods=['GET', 'POST'])
+@login_required
+@check_current_user
+@requires_role('EMPLOYEE')
+def team_management(team_name, user=None):
+    data = request.get_json()
+    if data is not None:
+        player = get_tm_by_id(db, data["rm"])
+        db.session.delete(player)
+        db.session.commit()
+    team = get_team_by_name(db, team_name)
+    team_members = {"players": get_members_of_team(db, team, role='player'),
+                    "coach": get_members_of_team(db, team, role='coach'),
+                    "assistants": get_members_of_team(
+                        db, team, role='assistant')}
+    if team is not None:
+        return render_template('teams_management.html', team=team,
+                               team_members=team_members, user=user)
+    else:
+        return abort(404)
+
+
+@main.route("/team_management/<team_name>/new_player", methods=['GET', 'POST'])
+@login_required
+@check_current_user
+@requires_role('EMPLOYEE')
+def new_player(team_name, user=None):
+    form = NewPlayer()
+    team = get_team_by_name(db, team_name)
+    if team is not None:
+        if form.validate_on_submit():
+            player = Player(name=form.name.data,
+                            surname=form.surname.data,
+                            date_of_birth=form.date_of_birth.data,
+                            role="player",
+                            team=team,
+                            number=form.number.data,
+                            position=form.position.data,
+                            club=form.club.data)
+            db.session.add(player)
+            db.session.commit()
+            return redirect(url_for(".team_management", team_name=team_name,
+                                    user=user))
+        else:
+            return render_template("new_player.html", form=form)
+    else:
+        return abort(404)
+
+
+@main.route("/team_management/<team_name>/new_member", methods=['GET', 'POST'])
+@login_required
+@check_current_user
+@requires_role('EMPLOYEE')
+def new_member(team_name, user=None):
+    form = NewTeamMember()
+    team = get_team_by_name(db, team_name)
+    if team is not None:
+        if form.validate_on_submit():
+            member = TeamMember(name=form.name.data,
+                                surname=form.surname.data,
+                                date_of_birth=form.date_of_birth.data,
+                                role=form.role.data,
+                                team=team)
+            db.session.add(member)
+            db.session.commit()
+            return redirect(url_for(".team_management", team_name=team_name,
+                                    user=user))
+        else:
+            return render_template("new_member.html", form=form)
+    else:
+        return abort(404)
+
+
+@main.route("/team_management/<team_name>/edit/<member_id>",
+            methods=['GET', 'POST'])
+@login_required
+@check_current_user
+@requires_role('EMPLOYEE')
+def edit_member(team_name, member_id, user=None):
+    team = get_team_by_name(db, team_name)
+    member = get_tm_by_id(db, member_id)
+    if member.role != "player":
+        form = NewTeamMember(
+            edit=True,
+            name=member.name,
+            surname=member.surname,
+            birth=member.date_of_birth,
+            role=member.role)
+    else:
+        form = NewPlayer(
+            edit=True,
+            name=member.name,
+            surname=member.surname,
+            birth=member.date_of_birth,
+            jersey=int(member.number),
+            position=member.position,
+            club=member.club)
+    if team is not None and member is not None:
+        if form.validate_on_submit():
+            member.name = form.name.data
+            member.surname = form.surname.data
+            member.date_of_birth = form.date_of_birth.data
+            if member.role != "player":
+                member.role = form.role.data
+            else:
+                member.number = form.number.data
+                member.position = form.position.data
+                member.club = form.club.data
+            db.session.commit()
+            return redirect(url_for(".team_management", team_name=team_name,
+                                    user=user))
+        else:
+            return render_template("edit_member.html", form=form)
+    else:
+        return abort(404)
 
 
 @main.route("/standings/data.json")
@@ -265,7 +386,8 @@ def manage_employees():
 
 
 @main.route("/teams/<team_name>")
-def team_profile(team_name):
+@check_current_user
+def team_profile(team_name, user=None):
     team = get_team_by_name(db, team_name)
     if team is not None:
         wins = get_wins(db, team, 0)
@@ -303,7 +425,8 @@ def team_profile(team_name):
                                losses_o=losses_o,
                                score=score,
                                per_s=per_s,
-                               per_r=per_r)
+                               per_r=per_r,
+                               user=user)
 
     else:
         team = None
