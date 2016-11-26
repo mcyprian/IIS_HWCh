@@ -164,7 +164,8 @@ def fill_db():
             for e in range(randrange(50, 110)):
                 team = sel_teams[randrange(2)]
                 event_type = events[randrange(len(events))]
-                event_time = match_date + datetime.timedelta(randrange(20))
+                event_time = datetime.timedelta(minutes=randrange(60),
+                                                seconds=randrange(60))
                 picked_player = players[team][randrange(len(players[team]))]
                 add_row(Event(code=event_type, time=event_time, employee=employee,
                               player=picked_player, match=matches[-1],
@@ -196,7 +197,8 @@ def fill_db():
 
             if home_score == away_score:
                 matches[m].overtime = randrange(1, 3)
-                event_time = match_date + datetime.timedelta(randrange(20, 30))
+                event_time = datetime.timedelta(minutes=randrange(60),
+                                                seconds=randrange(60))
                 team = sel_teams[randrange(2)]
                 picked_players = sample(players[team], 3)
                 add_row(Event(code='assist', time=event_time, employee=employee,
@@ -256,23 +258,23 @@ def fill_db():
                           role='player', number=8, position='forward', club='Washington Capitals',
                           team=rus), rows)
 
-    goal = add_row(Event(code='goal', time=datetime.datetime.now() + datetime.timedelta(randrange(20)),
+    goal = add_row(Event(code='goal', time=datetime.timedelta(randrange(20)),
                          employee=employees[0], player=alex,
                          match=matches[0]), rows)
 
-    goal = add_row(Event(code='goal', time=datetime.datetime.now() + datetime.timedelta(randrange(20)),
+    goal = add_row(Event(code='goal', time=datetime.timedelta(randrange(20)),
                          employee=employees[0], player=alex,
                          match=matches[0]), rows)
 
-    goal = add_row(Event(code='goal', time=datetime.datetime.now() + datetime.timedelta(randrange(20)),
+    goal = add_row(Event(code='goal', time=datetime.timedelta(randrange(20)),
                          employee=employees[0], player=alex,
                          match=matches[0]), rows)
 
-    goal = add_row(Event(code='goal', time=datetime.datetime.now() + datetime.timedelta(randrange(20)),
+    goal = add_row(Event(code='goal', time=datetime.timedelta(randrange(20)),
                          employee=employees[0], player=alex,
                          match=matches[0]), rows)
 
-    goal = add_row(Event(code='assist', time=datetime.datetime.now() + datetime.timedelta(randrange(20)),
+    goal = add_row(Event(code='assist', time=datetime.timedelta(randrange(20)),
                          employee=employees[0], player=alex,
                          match=matches[0]), rows)
 

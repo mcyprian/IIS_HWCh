@@ -2,21 +2,13 @@
 	margin: -1px;
 }
 
-.emp-data {
-    padding-left: 50px;
-}
-
-.emp-name {
-    font-weight: bold;
-}
-
 .panel {
     display: inline-block;
-    width: 35%;
+    width: 40%;
     position: relative;
 }
 
-.add_emp {
+.add-button {
     margin-bottom: 4px;
 }
 

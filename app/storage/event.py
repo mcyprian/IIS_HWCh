@@ -5,7 +5,7 @@ class Event(db.Model):
     __tablename__ = 'events'
     id = db.Column(db.Integer, primary_key=True)
     code = db.Column(db.String(64), nullable=False)
-    time = db.Column(db.Date, nullable=False, index=True)
+    time = db.Column(db.Interval, nullable=False, index=True)
     information = db.Column(db.String(255))  # TODO: remove this?
     employee_id = db.Column(db.Integer, db.ForeignKey('employees.id'))
     teammember_id = db.Column(db.Integer, db.ForeignKey('teammembers.id'), nullable=False,

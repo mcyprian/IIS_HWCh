@@ -12,7 +12,7 @@ class PlayedIn(db.Model):
         return '<PlayedIn {}, {}>'.format(self.player_id, self.formation_id)
 
 
-class Formation(db.Model):  # TODO property get team home/away
+class Formation(db.Model):
     __tablename__ = 'formations'
     id = db.Column(db.Integer, primary_key=True)
     match_id = db.Column(db.Integer, db.ForeignKey('matches.id'), nullable=False)

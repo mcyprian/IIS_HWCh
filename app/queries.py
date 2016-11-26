@@ -24,6 +24,13 @@ def get_all_arenas(db):
                            .all())]
 
 
+def get_match_by_id(db, match_id):
+    """Return selected match."""
+    return (db.session.query(Match)
+                      .filter_by(id=match_id)
+                      .first())
+
+
 def get_matches_by_day(db, day_num):
     """Return all matches scheduled for day day_num of the tournament."""
     match_date = START_DAY + datetime.timedelta(day_num - 1)
@@ -274,9 +281,16 @@ def get_all_employees(db):
                       .all())
 
 
+def get_event(db, event_id):
+    """Return selsected event."""
+    return (db.session.query(Event)
+                      .filter_by(id=event_id)
+                      .first())
+
+
 def get_events_of_match(db, match_id):
     """Return list of events for selected match."""
     return (db.session.query(Event)
                       .filter_by(match_id=match_id)
-                      .order_by(Event.id)
+                      .order_by(Event.time)
                       .all())

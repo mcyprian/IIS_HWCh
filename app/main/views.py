@@ -1,8 +1,8 @@
-from datetime import date, timedelta, datetime
+from datetime import date, timedelta
 from flexmock import flexmock
 from flask import (render_template, request, redirect, url_for,
                    jsonify, flash, abort)
-from flask_login import login_required
+from flask_login import login_required, current_user
 
 from app import db
 from app.queries import (get_player_by_surname,
@@ -26,12 +26,15 @@ from app.queries import (get_player_by_surname,
                          get_num_of_received,
                          get_members_of_team,
                          get_events_of_match,
+                         get_event,
+                         get_match_by_id,
                          get_mvp)
 
-from app.storage import Employee
+from app.storage import Employee, Event
 from app.roles import requires_role, check_current_user, roles
 from app.main import main
-from app.main.forms import NameForm, UpdateEmployeeForm, NewEmployeeForm
+from app.main.forms import (NameForm, UpdateEmployeeForm, NewEmployeeForm,
+                            UpdateEventForm, NewEventForm)
 
 
 @main.route('/')
@@ -86,8 +89,122 @@ def match_events(match_id, user=None):
     except ValueError:
         return abort(404)
     events = get_events_of_match(db, match_id)
+    match = get_match_by_id(db, match_id)
     return render_template('events.html', events=events,
-                           match_id=match_id, user=user)
+                           match=match, user=user)
+
+
+@main.route("/schedule/events/update/<event_id>", methods=['GET', 'POST'])
+@login_required
+@check_current_user
+@requires_role('ADMINISTRATOR')
+def update_event(event_id, user=None):
+    try:
+        event_id = int(event_id)
+    except ValueError:
+        return abort(404)
+
+    ev = get_event(db, event_id=event_id)
+    if not ev:
+        return abort(404)
+    teams = [("home", ev.match.home_team.name),
+             ("away", ev.match.away_team.name)]
+    match_participants = (
+        get_members_of_team(db, ev.match.home_team, role='player') +
+        get_members_of_team(db, ev.match.away_team, role='player'))
+    players = [((str(ev.player.id), '{} {} ({})'.format(
+            ev.player.name, ev.player.surname, ev.player.team.code)))]
+    for player in match_participants:
+        if player == ev.player:
+            continue
+        players.append((str(player.id), '{} {} ({})'.format(
+            player.name, player.surname, player.team.code)))
+    form = UpdateEventForm(teams=teams, players=players)
+    title = "Update of event number {}".format(ev.id)
+
+    if form.validate_on_submit():
+        if form.code.data:
+            ev.code = form.code.data
+        ev.time = timedelta(minutes=form.minutes.data,
+                            seconds=form.seconds.data)
+        if form.team.data == "home":
+            ev.team = ev.match.home_team
+        else:
+            ev.team = ev.match.away_team
+        ev.player = get_player_by_id(db, int(form.player.data))
+        ev.employee = current_user
+        db.session.commit()
+
+        return redirect(url_for('.match_events', match_id=ev.match.id))
+    print(title)
+    return render_template('quick_form.html',
+                           page_title=title,
+                           form=form,
+                           user=user)
+
+
+@main.route("/schedule/events/delete/<event_id>")
+@login_required
+@check_current_user
+@requires_role('ADMINISTRATOR')
+def delete_event(event_id, user=None):
+    try:
+        event_id = int(event_id)
+    except ValueError:
+        return abort(404)
+    ev = get_event(db, event_id=event_id)
+    if not ev:
+        return abort(404)
+    m = ev.match
+    db.session.delete(ev)
+    db.session.commit()
+    return redirect(url_for(".match_events", match_id=m.id))
+
+
+@main.route("/schedule/events/new/<match_id>", methods=['GET', 'POST'])
+@login_required
+@check_current_user
+@requires_role('EMPLOYEE')
+def new_event(match_id, user=None):
+    try:
+        match_id = int(match_id)
+    except ValueError:
+        return abort(404)
+
+    m = get_match_by_id(db, match_id)
+    if not m:
+        return abort(404)
+
+    teams = [("home", m.home_team.name),
+             ("away", m.away_team.name)]
+    match_participants = (
+        get_members_of_team(db, m.home_team, role='player') +
+        get_members_of_team(db, m.away_team, role='player'))
+    players = []
+    for player in match_participants:
+        players.append((str(player.id), '{} {} ({})'.format(
+            player.name, player.surname, player.team.code)))
+    form = NewEventForm(teams=teams, players=players)
+    if form.validate_on_submit():
+        code = form.code.data
+        time = timedelta(minutes=form.minutes.data,
+                         seconds=form.seconds.data)
+        if form.team.data == "home":
+            team = m.home_team
+        else:
+            team = m.away_team
+        player = get_player_by_id(db, int(form.player.data))
+        employee = current_user
+        ev = Event(code=code, time=time, employee=employee, player=player,
+                   match=m, team=team)
+        db.session.add(ev)
+        db.session.commit()
+        return redirect(url_for('.match_events', match_id=m.id))
+    title = "New event in match {}".format(m.id)
+    return render_template('quick_form.html',
+                           form=form,
+                           page_title=title,
+                           user=user)
 
 
 @main.route("/teams")
@@ -245,8 +362,10 @@ def update_employee(login, user=None):
         db.session.commit()
         flash("Employee data successfuly updated.")
         return redirect(url_for(".employees"))
-    return render_template("employee_update.html",
+    title = "Update of employee {}".format(emp.login)
+    return render_template("quick_form.html",
                            user=user,
+                           page_title=title,
                            form=form)
 
 
@@ -257,8 +376,6 @@ def update_employee(login, user=None):
 def new_employee(user=None):
     form = NewEmployeeForm()
     if form.validate_on_submit():
-        print(form.date_of_birth.data)
-        role = roles[form.role.data]
         emp = Employee(name=form.name.data,
                        surname=form.surname.data,
                        login=form.login.data,
@@ -269,8 +386,9 @@ def new_employee(user=None):
         db.session.add(emp)
         db.session.commit()
         return redirect(url_for(".employees"))
-    return render_template("employee_update.html",
+    return render_template("quick_form.html",
                            user=user,
+                           page_title="New employee",
                            form=form)
 
 

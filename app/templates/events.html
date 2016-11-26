@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}HWCh - Events management{% endblock %}
+
+{% block head %}
+    {{super()}}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='events.css')}}">
+{% endblock head %}
+
+{% block page_head_content %}
+<div class="container">
+    <div class="jumbotron">
+        <h1>Events of match {{ match.id }} ({{ match.home_team.code }} vs {{ match.away_team.code
+            }})</h1>
+    </div>
+</div>
+{% endblock page_head_content %}
+
+{% block page_content %}
+    <div class=add-button>
+        <a href="/schedule/events/new/{{ match.id }}"id=btn-{{ match.id }} class="btn btn-primary">Add event</a>
+    </div>
+    <div class="list-group">
+        {% for ev in events %}
+        <div class="panel panel-primary" id={{ ev.id }}>
+                <div class="panel-heading events-list" id=ph{{ ev.id }}>
+                    <span class="ev-id"><b>n.</b> {{ ev.id }}</span>
+                    <span class="ev-code"><b>type:</b> {{ ev.code }}</span>
+                    <span class="ev-time"><b>time:</b> {{ ev.time }}</span>
+                    <span class="ev-emp"><b>employee:</b> {{ ev.employee.login }}</span>
+                    <span class="ev-tmb"><b>player:</b> {{ev.player.name}} {{ ev.player.surname }}</span>
+                    <span class="ev-tmb"><b>team:</b> {{ev.team.code}}</span>
+                </div>
+
+                {% if user and user.role > 1 %}
+                <div class="panel-body" id="pb{{ev.id}}">
+                    <a href="/schedule/events/update/{{ ev.id }}" id={{ ev.id }} class="btn btn-primary update">Update</a>
+                    <a href="/schedule/events/delete/{{ ev.id }}" id={{ ev.id }} class="btn
+                        btn-danger remove">Remove</a>
+                </div>
+                {% endif %}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock page_content %}

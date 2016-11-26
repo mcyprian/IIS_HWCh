@@ -1,7 +1,9 @@
 from flask_wtf import FlaskForm
 from wtforms import (StringField, SubmitField, PasswordField,
-                     ValidationError, DateField, SelectField)
-from wtforms.validators import Required, Length, EqualTo
+                     ValidationError, DateField, SelectField,
+                     IntegerField)
+from wtforms.validators import (Required, Length, EqualTo,
+                                NumberRange, InputRequired)
 
 from app import db
 from app.queries import get_employee
@@ -42,3 +44,31 @@ class NewEmployeeForm(UpdateEmployeeForm):
         for attr in ['name', 'surname', 'login', 'password']:
             self[attr].validators.append(Required())
             self[attr].label.text = '* ' + self[attr].label.text
+
+
+class UpdateEventForm(FlaskForm):
+    code = SelectField('Type', choices=[('shot', 'shot'),
+                                        ('offside', 'offside'),
+                                        ('interference', 'interference'),
+                                        ('goal', 'goal'),
+                                        ('penalty', 'penalty')])
+    minutes = IntegerField('* Minute', validators=[NumberRange(min=0, max=60),
+                                                   InputRequired()])
+    seconds = IntegerField('* Second', validators=[NumberRange(min=0, max=60),
+                                                   InputRequired()])
+    team = SelectField('Team', choices=[])
+    player = SelectField('Player', choices=[])
+    submit = SubmitField('Submit')
+
+    def __init__(self, *args, **kwargs):
+        super(UpdateEventForm, self).__init__(*args, **kwargs)
+        self.team.choices = kwargs['teams']
+        self.player.choices = kwargs['players']
+
+
+class NewEventForm(UpdateEventForm):
+
+    def __init__(self, *args, **kwargs):
+        super(NewEventForm, self).__init__(*args, **kwargs)
+        self.code.validators.append(Required())
+        self.code.label.text = '* ' + self.code.label.text
