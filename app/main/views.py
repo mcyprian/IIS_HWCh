@@ -67,13 +67,18 @@ def redirect_to_first_day():
 @main.route("/schedule/<day_num>")
 @check_current_user
 def schedule(day_num, user=None):
-    playoffs = [('A1', 'B4'), ('A2', 'B3'), ('A3', 'B2'), ('A4', 'B1')]
     try:
         day_num = int(day_num)
         if day_num > 10:
             raise ValueError
     except ValueError:
         return abort(404)
+
+    playoffs = [
+        [('A1', 'B4'), ('A2', 'B3')],
+        [('A3', 'B2'), ('A4', 'B1')],
+        [('A1/B4', 'A4/B1'), ('A2/B3', 'A3/B2')],
+        [('', ''), ('', '')]]
     arenas = get_all_arenas(db)
     data = {}
     for arena in arenas:
@@ -86,7 +91,7 @@ def schedule(day_num, user=None):
                 m._home_score = m.home_score
                 m._away_score = m.away_score
             if not m.home_team:
-                pair = playoffs.pop()
+                pair = playoffs[day_num - 7].pop()
                 m._home_team = flexmock(name=pair[0], code='EMP')
                 m._away_team = flexmock(name=pair[1], code='EMP')
             else:

@@ -113,29 +113,32 @@ def fill_db():
         referees.append(add_row(Referee(name=fake_name(fake), surname=fake_surname(fake),
                                         date_of_birth=fake_date(fake)), rows))
 
-    values = [x % 4 < 2 for x in range(18)]
-    vs = list(combinations([svk, rus, cze, swe], 2)) + list(combinations([fin, usa, can, ger], 2))
+    values = [x & 1 for x in range(22)]
+    vs = [list(combinations([svk, rus, cze, swe], 2)),
+         list(combinations([fin, usa, can, ger], 2))]
 
     # Add matches data
     matches = []
-    match_date = START_DAY
-    for m in range(18):
+    match_date = START_DAY - datetime.timedelta(days=1)
+    for m in range(22):
         employee = employees[randrange(len(employees))]
         if m & 1:
+            match_date = match_date.replace(hour=20)
+        else:
             match_date = match_date.replace(hour=16)
             match_date += datetime.timedelta(1)
-        else:
-            match_date = match_date.replace(hour=20)
 
-        if  m < 10:
-            sel_teams = vs[randrange(len(vs))]
-            vs.remove(sel_teams)
-            group=A if values[m] else B
+        if  m < 12:
+            sel_teams = vs[m & 1][randrange(len(vs[m & 1]))]
+            vs[m & 1].remove(sel_teams)
+            group=sel_teams[0].group
+            arena = 'Bratislava' if group == A else 'Kosice'
         else:
             sel_teams = [None, None]
             group=None
+            arena = 'Bratislava' if values[m] else 'Kosice'
         matches.append(add_row(Match(category='group', datetime=match_date,
-                                     arena='Bratislava' if values[m] else 'Kosice',
+                                     arena=arena,
                                      fans=randrange(3000, 18000),
                                      group=group,
                                      home_team=sel_teams[0],
@@ -176,7 +179,7 @@ def fill_db():
                 team = sel_teams[randrange(2)]
                 event_type = events[randrange(len(events))]
                 # pick participants
-                picked_players = sample(players[team], 3)
+                picked_players = sample(players[team][3:], 3)
                 if event_type == 'goal':
                     if team == sel_teams[0]:
                         home_score += 1
