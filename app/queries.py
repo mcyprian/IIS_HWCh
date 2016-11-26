@@ -294,3 +294,10 @@ def get_events_of_match(db, match_id):
                       .filter_by(match_id=match_id)
                       .order_by(Event.time)
                       .all())
+
+
+def get_tm_by_id(db, tm_id):
+    """Return object of TeamMember or None if not present."""
+    return (db.session.query(TeamMember)
+            .filter_by(id=tm_id)
+            .first())

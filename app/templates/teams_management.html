@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block head %}
+	{{super()}}
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='teams_management.css') }}">
+{% endblock head %}
+
+{% block title %}HWCh - Teams Management{% endblock %}
+
+{% block page_content %}
+
+{% macro showMembers(members) -%}
+{% for member in members %}
+	<div id="member{{member.id}}" class="member">
+		<div class="member-edit">
+			<button class="remove-button" type="button"><span class="glyphicon glyphicon-remove"></span></button> 
+			<a href="/team_management/{{team.name}}/edit/{{member.id}}" class="edit-button"><span class="glyphicon glyphicon-pencil"></span></a> 
+		</div>
+		<h4>{{member.surname}} {{member.name}}</h4>
+	</div>
+{% endfor %}
+{%- endmacro %}
+
+<h1>Team {{team.name}}</h1>
+<a href="/team_management/{{team.name}}/new_player" class="btn btn-default">Add Player</a>
+<a href="/team_management/{{team.name}}/new_member" class="btn btn-default">Add Team Member</a>
+<div id="result-alert"></div>
+<div class="team-members">
+	<h2>Players:</h2>
+		{{showMembers(team_members.players)}}
+	<h2>Coach:</h2>
+		{{showMembers(team_members.coach)}}
+	<h2>Assistants:</h2>
+		{{showMembers(team_members.assistants)}}
+</div>
+{% endblock %}
