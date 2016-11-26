@@ -160,7 +160,7 @@ def fill_db():
         c3.referee = picked_refs[2]
         matches[m].controls.append(c3)
 
-        if m < 6:
+        if m < 7:
             home_score = 0
             away_score = 0
             events = ['shot', 'offside', 'interference']

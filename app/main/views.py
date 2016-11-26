@@ -37,7 +37,7 @@ from app.storage import Employee, Event
 from app.roles import requires_role, check_current_user, roles
 from app.main import main
 from app.main.forms import (NameForm, UpdateEmployeeForm, NewEmployeeForm,
-                            UpdateEventForm, NewEventForm)
+                            UpdateEventForm, NewEventForm, UpdateTeamsForm)
 from app.settings import START_DAY
 
 
@@ -157,7 +157,6 @@ def update_event(event_id, user=None):
         db.session.commit()
 
         return redirect(url_for('.match_events', match_id=ev.match.id))
-    print(title)
     return render_template('quick_form.html',
                            page_title=title,
                            form=form,
@@ -198,14 +197,18 @@ def new_event(match_id, user=None):
 
     teams = [("home", m.home_team.name),
              ("away", m.away_team.name)]
+
     match_participants = (
         get_members_of_team(db, m.home_team, role='player') +
         get_members_of_team(db, m.away_team, role='player'))
+
     players = []
     for player in match_participants:
         players.append((str(player.id), '{} {} ({})'.format(
             player.name, player.surname, player.team.code)))
+
     form = NewEventForm(teams=teams, players=players)
+
     if form.validate_on_submit():
         code = form.code.data
         time = timedelta(minutes=form.minutes.data,
@@ -222,6 +225,37 @@ def new_event(match_id, user=None):
         db.session.commit()
         return redirect(url_for('.match_events', match_id=m.id))
     title = "New event in match {}".format(m.id)
+    return render_template('quick_form.html',
+                           form=form,
+                           page_title=title,
+                           user=user)
+
+
+@main.route("/schedule/teams/<match_id>", methods=['GET', 'POST'])
+@check_current_user
+@requires_role('EMPLOYEE')
+def update_teams(match_id, user=None):
+    try:
+        match_id = int(match_id)
+    except ValueError:
+        return abort(404)
+    match = get_match_by_id(db, match_id)
+    if match is None:
+        return abort(404)
+
+    teams = []
+    for team in get_teams(db):
+        teams.append((team.name, '{} ({})'.format(
+            team.name, team.group.code)))
+
+    form = UpdateTeamsForm(teams=teams)
+    if form.validate_on_submit():
+        match.home_team = get_team_by_name(db, form.home_team.data)
+        match.away_team = get_team_by_name(db, form.away_team.data)
+        db.session.commit()
+        return redirect(url_for(".schedule", day_num=1))
+
+    title = "Set teams of match {}".format(match.id)
     return render_template('quick_form.html',
                            form=form,
                            page_title=title,

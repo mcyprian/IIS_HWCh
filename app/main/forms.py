@@ -9,6 +9,23 @@ from app import db
 from app.queries import get_employee
 
 
+class NotEqualTo(object):
+
+    def __init__(self, fieldname):
+        self.fieldname = fieldname
+
+    def __call__(self, form, field):
+        try:
+            other = form[self.fieldname]
+        except KeyError:
+            raise ValidationError(
+                field.gettext("Invalid field name '{}'.".format(
+                        self.fieldname)))
+        if field.data == other.data:
+            raise ValidationError('Field cannot be equal to {}s.'.format(
+                self.fieldname))
+
+
 class NameForm(FlaskForm):
     name = StringField('Insert name', validators=[Required(), Length(0, 64)])
     submit = SubmitField('Search')
@@ -72,3 +89,19 @@ class NewEventForm(UpdateEventForm):
         super(NewEventForm, self).__init__(*args, **kwargs)
         self.code.validators.append(Required())
         self.code.label.text = '* ' + self.code.label.text
+
+
+class UpdateTeamsForm(FlaskForm):
+    home_team = SelectField('Home team', choices=[],
+                            validators=[NotEqualTo('away_team')])
+    away_team = SelectField('Away team', choices=[])
+    submit = SubmitField('Submit')
+
+    def __init__(self, *args, **kwargs):
+        super(UpdateTeamsForm, self).__init__(*args, **kwargs)
+        self.home_team.choices = kwargs['teams']
+        self.away_team.choices = kwargs['teams']
+
+    def validator(self):
+        if self.home_team == self.away_team:
+            raise ValidationError("Home and away team cannot be the same")
