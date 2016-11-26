@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 _basedir = os.path.abspath(os.path.dirname(__file__))
 
 
@@ -6,6 +7,7 @@ class Config:
     SECRET_KEY = 'Replace this with a proper key.'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
     SQLALCHEMY_TRACK_MODIFICATIONS = True
+    PERMANENT_SESSION_LIFETIME = timedelta(minutes=3)
 
 
 class DevelConfig(Config):
