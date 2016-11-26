@@ -41,6 +41,11 @@ def index(user=None):
     return render_template('index.html', user=user)
 
 
+@main.route("/schedule")
+def redirect_to_first_day():
+    return redirect(url_for(".schedule", day_num=1))
+
+
 @main.route("/schedule/<day_num>")
 @check_current_user
 def schedule(day_num, user=None):
@@ -299,11 +304,6 @@ def championship_management(user=None):
     return render_template('blank.html',
                            data="Only managers can see this.",
                            user=user)
-
-
-@main.route("/settings")
-def settings(user=None):
-    return redirect(url_for(".employees"))
 
 
 @main.route("/employees")
