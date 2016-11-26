@@ -22,16 +22,18 @@
 					<div class="row">
 						<h2 id="head" class="text-center">Next match</h2>
 						<div class="col-sm-2"></div>
-						<div class="col-sm-2"> <img src="https://mcyprian.fedorapeople.org/flags/SVK" class="img-circle center-block"></div>
-			            <div class="col-sm-2" ><h3  class="text-center">Slovakia</h3></div>
-			            <div class="col-sm-2"><h3  class="text-center">Slovakia</h3></div>
-		                <div class="col-sm-2" ><img src="https://mcyprian.fedorapeople.org/flags/SVK" class="img-circle center-block"></div>
+                        <div class="col-sm-2"> <img
+                             src="https://mcyprian.fedorapeople.org/flags/{{games[0].home_team.code}}" class="img-circle center-block"></div>
+                        <div class="col-sm-2" ><h3  class="text-center">{{games[0].home_team.name}}</h3></div>
+                        <div class="col-sm-2"><h3  class="text-center">{{games[0].away_team.name}}</h3></div>
+                        <div class="col-sm-2" ><img
+                             src="https://mcyprian.fedorapeople.org/flags/{{games[0].away_team.code}}" class="img-circle center-block"></div>
 		                <div class="col-sm-2"></div>
 	       			 </div> 
 					</div> 
 				<div class="carousel-caption">
-					<h3>Day: 1</h3>
-					<h3>Date: 20:20:20</h3>
+                    <h3>Day: {{games[0].day}}</h3>
+                    <h3>Date: {{games[0].datetime.time()}}</h3>
 				</div>      
 			</div>
 
@@ -40,16 +42,20 @@
 					<div class="row">
 							<h2 id="head" class="text-center">Next match</h2>
 							<div class="col-sm-2"></div>
-							<div class="col-sm-2"> <img src="https://mcyprian.fedorapeople.org/flags/SVK" class="img-circle center-block"></div>
-				            <div class="col-sm-2" ><h3  class="text-center">Slovakia</h3></div>
-				            <div class="col-sm-2"><h3  class="text-center">Slovakia</h3></div>
-			                <div class="col-sm-2" ><img src="https://mcyprian.fedorapeople.org/flags/SVK" class="img-circle center-block"></div>
+							<div class="col-sm-2"> <img
+            src="https://mcyprian.fedorapeople.org/flags/{{games[1].home_team.code}}" class="img-circle center-block"></div>
+                            <div class="col-sm-2" ><h3
+                                 class="text-center">{{games[1].home_team.name}}</h3></div>
+                            <div class="col-sm-2"><h3
+                                 class="text-center">{{games[1].away_team.name}}</h3></div>
+			                <div class="col-sm-2" ><img
+                        src="https://mcyprian.fedorapeople.org/flags/{{games[1].away_team.code}}" class="img-circle center-block"></div>
 			                <div class="col-sm-2"></div>
 		       			 </div> 
 						</div> 
 				<div class="carousel-caption">
-					<h3>Day: 2</h3>
-					<h3>Date: 14:20:20</h3>
+                    <h3>Day: {{games[1].day}}</h3>
+                    <h3>Time: {{games[1].datetime.time()}}</h3>
 				</div>      
 			</div>
 		</div>
@@ -72,15 +78,15 @@
 			<div class="thumbnail">
 				<div class="row">
 					<div class="col-md-4" id="teams">
-						<img id="icon" src="https://mcyprian.fedorapeople.org/flags/SVK" class="img-circle center-block">
+                        <img id="icon" src="https://mcyprian.fedorapeople.org/flags/{{ team.code }}" class="img-circle center-block">
 					</div>
 					<div class="col-md-8" id="teams">
-						<h2 id="team_name" class="text-left"><b>Slovakia</b></h2>
+                        <h2 id="team_name" class="text-left"><b>{{ team.name }}</b></h2>
 					</div>
 					
 				</div>
 				<div class="caption" id="team_caption">
-					<a href="#" class="btn btn-primary" role="button">Know more</a>
+                    <a href="/teams/{{ team.name }}" class="btn btn-primary" role="button">Know more</a>
 				</div>
 			</div>
 		</div>
@@ -89,8 +95,8 @@
 				<div class="thumbnail">
 				<img src="https://mcyprian.fedorapeople.org/avatar.png" class="imgBorder" width="200" height="200" >
 				<div class="caption">
-					<h3>Name Surname</h3>
-					<a href="#" class="btn btn-primary" role="button">Know more</a>
+                    <h3>{{ player.name }} {{ player.surname }} ({{player.team.code}})</h3>
+					<a href="/players/{{ player.id }}" class="btn btn-primary" role="button">Know more</a>
 				</div>
 			</div>
 		</div>
@@ -101,7 +107,7 @@
 			<div class="topic"> </div>
 			<div class="caption">
 				<p>"text of topic"</p>
-				<a href="#" class="btn btn-primary" role="button">Know more</a>
+                <a href="#" class="btn btn-primary" role="button">Know more</a>
 				</div>
 			</div>
 		</div>

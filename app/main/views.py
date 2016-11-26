@@ -1,4 +1,4 @@
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 from flexmock import flexmock
 from flask import (render_template, request, redirect, url_for,
                    jsonify, flash, abort)
@@ -11,6 +11,7 @@ from app.queries import (get_player_by_surname,
                          get_teams,
                          get_all_arenas,
                          get_matches_for_arena_by_day,
+                         get_matches_by_day,
                          get_score_or_none,
                          get_most_productive,
                          get_num_of,
@@ -28,19 +29,34 @@ from app.queries import (get_player_by_surname,
                          get_events_of_match,
                          get_event,
                          get_match_by_id,
-                         get_mvp)
+                         get_mvp,
+                         get_player_rand,
+                         get_team_rand)
 
 from app.storage import Employee, Event
 from app.roles import requires_role, check_current_user, roles
 from app.main import main
 from app.main.forms import (NameForm, UpdateEmployeeForm, NewEmployeeForm,
                             UpdateEventForm, NewEventForm)
+from app.settings import START_DAY
 
 
 @main.route('/')
 @check_current_user
 def index(user=None):
-    return render_template('index.html', user=user)
+    player = get_player_rand(db)
+    team = get_team_rand(db)
+    difference = (datetime.today() - START_DAY).days
+    games1 = get_matches_by_day(db, difference + 1)
+    games2 = get_matches_by_day(db, difference + 2)
+    for game in games1:
+        game.day = difference + 1
+    for game in games2:
+        game.day = difference + 2
+    return render_template('index.html', player=player,
+                           team=team,
+                           games=games1 + games2,
+                           user=user)
 
 
 @main.route("/schedule")

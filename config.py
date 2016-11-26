@@ -5,6 +5,7 @@ _basedir = os.path.abspath(os.path.dirname(__file__))
 class Config:
     SECRET_KEY = 'Replace this with a proper key.'
     SQLALCHEMY_COMMIT_ON_TEARDOWN = True
+    SQLALCHEMY_TRACK_MODIFICATIONS = True
 
 
 class DevelConfig(Config):
