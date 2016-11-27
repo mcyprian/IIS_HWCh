@@ -32,6 +32,7 @@ from app.queries import (get_player_by_surname,
                          get_mvp,
                          get_player_rand,
                          get_tm_by_id,
+                         can_be_removed,
                          get_team_rand)
 
 from app.storage import Employee, Event
@@ -47,15 +48,26 @@ from app.storage import Player, TeamMember
 @main.route('/')
 @check_current_user
 def index(user=None):
-    player = get_player_rand(db)
-    team = get_team_rand(db)
+    team = get_team_rand(db) or flexmock(name="Missing data", code="EMP")
+    player = get_player_rand(db) or flexmock(name="Missing",
+                                             surname="data",
+                                             team=team)
     difference = (datetime.today() - START_DAY).days
     games1 = get_matches_by_day(db, difference + 1)
+    if not games1:
+        games1 = [flexmock(home_team=flexmock(name="Missing data", code='EMP'),
+                           away_team=flexmock(name="Missing data", code='EMP'),
+                           datetime=flexmock(time=lambda: "00:00"))]
     games2 = get_matches_by_day(db, difference + 2)
+    if not games2:
+        games2 = [flexmock(home_team=flexmock(name="Missing data", code='EMP'),
+                           away_team=flexmock(name="Missing data", code='EMP'),
+                           datetime=flexmock(time=lambda: "00:00"))]
     for game in games1:
         game.day = difference + 1
     for game in games2:
         game.day = difference + 2
+
     return render_template('index.html', player=player,
                            team=team,
                            games=games1 + games2,
@@ -275,8 +287,13 @@ def teams(user=None):
 def teams_list():
     teams = {}
     for t in get_teams(db):
-        coach = get_members_of_team(db, t, role='coach').pop()
+        try:
+            coach = get_members_of_team(db, t, role='coach').pop()
+        except IndexError:
+            coach = flexmock(name='Missing', surname='Coach')
         (mvp, points) = get_mvp(db, t)
+        if not mvp:
+            (mvp, points) = (flexmock(name="Missing", surname="Player"), 0)
         teams[t.name] = {
             "mvp": {
                 "id": mvp.id,
@@ -367,6 +384,9 @@ def team_management(team_name, user=None):
                     "coach": get_members_of_team(db, team, role='coach'),
                     "assistants": get_members_of_team(
                         db, team, role='assistant')}
+    for player in team_members["players"]:
+        player.del_flag = can_be_removed(db, player)
+
     if team is not None:
         return render_template('teams_management.html', team=team,
                                team_members=team_members, user=user)
@@ -634,6 +654,9 @@ def team_profile(team_name, user=None):
             "coachs": get_members_of_team(db, team, 'coach'),
             "assistants": get_members_of_team(db, team, 'assistant')
         }
+        for key, value in data.items():
+            if not value:
+                data[key] = [flexmock(name="Missing", surname="Member")]
         data["num_of_mem"] = len(
             data["players"]) + len(data["coachs"]) + len(data["assistants"])
 
@@ -662,5 +685,4 @@ def team_profile(team_name, user=None):
                                user=user)
 
     else:
-        team = None
-        return render_template('team_profile.html', team=team)
+        return abort(404)

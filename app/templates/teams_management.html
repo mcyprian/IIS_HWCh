@@ -14,7 +14,9 @@
 {% for member in members %}
 	<div id="member{{member.id}}" class="member">
 		<div class="member-edit">
+            {% if member.del_flag is not defined or member.del_flag == True %}
 			<button class="remove-button" type="button"><span class="glyphicon glyphicon-remove"></span></button> 
+            {% endif %}
 			<a href="/team_management/{{team.name}}/edit/{{member.id}}" class="edit-button"><span class="glyphicon glyphicon-pencil"></span></a> 
 		</div>
 		<h4>{{member.surname}} {{member.name}}</h4>

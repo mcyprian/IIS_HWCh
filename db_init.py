@@ -161,6 +161,35 @@ def fill_db():
         matches[m].controls.append(c3)
 
         if m < 7:
+            participants = {}
+            # home formations
+            team = sel_teams[0]
+            player_range = sample(players[team][:3], 2) # golies
+            player_range += sample(players[team][3:16], 12) # forwards
+            player_range += sample(players[team][16:], 6) # defenders
+            participants[team] = [p for p in player_range]
+            for f in range(4):
+                formation = add_row(Formation(team_role='home', match=matches[-1]), rows)
+                for n in range(4):
+                    p1 = add_row(PlayedIn(time=datetime.timedelta(
+                        minutes=randrange(5, 20), seconds=randrange(60))), rows)
+                    p1.player = player_range.pop()
+                    formation.playedins.append(p1)
+
+            # away formations
+            team = sel_teams[1]
+            player_range = sample(players[team][:3], 2) # golies
+            player_range += sample(players[team][3:16], 12) # forwards
+            player_range += sample(players[team][16:], 6) # defenders
+            participants[team] = [p for p in player_range]
+            for f in range(4):
+                formation = add_row(Formation(team_role='away', match=matches[-1]), rows)
+                for n in range(4):
+                    p1 = add_row(PlayedIn(time=datetime.timedelta(
+                        minutes=randrange(5, 20), seconds=randrange(60))), rows)
+                    p1.player = player_range.pop()
+                    formation.playedins.append(p1)
+
             home_score = 0
             away_score = 0
             events = ['shot', 'offside', 'interference']
@@ -169,7 +198,7 @@ def fill_db():
                 event_type = events[randrange(len(events))]
                 event_time = datetime.timedelta(minutes=randrange(60),
                                                 seconds=randrange(60))
-                picked_player = players[team][randrange(len(players[team]))]
+                picked_player = participants[team][randrange(len(participants[team]))]
                 add_row(Event(code=event_type, time=event_time, employee=employee,
                               player=picked_player, match=matches[-1],
                               team=team), rows)
@@ -179,7 +208,7 @@ def fill_db():
                 team = sel_teams[randrange(2)]
                 event_type = events[randrange(len(events))]
                 # pick participants
-                picked_players = sample(players[team][3:], 3)
+                picked_players = sample(participants[team][2:], 3)
                 if event_type == 'goal':
                     if team == sel_teams[0]:
                         home_score += 1
@@ -203,7 +232,7 @@ def fill_db():
                 event_time = datetime.timedelta(minutes=randrange(60),
                                                 seconds=randrange(60))
                 team = sel_teams[randrange(2)]
-                picked_players = sample(players[team], 3)
+                picked_players = sample(participants[team], 3)
                 add_row(Event(code='assist', time=event_time, employee=employee,
                               player=picked_players[1], match=matches[-1],
                               team=team), rows)
@@ -217,28 +246,6 @@ def fill_db():
                               player=picked_players[0], match=matches[-1],
                               team=team), rows)
 
-
-            # home formations
-            team = sel_teams[0]
-            player_range = sample(players[team], 16)
-            for f in range(4):
-                formation = add_row(Formation(team_role='home', match=matches[-1]), rows)
-                for n in range(4):
-                    p1 = add_row(PlayedIn(time=datetime.timedelta(
-                        minutes=randrange(5, 20), seconds=randrange(60))), rows)
-                    p1.player = player_range.pop()
-                    formation.playedins.append(p1)
-
-            # away formations
-            team = sel_teams[1]
-            player_range = sample(players[team], 16)
-            for f in range(4):
-                formation = add_row(Formation(team_role='away', match=matches[-1]), rows)
-                for n in range(4):
-                    p1 = add_row(PlayedIn(time=datetime.timedelta(
-                        minutes=randrange(5, 20), seconds=randrange(60))), rows)
-                    p1.player = player_range.pop()
-                    formation.playedins.append(p1)
 
    # Add special data
     zdeno = add_row(Player(name='Zdeno', surname='Chara', date_of_birth=datetime.date(1977, 3, 18),

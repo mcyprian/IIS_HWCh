@@ -299,5 +299,13 @@ def get_events_of_match(db, match_id):
 def get_tm_by_id(db, tm_id):
     """Return object of TeamMember or None if not present."""
     return (db.session.query(TeamMember)
-            .filter_by(id=tm_id)
-            .first())
+                      .filter_by(id=tm_id)
+                      .first())
+
+
+def can_be_removed(db, player):
+    """Checks if player already played in a game."""
+    return ((db.session.query(PlayedIn)
+                       .filter_by(player=player)
+                       .first() is None) and
+            not player.events)
