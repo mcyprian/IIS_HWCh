@@ -106,6 +106,7 @@ class UpdateTeamsForm(FlaskForm):
         if self.home_team == self.away_team:
             raise ValidationError("Home and away team cannot be the same")
 
+
 class NewPlayer(FlaskForm):
     name = StringField('* First name:', validators=[Required(), Length(0, 64)])
     surname = StringField('* Last name:',
