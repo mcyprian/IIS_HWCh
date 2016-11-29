@@ -105,13 +105,18 @@ def schedule(day_num, user=None):
             if m.home_score is not None:
                 m._home_score = m.home_score
                 m._away_score = m.away_score
-            if not m.home_team:
+            if day_num >= 7:
                 pair = playoffs[day_num - 7].pop()
-                m._home_team = flexmock(name=pair[0], code='EMP')
-                m._away_team = flexmock(name=pair[1], code='EMP')
             else:
-                m._home_team = m.home_team
-                m._away_team = m.away_team
+                pair = ('Empty', 'Empty')
+            m._home_team = m.home_team if m.home_team else flexmock(
+                                                                    name=pair
+                                                                    [0],
+                                                                    code='EMP')
+            m._away_team = m.away_team if m.away_team else flexmock(
+                                                                    name=pair
+                                                                    [1],
+                                                                    code='EMP')
 
     return render_template('schedule.html', data=data, day=day_num, user=user)
 
@@ -263,10 +268,12 @@ def update_teams(match_id, user=None):
         teams.append((team.name, '{} ({})'.format(
             team.name, team.group.code)))
 
+    teams.append(('EMPTY', 'EMPTY'))
     form = UpdateTeamsForm(teams=teams)
     if form.validate_on_submit():
         match.home_team = get_team_by_name(db, form.home_team.data)
         match.away_team = get_team_by_name(db, form.away_team.data)
+        print(match.home_team, match.away_team)
         db.session.commit()
         return redirect(url_for(".schedule", day_num=1))
 

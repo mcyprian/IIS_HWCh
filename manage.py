@@ -1,5 +1,8 @@
 #!/usr/bin/env python3
 import os
+from datetime import timedelta
+
+from flask import session
 from flask_script import Manager, Shell
 
 from app import create_app, db
@@ -10,6 +13,10 @@ from db_init import fill_db, recreate_all
 app = create_app(os.environ.get('IIS_CONFIG', 'default'))
 manager = Manager(app)
 
+@app.before_request
+def session_expiration():
+    session.permanent = True
+    app.permanent_session_lifetime = timedelta(minutes=2)
 
 def make_shell_context():
     return dict(

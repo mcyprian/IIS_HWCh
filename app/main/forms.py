@@ -21,7 +21,7 @@ class NotEqualTo(object):
             raise ValidationError(
                 field.gettext("Invalid field name '{}'.".format(
                         self.fieldname)))
-        if field.data == other.data:
+        if field.data == other.data and field.data != "EMPTY":
             raise ValidationError('Field cannot be equal to {}s.'.format(
                 self.fieldname))
 

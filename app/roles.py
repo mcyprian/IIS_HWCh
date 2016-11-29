@@ -14,7 +14,10 @@ def requires_role(role):
     def wrapper(f):
         @wraps(f)
         def wrapped(*args, **kwargs):
-            if current_user.role < roles[role]:
+            try:
+                if current_user.role < roles[role]:
+                    return abort(403)
+            except AttributeError:
                 return abort(403)
             return f(*args, **kwargs)
         return wrapped
