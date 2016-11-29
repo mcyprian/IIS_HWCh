@@ -9,6 +9,7 @@ from app.storage import (Player,
                          Employee,
                          Formation,
                          PlayedIn,
+                         Group,
                          TeamMember)
 from app.settings import START_DAY
 
@@ -28,6 +29,15 @@ def get_match_by_id(db, match_id):
     """Return selected match."""
     return (db.session.query(Match)
                       .filter_by(id=match_id)
+                      .first())
+
+
+def get_finished_match_rand(db):
+    """Return random match"""
+    has_events = Match.events.any()
+    return (db.session.query(Match)
+                      .filter(has_events)
+                      .order_by(func.random())
                       .first())
 
 
@@ -309,3 +319,9 @@ def can_be_removed(db, player):
                        .filter_by(player=player)
                        .first() is None) and
             not player.events)
+
+
+def get_all_groups(db):
+    "Return list of all groups"
+    return (db.session.query(Group)
+              .all())

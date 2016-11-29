@@ -45,40 +45,92 @@ def fill_db():
     # Add teams data
     A = add_row(Group(code='A'), rows)
     B = add_row(Group(code='B'), rows)
-    svk = add_row(Team(name='Slovakia', code='SVK', max_members=30, group=A), rows)
-    rus = add_row(Team(name='Russia', code='RUS', max_members=30, group=A), rows)
-    cze = add_row(Team(name='Czech Republic', code='CZE', max_members=30, group=A), rows)
-    swe = add_row(Team(name='Sweden', code='SWE', max_members=30, group=A), rows)
-    fin = add_row(Team(name='Finland', code='FIN', max_members=30, group=B), rows)
+
+    svk = add_row(Team(name='Slovakia',
+                       code='SVK',
+                       max_members=30,
+                       group=A),
+                  rows)
+    rus = add_row(Team(name='Russia',
+                       code='RUS',
+                       max_members=30,
+                       group=A),
+                  rows)
+    cze = add_row(Team(name='Czech Republic',
+                       code='CZE',
+                       max_members=30,
+                       group=A),
+                  rows)
+    swe = add_row(Team(name='Sweden',
+                       code='SWE',
+                       max_members=30,
+                       group=A),
+                  rows)
+    fin = add_row(Team(name='Finland',
+                       code='FIN',
+                       max_members=30,
+                       group=B),
+                  rows)
     usa = add_row(Team(name='USA', code='USA', max_members=30, group=B), rows)
-    can = add_row(Team(name='Canada', code='CAN', max_members=30, group=B), rows)
-    ger = add_row(Team(name='Germany', code='GER', max_members=30, group=B), rows)
+    can = add_row(Team(name='Canada',
+                       code='CAN',
+                       max_members=30,
+                       group=B),
+                  rows)
+    ger = add_row(Team(name='Germany', code='GER',
+                       max_members=30,
+                       group=B),
+                  rows)
 
     # Add players and couches data
     players = {}
-    for team_obj, locale in ((svk, 'cs_CZ'), (rus, 'ru_RU'), (cze, 'cs_CZ'), (swe, 'sv_SE'),
-                             (fin, 'fi_FI'), (usa, 'EN_us'), (can, 'en_CA'), (ger, 'de_DE')):
+    for team_obj, locale in (
+            (svk, 'cs_CZ'),
+            (rus, 'ru_RU'),
+            (cze, 'cs_CZ'),
+            (swe, 'sv_SE'),
+            (fin, 'fi_FI'),
+            (usa, 'EN_us'),
+            (can, 'en_CA'),
+            (ger, 'de_DE')):
         players[team_obj] = []
         fake = Factory.create(locale)
-        for p in range(25):
+        for p in range(27):
             if p < 3:
                 position = 'goalie'
             else:
                 position = 'forward' if p < 16 else 'defender'
-            players[team_obj].append(add_row(Player(name=fake_name(fake), surname=fake_surname(fake),
-                                                    date_of_birth=fake_date(fake), role='player', number=fake_num(),
-                                                    position=position, club=fake_club(fake), team=team_obj), rows))
+            players[team_obj].append(
+                add_row(Player(name=fake_name(fake),
+                               surname=fake_surname(fake),
+                               date_of_birth=fake_date(fake),
+                               role='player',
+                               number=fake_num(),
+                               position=position,
+                               club=fake_club(fake),
+                               team=team_obj),
+                        rows))
 
-        add_row(TeamMember(name=fake_name(fake), surname=fake_surname(fake),
-                           date_of_birth=fake_date(fake), role='assistant', team=team_obj), rows)
+        add_row(TeamMember(name=fake_name(fake),
+                           surname=fake_surname(fake),
+                           date_of_birth=fake_date(fake),
+                           role='assistant',
+                           team=team_obj),
+                rows)
 
+        add_row(TeamMember(name=fake_name(fake),
+                           surname=fake_surname(fake),
+                           date_of_birth=fake_date(fake),
+                           role='assistant',
+                           team=team_obj),
+                rows)
 
-        add_row(TeamMember(name=fake_name(fake), surname=fake_surname(fake),
-                           date_of_birth=fake_date(fake), role='assistant', team=team_obj), rows)
-
-
-        add_row(TeamMember(name=fake_name(fake), surname=fake_surname(fake),
-                           date_of_birth=fake_date(fake), role='coach', team=team_obj), rows)
+        add_row(
+            TeamMember(name=fake_name(fake), surname=fake_surname(fake),
+                       date_of_birth=fake_date(fake),
+                       role='coach',
+                       team=team_obj),
+         rows)
 
     # Add employees data
     fake = Factory.create('en_US')
@@ -102,20 +154,25 @@ def fill_db():
         name = fake.first_name()
         surname = fake.last_name()
         login = name[0].lower() + surname.lower()
-        employees.append(add_row(Employee(name=name, surname=surname, login=login,
+        employees.append(add_row(Employee(name=name,
+                                          surname=surname,
+                                          login=login,
                                           date_of_birth=fake_date(fake),
                                           role=roles['EMPLOYEE'],
-                                          password='12345'), rows))
+                                          password='12345'),
+                                 rows))
 
     # Add referees data
     referees = []
     for r in range(10):
-        referees.append(add_row(Referee(name=fake_name(fake), surname=fake_surname(fake),
-                                        date_of_birth=fake_date(fake)), rows))
+        referees.append(add_row(Referee(name=fake_name(fake),
+                                        surname=fake_surname(fake),
+                                        date_of_birth=fake_date(fake)),
+                                rows))
 
     values = [x & 1 for x in range(22)]
     vs = [list(combinations([svk, rus, cze, swe], 2)),
-         list(combinations([fin, usa, can, ger], 2))]
+          list(combinations([fin, usa, can, ger], 2))]
 
     # Add matches data
     matches = []
@@ -128,15 +185,16 @@ def fill_db():
             match_date = match_date.replace(hour=16)
             match_date += datetime.timedelta(1)
 
-        if  m < 12:
+        if m < 12:
             sel_teams = vs[m & 1][randrange(len(vs[m & 1]))]
             vs[m & 1].remove(sel_teams)
-            group=sel_teams[0].group
+            group = sel_teams[0].group
             arena = 'Bratislava' if group == A else 'Kosice'
         else:
             sel_teams = [None, None]
-            group=None
+            group = None
             arena = 'Bratislava' if values[m] else 'Kosice'
+
         matches.append(add_row(Match(category='group', datetime=match_date,
                                      arena=arena,
                                      fans=randrange(3000, 18000),
@@ -161,34 +219,44 @@ def fill_db():
         matches[m].controls.append(c3)
 
         if m < 7:
+            # Formations
             participants = {}
-            # home formations
-            team = sel_teams[0]
-            player_range = sample(players[team][:3], 2) # golies
-            player_range += sample(players[team][3:16], 12) # forwards
-            player_range += sample(players[team][16:], 6) # defenders
-            participants[team] = [p for p in player_range]
-            for f in range(4):
-                formation = add_row(Formation(team_role='home', match=matches[-1]), rows)
-                for n in range(4):
-                    p1 = add_row(PlayedIn(time=datetime.timedelta(
-                        minutes=randrange(5, 20), seconds=randrange(60))), rows)
-                    p1.player = player_range.pop()
-                    formation.playedins.append(p1)
+            for id_str, team in zip(['home', 'away'], sel_teams):
+                goalies = sample(players[team][:3], 2)  # golies
+                forwards = sample(players[team][3:16], 12)  # forwards
+                defenders = sample(players[team][16:], 8)  # defenders
+                player_range = goalies + forwards + defenders
+                participants[team] = [p for p in player_range]
 
-            # away formations
-            team = sel_teams[1]
-            player_range = sample(players[team][:3], 2) # golies
-            player_range += sample(players[team][3:16], 12) # forwards
-            player_range += sample(players[team][16:], 6) # defenders
-            participants[team] = [p for p in player_range]
-            for f in range(4):
-                formation = add_row(Formation(team_role='away', match=matches[-1]), rows)
-                for n in range(4):
-                    p1 = add_row(PlayedIn(time=datetime.timedelta(
-                        minutes=randrange(5, 20), seconds=randrange(60))), rows)
-                    p1.player = player_range.pop()
-                    formation.playedins.append(p1)
+                formation = add_row(Formation(
+                                        team_role=id_str, match=matches[-1]),
+                                    rows)
+                g = add_row(PlayedIn(time=datetime.timedelta(
+                    minutes=randrange(5, 20),
+                            seconds=randrange(60)),
+                            role='goalie'),
+                            rows)
+                g.player = goalies.pop()
+                formation.playedins.append(g)
+
+                for f in range(4):
+                    formation = add_row(
+                                        Formation(team_role='home',
+                                                  match=matches
+                                                  [-1]),
+                                        rows)
+                    for n in range(3):
+                        p1 = add_row(PlayedIn(time=datetime.timedelta(
+                            minutes=randrange(5, 20), seconds=randrange(60)),
+                            role='forward'), rows)
+                        p1.player = forwards.pop()
+                        formation.playedins.append(p1)
+                    for n in range(2):
+                        p1 = add_row(PlayedIn(time=datetime.timedelta(
+                            minutes=randrange(5, 20), seconds=randrange(60)),
+                            role='defender'), rows)
+                        p1.player = defenders.pop()
+                        formation.playedins.append(p1)
 
             home_score = 0
             away_score = 0
@@ -198,10 +266,12 @@ def fill_db():
                 event_type = events[randrange(len(events))]
                 event_time = datetime.timedelta(minutes=randrange(60),
                                                 seconds=randrange(60))
-                picked_player = participants[team][randrange(len(participants[team]))]
-                add_row(Event(code=event_type, time=event_time, employee=employee,
-                              player=picked_player, match=matches[-1],
-                              team=team), rows)
+                picked_player = participants[team][
+                    randrange(len(participants[team]))]
+                add_row(Event(code=event_type, time=event_time,
+                              employee=employee, player=picked_player,
+                              match=matches[-1], team=team),
+                        rows)
 
             events = ['goal', 'penalty']
             for e in range(randrange(5, 12)):
@@ -214,18 +284,24 @@ def fill_db():
                         home_score += 1
                     else:
                         away_score += 1
-                    add_row(Event(code='assist', time=event_time, employee=employee,
-                                  player=picked_players[1], match=matches[-1],
-                                  team=team), rows)
-                    add_row(Event(code='assist', time=event_time, employee=employee,
-                                  player=picked_players[2], match=matches[-1],
-                                  team=team), rows)
-                    add_row(Event(code='shot', time=event_time, employee=employee,
-                                  player=picked_players[0], match=matches[-1],
-                                  team=team), rows)
-                add_row(Event(code=event_type, time=event_time, employee=employee,
-                              player=picked_players[0], match=matches[-1],
-                              team=team), rows)
+                    add_row(Event(code='assist', time=event_time,
+                                  employee=employee, player=picked_players[1],
+                                  match=matches[-1],
+                                  team=team),
+                            rows)
+                    add_row(Event(code='assist', time=event_time,
+                                  employee=employee, player=picked_players[2],
+                                  match=matches[-1],
+                                  team=team),
+                            rows)
+                    add_row(Event(code='shot', time=event_time,
+                                  employee=employee, player=picked_players[0],
+                                  match=matches[-1], team=team),
+                            rows)
+                add_row(Event(code=event_type, time=event_time,
+                              employee=employee, player=picked_players[0],
+                              match=matches[-1], team=team),
+                        rows)
 
             if home_score == away_score:
                 matches[m].overtime = randrange(1, 3)
@@ -246,27 +322,31 @@ def fill_db():
                               player=picked_players[0], match=matches[-1],
                               team=team), rows)
 
-
    # Add special data
-    zdeno = add_row(Player(name='Zdeno', surname='Chara', date_of_birth=datetime.date(1977, 3, 18),
-                           role='player', number=33, position='defender', club='Boston Bruins', team=svk),
-                    rows)
+    zdeno = add_row(Player(name='Zdeno', surname='Chara',
+                           date_of_birth=datetime.date(1977, 3, 18),
+                           role='player', number=33, position='defender',
+                           club='Boston Bruins', team=svk), rows)
 
-    charris = add_row(Player(name='Stratakis', surname='Charalampos', date_of_birth=datetime.date(1977, 3, 18),
-                             role='player', number=12, position='defender', club='Calgary Flames', team=usa),
-                      rows)
+    charris = add_row(Player(name='Stratakis', surname='Charalampos',
+                             date_of_birth=datetime.date(1977, 3, 18),
+                             role='player', number=12, position='defender',
+                             club='Calgary Flames', team=usa), rows)
 
-    zdeno = add_row(Player(name='Marcel', surname='Hossa', date_of_birth=datetime.date(1981, 10, 12),
-                           role='player', number=18, position='forward', club='Dukla Trencin', team=svk),
-                    rows)
+    zdeno = add_row(Player(name='Marcel', surname='Hossa',
+                           date_of_birth=datetime.date(1981, 10, 12),
+                           role='player', number=18, position='forward',
+                           club='Dukla Trencin', team=svk), rows)
 
-    zdeno = add_row(Player(name='Marian', surname='Hossa', date_of_birth=datetime.date(1979, 1, 12),
-                           role='player', number=81, position='forward', club='Chicago Blackhawks', team=svk),
-                    rows)
+    zdeno = add_row(Player(name='Marian', surname='Hossa',
+                           date_of_birth=datetime.date(1979, 1, 12),
+                           role='player', number=81, position='forward',
+                           club='Chicago Blackhawks', team=svk), rows)
 
-    alex = add_row(Player(name='Alex', surname='Ovechkin', date_of_birth=datetime.date(1985, 9, 17),
-                          role='player', number=8, position='forward', club='Washington Capitals',
-                          team=rus), rows)
+    alex = add_row(Player(name='Alex', surname='Ovechkin',
+                          date_of_birth=datetime.date(1985, 9, 17),
+                          role='player', number=8, position='forward',
+                          club='Washington Capitals', team=rus), rows)
 
     goal = add_row(Event(code='goal', time=datetime.timedelta(randrange(20)),
                          employee=employees[0], player=alex,
@@ -287,8 +367,5 @@ def fill_db():
     goal = add_row(Event(code='assist', time=datetime.timedelta(randrange(20)),
                          employee=employees[0], player=alex,
                          match=matches[0]), rows)
-
-
-
 
     db.session.add_all(rows)
