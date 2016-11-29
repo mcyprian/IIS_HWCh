@@ -41,8 +41,14 @@ class UpdateEmployeeForm(FlaskForm):
     submit = SubmitField('Submit')
 
     def validate_login(self, field):
-        if field.data != self.login and get_employee(db, self.login.data):
+        if field.data != self.emp.login and get_employee(db, self.login.data):
             raise ValidationError("Login already exist.")
+
+    def __init__(self, *args, **kwargs):
+        super(UpdateEmployeeForm, self).__init__(*args, **kwargs)
+        self.emp = kwargs['emp']
+        for attr in ['name', 'surname', 'login']:
+            setattr(getattr(self, attr), 'default', kwargs[attr])
 
 
 class NewEmployeeForm(UpdateEmployeeForm):
@@ -81,6 +87,7 @@ class UpdateEventForm(FlaskForm):
         super(UpdateEventForm, self).__init__(*args, **kwargs)
         self.team.choices = kwargs['teams']
         self.player.choices = kwargs['players']
+        self.seconds.default = str(kwargs['time'].seconds)
 
 
 class NewEventForm(UpdateEventForm):

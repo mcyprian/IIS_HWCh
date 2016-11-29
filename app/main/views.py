@@ -557,8 +557,13 @@ def employees(user=None):
 @check_current_user
 @requires_role('ADMINISTRATOR')
 def update_employee(login, user=None):
-    form = UpdateEmployeeForm()
     emp = get_employee(db, login=login)
+    if not emp:
+        return abort(404)
+    form = UpdateEmployeeForm(name=emp.name,
+                              surname=emp.surname,
+                              login=emp.login,
+                              emp=emp)
     if not emp:
         return abort(404)
     if form.validate_on_submit():
