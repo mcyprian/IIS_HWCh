@@ -154,7 +154,7 @@ def update_event(event_id, user=None):
         get_members_of_team(db, ev.match.home_team, role='player') +
         get_members_of_team(db, ev.match.away_team, role='player'))
     players = [((str(ev.player.id), '{} {} ({})'.format(
-            ev.player.name, ev.player.surname, ev.player.team.code)))]
+        ev.player.name, ev.player.surname, ev.player.team.code)))]
     for player in match_participants:
         if player == ev.player:
             continue
@@ -644,15 +644,33 @@ def manage_employees():
     return jsonify(response_data)
 
 
+def get_team_points(team, poi=True):
+
+    wins = get_wins(db, team, 0)
+    wins_o = get_wins(db, team, 1)
+    losses_o = get_losses(db, team, 1)
+
+    if poi == True:
+        score = (wins * 3) + (wins_o * 2) + (losses_o)
+        return score
+    else:
+        losses = get_losses(db, team, 0)
+        data = {
+            "wins": wins,
+            "wins_o": wins_o,
+            "losses": losses,
+            "losses_o": losses_o
+        }
+
+        return data
+
+
 @main.route("/teams/<team_name>")
 @check_current_user
 def team_profile(team_name, user=None):
     team = get_team_by_name(db, team_name)
     if team is not None:
-        wins = get_wins(db, team, 0)
-        wins_o = get_wins(db, team, 1)
-        losses = get_losses(db, team, 0)
-        losses_o = get_losses(db, team, 1)
+        status = get_team_points(team, False)
         received = get_num_of_received(db, team)
         scored = get_num_of_scored(db, team)
         data = {
@@ -666,7 +684,7 @@ def team_profile(team_name, user=None):
         data["num_of_mem"] = len(
             data["players"]) + len(data["coachs"]) + len(data["assistants"])
 
-        score = (wins * 3) + (wins_o * 2) + (losses_o)
+        score = get_team_points(team, True)
 
         if ((scored + received) > 0):
             percents = 100 / (scored + received)
@@ -681,10 +699,7 @@ def team_profile(team_name, user=None):
                                scored=scored,
                                received=received,
                                data=data,
-                               wins=wins,
-                               losses=losses,
-                               wins_o=wins_o,
-                               losses_o=losses_o,
+                               status=status,
                                score=score,
                                per_s=per_s,
                                per_r=per_r,
@@ -692,3 +707,39 @@ def team_profile(team_name, user=None):
 
     else:
         return abort(404)
+
+
+@main.route('/match_profile/<match_id>')
+@check_current_user
+def match_profile(match_id, user=None):
+
+    try:
+        match_id = int(match_id)
+    except ValueError:
+        return abort(404)
+
+    match = get_match_by_id(db, match_id)
+    if match != None:
+        events = get_events_of_match(db, match_id)
+        print (events)
+        return render_template('match_profile.html', match=match, events=events)
+
+    else:
+        return abort(404)
+
+
+@main.route('/groups')
+@check_current_user
+def groups(user=None):
+    """
+    data = {
+        "group":
+    }
+
+    for team in teams:
+        wins = get_wins(db, team, 0)
+        wins_o = get_wins(db, team, 1)
+        losses_o = get_losses(db, team, 1)
+        get_score(wins,wins_o,losses_o)"""
+
+    return render_template('groups.html', data=data)

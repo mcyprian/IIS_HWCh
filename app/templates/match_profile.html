@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}HWCh - Groups{% endblock %}
+
+{% block head %}
+	{{super()}}
+	<link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='match_profile.css') }}">
+{% endblock head %}
+
+{% block page_head_content %}
+<div class="container">
+	<div class="jumbotron">
+		<h1>Match profile</h1>
+	</div>
+</div>
+
+{% endblock page_head_content %}
+{% block page_content %}
+
+<h2 id="date">{{match.datetime}}</h2>
+
+<div class="row" id="primary-info">
+	<div class="col-md-1">
+	</div>
+	<div class="col-md-4">
+	<img class="inline" id="icon_left" src="https://mcyprian.fedorapeople.org/flags/{{match.home_team.code}}" class="img-circle center-block">
+	<h2 class="inline" id="name_left">{{match.home_team.name}}</h2>
+	</div>
+	<div class="col-md-2">
+	</div>
+	<div class="col-md-4">
+	<img class="inline" id="icon_right" src="https://mcyprian.fedorapeople.org/flags/{{match.away_team.code}}" class="img-circle center-block">
+	<h2  class="inline" id="name_right">{{match.away_team.name}}</h2>
+	</div>
+	<div class="col-md-1">
+	</div>
+</div>
+
+
+ <div class="row">
+    	<div class="col-md-6">
+            <div class="panel with-nav-tabs panel-primary">
+                <div class="panel-heading">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#tab1primary" data-toggle="tab">Formation 1</a></li>
+                            <li><a href="#tab2primary" data-toggle="tab">Formation 2</a></li>
+                            <li><a href="#tab3primary" data-toggle="tab">Formation 3</a></li>
+                            <li><a href="#tab4primary" data-toggle="tab">Formation 4</a></li>
+                        </ul>
+                </div>
+                <div class="panel-body">
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="tab1primary">Primary 1</div>
+                        <div class="tab-pane fade" id="tab2primary">Zdeno chara zdeno chara zdeno chara zdeno chara zdeno chara</div>
+                        <div class="tab-pane fade" id="tab3primary">Primary 3</div>
+                        <div class="tab-pane fade" id="tab4primary">Primary 4</div>
+                        <div class="tab-pane fade" id="tab5primary">Primary 5</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel with-nav-tabs panel-primary">
+                <div class="panel-heading">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#tab11primary" data-toggle="tab">Formation 1</a></li>
+                            <li><a href="#tab22primary" data-toggle="tab">Formation 2</a></li>
+                            <li><a href="#tab33primary" data-toggle="tab">Formation 3</a></li>
+                            <li><a href="#tab44primary" data-toggle="tab">Formation 4</a></li>
+                            <li><a href="#tab55primary" data-toggle="tab">Goalies</a></li>
+                        </ul>
+                </div>
+                <div class="panel-body">
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="tab11primary">Primary 1</div>
+                        <div class="tab-pane fade" id="tab22primary">
+                        	<ul class="nav-list list-inline" id="positions">
+                        		<div class="row">
+                        		<div class="col-md-1">
+								</div>
+								<div class="col-md-2" >
+								<li id="center"><p>L</p><a href="#"><span>Zdeno chara</span></a></li>
+								</div>
+								<div class="col-md-2" id="bord">
+								<li id="center"><p >C</p><a href="#"><span>Zdeno chara</span></a></li>
+								</div>
+								<div class="col-md-2" id="bord">
+								<li id="center"><p >R</p><a href="#"><span>Zdeno chara</span></a></li>
+								</div>
+								<div class="col-md-2" id="bord">
+								<li id="center"><p >Defender</p><a href="#"><span>Zdeno chara</span></a></li>
+								</div>
+								<div class="col-md-2" id="bord">
+								<li id="center"><p >Defender</p><a href="#">Zdeno Chara</a></li>
+								</div>
+								<div class="col-md-1">
+								</div>
+								</div>
+                            </ul>
+                            </div>
+                        <div class="tab-pane fade" id="tab33primary">Primary 3</div>
+                        <div class="tab-pane fade" id="tab44primary">Primary 4</div>
+                        <div class="tab-pane fade" id="tab55primary">
+                        <ul class="nav-list list-inline" id="positions">
+                        	<div class="row">
+                        		<div class="col-md-1">
+								</div>
+								<div class="col-md-5" >
+								<li id="center"><p>Primary</p><a href="#"><span>Zdeno chara</span></a></li>
+								</div>
+								<div class="col-md-5" id="bord">
+								<li id="center"><p>Secondary</p><a href="#">Zdeno chara</a></li>
+								</div>
+								<div class="col-md-1">
+								</div>
+								</div>
+                            </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!--<h3 id="refer">Referees</h3>-->
+
+<!--<div class="row">
+		<div class="col-md-3">
+		</div>
+    	<div class="col-md-6">
+            <div class="panel with-nav-tabs panel-primary">
+                <div class="panel-heading">
+                        <ul class="nav nav-tabs">
+                            <li class="active"><a href="#tab1primary" data-toggle="tab">Formation 1</a></li>
+                            <li><a href="#tab2primary" data-toggle="tab">Formation 2</a></li>
+                            <li><a href="#tab3primary" data-toggle="tab">Formation 3</a></li>
+                            <li><a href="#tab4primary" data-toggle="tab">Formation 4</a></li>
+                        </ul>
+                </div>
+                <div class="panel-body">
+                    <div class="tab-content">
+                        <div class="tab-pane fade in active" id="tab1primary">Primary 1</div>
+                        <div class="tab-pane fade" id="tab2primary">Zdeno chara zdeno chara zdeno chara zdeno chara zdeno chara</div>
+                        <div class="tab-pane fade" id="tab3primary">Primary 3</div>
+                        <div class="tab-pane fade" id="tab4primary">Primary 4</div>
+                        <div class="tab-pane fade" id="tab5primary">Primary 5</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+       	 <div class="col-md-3">
+		</div>
+</div>-->
+{% if match.controls %}
+<div class="row" id="referees">
+	<div class="col-md-4">
+	<ul class="list-group">
+	  <li class="list-group-item list-group-item-info" >Referees</li>
+	  {% for c in match.controls %}
+	  <li class="list-group-item">{{c.referee.name}} {{c.referee.surname}} - {{c.role}}</li>
+	  {% endfor %}
+	</ul>
+	</div>
+</div>
+{% endif %}
+
+
+<button type="button" class="btn btn-primary center-block">Show events</button>
+
+
+
+
+<div class="container" id="stats">
+    <div class="row">
+        <div class="panel panel-default filterable">
+            <div class="panel-heading">
+                <h3 class="panel-title">{{match.home_team.name}}</h3>
+                <h3 class="panel-title" id="title-right">{{match.away_team.name}}</h3>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Time</th>
+                        <th>Player</th>
+                        <th>Description</th>
+                        <th>Score</th>
+                        <th>Decription</th>
+                        <th>Player</th>
+                        <th>Time</th>
+                    </tr>
+                </thead>
+                <tbody>
+                	{% set goal_home = 0 %}
+                	{% set goal_away = 0 %}
+                	{% for e in events %}
+                	{% if e.team.name == match.home_team.name %}
+                    <tr>
+                        <td>{{e.time}}`</td>
+                        <td>{{e.player.name}} {{e.player.surname}}</td>
+                        <td>{{e.code}}</td>
+                        {% if e.code == "goal" %}
+                        {% set goal_home = goal_home + 1 %}
+                        <td>{{goal_home}} - {{goal_away}}</td>
+                        {% else %}
+                        <td></td>
+                        {% endif %}
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                    </tr>
+                    {% else %}
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        {% if e.code == "goal" %}
+                        {% set goal_away = goal_away + 1 %}
+                        <td>{{goal_home}} - {{goal_away}}</td>
+                        {% else %}
+                        <td></td>
+                        {% endif %}
+                       	<td>{{e.code}}</td>
+                        <td>{{e.player.name}} {{e.player.surname}}</td>
+                        <td>{{e.time}}`</td>
+                    </tr>
+                    {% endif %}
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% endblock page_content %}
