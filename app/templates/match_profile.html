@@ -43,19 +43,58 @@
             <div class="panel with-nav-tabs panel-primary">
                 <div class="panel-heading">
                         <ul class="nav nav-tabs">
-                            <li class="active"><a href="#tab1primary" data-toggle="tab">Formation 1</a></li>
-                            <li><a href="#tab2primary" data-toggle="tab">Formation 2</a></li>
-                            <li><a href="#tab3primary" data-toggle="tab">Formation 3</a></li>
-                            <li><a href="#tab4primary" data-toggle="tab">Formation 4</a></li>
+                        	{% set number = 0 %}
+            				{% for f in match.formations %}
+            				{% if f.team_role == "home" %}
+            				{% set number = number + 1 %}
+            				{% if number == 1 %}
+                            <li class="active"><a href="#tab{{number}}primary" data-toggle="tab">{% if f.playedins|length > 1 %}Formation {{number}} {% else %} Goalie {% endif %}</a></li>
+                            {% else %}
+                            <li><a href="#tab{{number}}primary" data-toggle="tab">{% if f.playedins|length > 1 %} Formation {{number}} {% else %} Goalie {% endif %}</a></li>
+                            {% endif %}
+                            {% endif %}
+                            {% endfor %}
                         </ul>
                 </div>
                 <div class="panel-body">
                     <div class="tab-content">
-                        <div class="tab-pane fade in active" id="tab1primary">Primary 1</div>
-                        <div class="tab-pane fade" id="tab2primary">Zdeno chara zdeno chara zdeno chara zdeno chara zdeno chara</div>
-                        <div class="tab-pane fade" id="tab3primary">Primary 3</div>
-                        <div class="tab-pane fade" id="tab4primary">Primary 4</div>
-                        <div class="tab-pane fade" id="tab5primary">Primary 5</div>
+                   		{% set number = 0 %}
+                    	{% for f in match.formations %}
+                    	{% if f.team_role == "home" %}
+                    	{% set number = number + 1 %}
+                        <div class="tab-pane fade {% if number == 1 %} in active {% endif %}" id="tab{{number}}primary">
+                        {% if f.playedins|length > 1 %} 
+                        <ul class="nav-list list-inline" id="positions">
+                        		<div class="row">
+                        		<div class="col-md-1">
+								</div>
+								{% for p in f.playedins %}
+								<div class="col-md-2" {% if loop.index != 1%} id="bord" {% endif %}>
+								<li id="center"><p>{{p.role}}</p><a href="/players/{{ p.player.id }}"><span>{{p.player.name}} {{p.player.surname}}</span></a></li>
+								</div>
+								{% endfor %}
+								<div class="col-md-1">
+								</div>
+								</div>
+                            </ul>
+                        {% else %}
+                        <ul class="nav-list list-inline" id="positions">
+                        	<div class="row">
+                        		<div class="col-md-1">
+								</div>
+								{% for p in f.playedins %}
+								<div class="col-md-10" >
+								<li id="center"><p>goalie</p><a href="/players/{{ p.player.id }}"><span>{{p.player.name}} {{p.player.surname}}</span></a></li>
+								</div>
+								{% endfor %}
+								<div class="col-md-1">
+								</div>
+								</div>
+                            </ul>
+                        {% endif %}
+                        </div>
+                        {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
             </div>
@@ -64,103 +103,77 @@
             <div class="panel with-nav-tabs panel-primary">
                 <div class="panel-heading">
                         <ul class="nav nav-tabs">
-                            <li class="active"><a href="#tab11primary" data-toggle="tab">Formation 1</a></li>
-                            <li><a href="#tab22primary" data-toggle="tab">Formation 2</a></li>
-                            <li><a href="#tab33primary" data-toggle="tab">Formation 3</a></li>
-                            <li><a href="#tab44primary" data-toggle="tab">Formation 4</a></li>
-                            <li><a href="#tab55primary" data-toggle="tab">Goalies</a></li>
+                        	{% set number = 0 %}
+            				{% for f in match.formations %}
+            				{% if f.team_role == "away" %}
+            				{% set number = number + 1 %}
+            				{% if number == 1 %}
+                            <li class="active"><a href="#tab{{number}}{{number}}primary" data-toggle="tab">{% if f.playedins|length > 1 %}Formation {{number}} {% else %} Goalie {% endif %}</a></li>
+                            {% else %}
+                            <li><a href="#tab{{number}}{{number}}primary" data-toggle="tab">{% if f.playedins|length > 1 %} Formation {{number}} {% else %} Goalie {% endif %}</a></li>
+                            {% endif %}
+                            {% endif %}
+                            {% endfor %}
                         </ul>
                 </div>
                 <div class="panel-body">
                     <div class="tab-content">
-                        <div class="tab-pane fade in active" id="tab11primary">Primary 1</div>
-                        <div class="tab-pane fade" id="tab22primary">
-                        	<ul class="nav-list list-inline" id="positions">
+                   		{% set number = 0 %}
+                    	{% for f in match.formations %}
+                    	{% if f.team_role == "away" %}
+                    	{% set number = number + 1 %}
+                        <div class="tab-pane fade {% if number == 1 %} in active {% endif %}" id="tab{{number}}{{number}}primary">
+                        {% if f.playedins|length > 1 %} 
+                        <ul class="nav-list list-inline" id="positions">
                         		<div class="row">
                         		<div class="col-md-1">
 								</div>
-								<div class="col-md-2" >
-								<li id="center"><p>L</p><a href="#"><span>Zdeno chara</span></a></li>
+								{% for p in f.playedins %}
+								<div class="col-md-2" {% if loop.index != 1%} id="bord" {% endif %}>
+								<li id="center"><p>{{p.role}}</p><a href="/players/{{ p.player.id }}"><span>{{p.player.name}} {{p.player.surname}}</span></a></li>
 								</div>
-								<div class="col-md-2" id="bord">
-								<li id="center"><p >C</p><a href="#"><span>Zdeno chara</span></a></li>
-								</div>
-								<div class="col-md-2" id="bord">
-								<li id="center"><p >R</p><a href="#"><span>Zdeno chara</span></a></li>
-								</div>
-								<div class="col-md-2" id="bord">
-								<li id="center"><p >Defender</p><a href="#"><span>Zdeno chara</span></a></li>
-								</div>
-								<div class="col-md-2" id="bord">
-								<li id="center"><p >Defender</p><a href="#">Zdeno Chara</a></li>
-								</div>
+								{% endfor %}
 								<div class="col-md-1">
 								</div>
 								</div>
                             </ul>
-                            </div>
-                        <div class="tab-pane fade" id="tab33primary">Primary 3</div>
-                        <div class="tab-pane fade" id="tab44primary">Primary 4</div>
-                        <div class="tab-pane fade" id="tab55primary">
+                        {% else %}
                         <ul class="nav-list list-inline" id="positions">
                         	<div class="row">
                         		<div class="col-md-1">
 								</div>
-								<div class="col-md-5" >
-								<li id="center"><p>Primary</p><a href="#"><span>Zdeno chara</span></a></li>
+								{% for p in f.playedins %}
+								<div class="col-md-10" >
+								<li id="center"><p>goalie</p><a href="/players/{{ p.player.id }}"><span>{{p.player.name}} {{p.player.surname}}</span></a></li>
 								</div>
-								<div class="col-md-5" id="bord">
-								<li id="center"><p>Secondary</p><a href="#">Zdeno chara</a></li>
-								</div>
+								{% endfor %}
 								<div class="col-md-1">
 								</div>
 								</div>
                             </ul>
-                            </div>
+                        {% endif %}
                         </div>
+                        {% endif %}
+                        {% endfor %}
                     </div>
                 </div>
             </div>
         </div>
+</div>
 
-<!--<h3 id="refer">Referees</h3>-->
+        
 
-<!--<div class="row">
-		<div class="col-md-3">
-		</div>
-    	<div class="col-md-6">
-            <div class="panel with-nav-tabs panel-primary">
-                <div class="panel-heading">
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#tab1primary" data-toggle="tab">Formation 1</a></li>
-                            <li><a href="#tab2primary" data-toggle="tab">Formation 2</a></li>
-                            <li><a href="#tab3primary" data-toggle="tab">Formation 3</a></li>
-                            <li><a href="#tab4primary" data-toggle="tab">Formation 4</a></li>
-                        </ul>
-                </div>
-                <div class="panel-body">
-                    <div class="tab-content">
-                        <div class="tab-pane fade in active" id="tab1primary">Primary 1</div>
-                        <div class="tab-pane fade" id="tab2primary">Zdeno chara zdeno chara zdeno chara zdeno chara zdeno chara</div>
-                        <div class="tab-pane fade" id="tab3primary">Primary 3</div>
-                        <div class="tab-pane fade" id="tab4primary">Primary 4</div>
-                        <div class="tab-pane fade" id="tab5primary">Primary 5</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-       	 <div class="col-md-3">
-		</div>
-</div>-->
 {% if match.controls %}
 <div class="row" id="referees">
 	<div class="col-md-4">
+	<div class="thumbnail">
 	<ul class="list-group">
 	  <li class="list-group-item list-group-item-info" >Referees</li>
 	  {% for c in match.controls %}
 	  <li class="list-group-item">{{c.referee.name}} {{c.referee.surname}} - {{c.role}}</li>
 	  {% endfor %}
 	</ul>
+	</div>
 	</div>
 </div>
 {% endif %}

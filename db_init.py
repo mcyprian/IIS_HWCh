@@ -233,21 +233,21 @@ def fill_db():
                 participants[team] = [p for p in player_range]
 
                 formation = add_row(Formation(
-                                        team_role=id_str, match=matches[-1]),
-                                    rows)
+                    team_role=id_str, match=matches[-1]),
+                    rows)
                 g = add_row(PlayedIn(time=datetime.timedelta(
                     minutes=randrange(5, 20),
                             seconds=randrange(60)),
-                            role='goalie'),
-                            rows)
+                    role='goalie'),
+                    rows)
                 g.player = goalies.pop()
                 formation.playedins.append(g)
 
                 for f in range(4):
                     formation = add_row(
-                                        Formation(team_role='home',
-                                                  match=matches
-                                                  [-1]),
+                        Formation(team_role=id_str,
+                                  match=matches
+                                  [-1]),
                                         rows)
                     for n in range(3):
                         p1 = add_row(PlayedIn(time=datetime.timedelta(
@@ -315,12 +315,14 @@ def fill_db():
                                                 seconds=randrange(60))
                 team = sel_teams[randrange(2)]
                 picked_players = sample(participants[team], 3)
-                add_row(Event(code='assist', time=event_time, employee=employee,
-                              player=picked_players[1], match=matches[-1],
-                              team=team), rows)
-                add_row(Event(code='assist', time=event_time, employee=employee,
-                              player=picked_players[2], match=matches[-1],
-                              team=team), rows)
+                add_row(
+                    Event(code='assist', time=event_time, employee=employee,
+                          player=picked_players[1], match=matches[-1],
+                          team=team), rows)
+                add_row(
+                    Event(code='assist', time=event_time, employee=employee,
+                          player=picked_players[2], match=matches[-1],
+                          team=team), rows)
                 add_row(Event(code='shot', time=event_time, employee=employee,
                               player=picked_players[0], match=matches[-1],
                               team=team), rows)

@@ -33,7 +33,8 @@ from app.queries import (get_player_by_surname,
                          get_player_rand,
                          get_tm_by_id,
                          can_be_removed,
-                         get_team_rand)
+                         get_team_rand,
+                         get_all_groups)
 
 from app.storage import Employee, Event
 from app.roles import requires_role, check_current_user, roles
@@ -721,7 +722,10 @@ def match_profile(match_id, user=None):
     match = get_match_by_id(db, match_id)
     if match != None:
         events = get_events_of_match(db, match_id)
-        print (events)
+        for f in match.formations:
+            for p in f.playedins:
+                print([p.player.surname, p.role])
+
         return render_template('match_profile.html', match=match, events=events)
 
     else:
@@ -731,15 +735,15 @@ def match_profile(match_id, user=None):
 @main.route('/groups')
 @check_current_user
 def groups(user=None):
-    """
-    data = {
-        "group":
-    }
 
-    for team in teams:
-        wins = get_wins(db, team, 0)
-        wins_o = get_wins(db, team, 1)
-        losses_o = get_losses(db, team, 1)
-        get_score(wins,wins_o,losses_o)"""
+    datas = []
+    groups = get_all_groups(db)
+    print(groups)
+    for t in groups:
+        datas.append([(g.name, get_team_points(g, True)) for g in t.teams])
+    print(datas)
 
-    return render_template('groups.html', data=data)
+    for i in datas:
+        i.sort(key=lambda tup: tup[1], reverse=True)
+
+    return render_template('groups.html', groups=groups, datas=datas)
