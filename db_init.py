@@ -205,7 +205,7 @@ def fill_db():
         matches[m].overtime = 0
 
         # Add referees
-        picked_refs = sample(referees, 3)
+        picked_refs = sample(referees, 4)
         c1 = add_row(Controls(role='head'), rows)
         c1.referee = picked_refs[0]
         matches[m].controls.append(c1)
@@ -217,6 +217,10 @@ def fill_db():
         c3 = add_row(Controls(role='line'), rows)
         c3.referee = picked_refs[2]
         matches[m].controls.append(c3)
+
+        c4 = add_row(Controls(role='video'), rows)
+        c4.referee = picked_refs[3]
+        matches[m].controls.append(c4)
 
         if m < 7:
             # Formations
