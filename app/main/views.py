@@ -183,24 +183,6 @@ def update_event(event_id, user=None):
                            user=user)
 
 
-@main.route("/schedule/events/delete/<event_id>")
-@login_required
-@check_current_user
-@requires_role('ADMINISTRATOR')
-def delete_event(event_id, user=None):
-    try:
-        event_id = int(event_id)
-    except ValueError:
-        return abort(404)
-    ev = get_event(db, event_id=event_id)
-    if not ev:
-        return abort(404)
-    m = ev.match
-    db.session.delete(ev)
-    db.session.commit()
-    return redirect(url_for(".match_events", match_id=m.id))
-
-
 @main.route("/schedule/events/new/<match_id>", methods=['GET', 'POST'])
 @login_required
 @check_current_user
@@ -249,6 +231,19 @@ def new_event(match_id, user=None):
                            form=form,
                            page_title=title,
                            user=user)
+
+
+@main.route("/schedule/events/delete.json", methods=["POST"])
+def delete_event():
+    data = request.get_json()
+    ev = get_event(db, event_id=data["id"])
+    if not ev:
+        response_data = {"status": "failure", "id": data["id"]}
+    else:
+        db.session.delete(ev)
+        db.session.commit()
+        response_data = {"status": "success", "id": data["id"]}
+    return jsonify(response_data)
 
 
 @main.route("/schedule/teams/<match_id>", methods=['GET', 'POST'])
@@ -618,7 +613,7 @@ def employee_list():
     return jsonify(employees)
 
 
-@main.route("/employees/manage.json", methods=["GET", "POST"])
+@main.route("/employees/manage.json", methods=["POST"])
 def manage_employees():
     data = request.get_json()
     emp = get_employee(db, login=data["login"])

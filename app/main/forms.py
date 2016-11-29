@@ -87,7 +87,6 @@ class UpdateEventForm(FlaskForm):
         super(UpdateEventForm, self).__init__(*args, **kwargs)
         self.team.choices = kwargs['teams']
         self.player.choices = kwargs['players']
-        self.seconds.default = str(kwargs['time'].seconds)
 
 
 class NewEventForm(UpdateEventForm):

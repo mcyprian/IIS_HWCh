@@ -1,4 +1,3 @@
-import getData from "./data"
 import { postData } from "./data"
 
 
