@@ -36,8 +36,8 @@ class UpdateEmployeeForm(FlaskForm):
     surname = StringField('Last name', [Length(0, 64)])
     login = StringField('Login', [Length(0, 64)])
     password = PasswordField('New Password', [
-        EqualTo('confirm', message='Passwords must match')])
-    confirm = PasswordField('Repeat Password')
+        EqualTo('confirm', message='Passwords must match'), Length(0, 128)])
+    confirm = PasswordField('Repeat Password', [Length(0, 128)])
     submit = SubmitField('Submit')
 
     def validate_login(self, field):
@@ -63,10 +63,13 @@ class NewEmployeeForm(UpdateEmployeeForm):
     submit = SubmitField('Submit')
 
     def __init__(self, *args, **kwargs):
-        super(NewEmployeeForm, self).__init__(*args, **kwargs)
+        super(UpdateEmployeeForm, self).__init__(*args, **kwargs)
         for attr in ['name', 'surname', 'login', 'password']:
             self[attr].validators.append(Required())
             self[attr].label.text = '* ' + self[attr].label.text
+
+    def validate_login(self, field):
+        pass
 
 
 class UpdateEventForm(FlaskForm):
