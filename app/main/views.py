@@ -418,7 +418,7 @@ def new_player(team_name, user=None):
             return redirect(url_for(".team_management", team_name=team_name,
                                     user=user))
         else:
-            return render_template("new_player.html", form=form)
+            return render_template("new_player.html", form=form, user=user)
     else:
         return abort(404)
 
@@ -442,7 +442,7 @@ def new_member(team_name, user=None):
             return redirect(url_for(".team_management", team_name=team_name,
                                     user=user))
         else:
-            return render_template("new_member.html", form=form)
+            return render_template("new_member.html", form=form, user=user)
     else:
         return abort(404)
 
@@ -486,7 +486,7 @@ def edit_member(team_name, member_id, user=None):
             return redirect(url_for(".team_management", team_name=team_name,
                                     user=user))
         else:
-            return render_template("edit_member.html", form=form)
+            return render_template("edit_member.html", form=form, user=user)
     else:
         return abort(404)
 
