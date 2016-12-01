@@ -18,7 +18,8 @@ function createTeamList(data){
 		html_result = `<div class="panel panel-primary">
 		<div class="panel-heading team-in-list" id="${i}">
 				<img class="team-logo-heading" src="${flagUrl}">
-				${country_name}
+				<b>${country_name}</b>
+				<small> (Click for more)</small>
 		</div>
 		<div class="panel-body">
 			<div id="teamId${i}">
