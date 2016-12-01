@@ -13,10 +13,12 @@ from db_init import fill_db, recreate_all
 app = create_app(os.environ.get('IIS_CONFIG', 'default'))
 manager = Manager(app)
 
+
 @app.before_request
 def session_expiration():
     session.permanent = True
     app.permanent_session_lifetime = timedelta(minutes=2)
+
 
 def make_shell_context():
     return dict(
@@ -33,7 +35,7 @@ def make_shell_context():
         Controls=Controls,
         Formation=Formation,
         PlayedIn=PlayedIn,
-     fill_db=fill_db)
+        fill_db=fill_db)
 
 manager.add_command('shell', Shell(make_context=make_shell_context))
 

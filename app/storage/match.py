@@ -6,7 +6,7 @@ class Match(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     category = db.Column(db.String(64), nullable=False)
     datetime = db.Column(db.DateTime)
-    arena = db.Column(db.String(64))  # TODO complete automacally for group??
+    arena = db.Column(db.String(64))
     fans = db.Column(db.Integer)
     overtime = db.Column(db.Integer)
     group_id = db.Column(db.Integer, db.ForeignKey('groups.id'))

@@ -23,7 +23,7 @@ class Employee(UserMixin, db.Model):
     def password(self, password):
         self._password = generate_password_hash(password)
 
-    def verify_password(self, password):  # TODO will be needed?
+    def verify_password(self, password):
         return check_password_hash(self._password, password)
 
     def __repr__(self):

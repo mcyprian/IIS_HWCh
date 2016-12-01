@@ -268,7 +268,6 @@ def update_teams(match_id, user=None):
     if form.validate_on_submit():
         match.home_team = get_team_by_name(db, form.home_team.data)
         match.away_team = get_team_by_name(db, form.away_team.data)
-        print(match.home_team, match.away_team)
         db.session.commit()
         return redirect(url_for(".schedule", day_num=1))
 

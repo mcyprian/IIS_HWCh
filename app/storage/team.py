@@ -1,7 +1,7 @@
 from app import db
 
 
-class Team(db.Model):  # TODO property na vyhry, prehry, vyhry po predlzeni body ...
+class Team(db.Model):
     __tablename__ = 'teams'
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(64), nullable=False, index=True, unique=True)
