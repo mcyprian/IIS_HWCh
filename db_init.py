@@ -281,6 +281,8 @@ def fill_db():
             for e in range(randrange(5, 12)):
                 team = sel_teams[randrange(2)]
                 event_type = events[randrange(len(events))]
+                event_time = datetime.timedelta(minutes=randrange(60),
+                                                seconds=randrange(60))
                 # pick participants
                 picked_players = sample(participants[team][2:], 3)
                 if event_type == 'goal':
