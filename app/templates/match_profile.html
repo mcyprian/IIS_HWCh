@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
-{% block title %}HWCh - Groups{% endblock %}
+{% block title %}HWCh - Match_profile{% endblock %}
 
 {% block head %}
 	{{super()}}
@@ -24,13 +24,13 @@
 	<div class="col-md-1">
 	</div>
 	<div class="col-md-4">
-	<img class="inline" id="icon_left" src="https://mcyprian.fedorapeople.org/flags/{{match.home_team.code}}" class="img-circle center-block">
+	<img class="inline" id="icon_left" {% if match.home_team %} src="https://mcyprian.fedorapeople.org/flags/{{match.home_team.code}}" {% else %} src="https://mcyprian.fedorapeople.org/flags/EMP" {% endif %}class="img-circle center-block">
 	<h2 class="inline" id="name_left">{{match.home_team.name}}</h2>
 	</div>
 	<div class="col-md-2">
 	</div>
 	<div class="col-md-4">
-	<img class="inline" id="icon_right" src="https://mcyprian.fedorapeople.org/flags/{{match.away_team.code}}" class="img-circle center-block">
+	<img class="inline" id="icon_right" {% if match.away_team %} src="https://mcyprian.fedorapeople.org/flags/{{match.away_team.code}}" {% else %} src="https://mcyprian.fedorapeople.org/flags/EMP" {% endif %} class="img-circle center-block">
 	<h2  class="inline" id="name_right">{{match.away_team.name}}</h2>
 	</div>
 	<div class="col-md-1">
@@ -162,9 +162,8 @@
 </div>
 
         
-
-{% if match.controls %}
 <div class="row" id="referees">
+{% if match.controls %}
 	<div class="col-md-4">
 	<div class="thumbnail">
 	<ul class="list-group">
@@ -175,11 +174,16 @@
 	</ul>
 	</div>
 	</div>
+	<div class="col-md-8">
+	{% else %}
+	<div class="col-md-12">
+	{% endif %}
+	<h1 class="text-center"><b>Result<b></h1>
+	<h3 class="text-center">{% if home_score == None %}-- : -- {% else %}{{home_score}} : {{away_score}}{% endif %}{% if match.overtime %}p{% endif %}</h3>
+	</div>
 </div>
-{% endif %}
 
-
-<button type="button" class="btn btn-primary center-block">Show events</button>
+<button id="show" type="button" class="btn btn-info center-block">Show events</button>
 
 
 

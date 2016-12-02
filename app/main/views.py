@@ -34,7 +34,8 @@ from app.queries import (get_player_by_surname,
                          get_tm_by_id,
                          can_be_removed,
                          get_team_rand,
-                         get_all_groups)
+                         get_all_groups,
+                         get_finished_match_rand)
 
 from app.storage import Employee, Event
 from app.roles import requires_role, check_current_user, roles
@@ -69,10 +70,13 @@ def index(user=None):
     for game in games2:
         game.day = difference + 2
 
+    rand_match = get_finished_match_rand(db)
+
     return render_template('index.html', player=player,
                            team=team,
                            games=games1 + games2,
-                           user=user)
+                           user=user,
+                           rand_match=rand_match)
 
 
 @main.route("/schedule")
@@ -721,12 +725,14 @@ def match_profile(match_id, user=None):
 
     match = get_match_by_id(db, match_id)
     if match != None:
+        home_score = get_score_or_none(db, match, home=True)
+        away_score = get_score_or_none(db, match, home=False)
         events = get_events_of_match(db, match_id)
-        for f in match.formations:
-            for p in f.playedins:
-                print([p.player.surname, p.role])
 
-        return render_template('match_profile.html', match=match, events=events)
+        return render_template('match_profile.html', match=match,
+                                                    events=events,
+                                                    home_score=home_score,
+                                                    away_score=away_score)
 
     else:
         return abort(404)
@@ -738,10 +744,8 @@ def groups(user=None):
 
     datas = []
     groups = get_all_groups(db)
-    print(groups)
     for t in groups:
         datas.append([(g.name, get_team_points(g, True)) for g in t.teams])
-    print(datas)
 
     for i in datas:
         i.sort(key=lambda tup: tup[1], reverse=True)

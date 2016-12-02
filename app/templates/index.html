@@ -77,37 +77,40 @@
 		<div class="col-md-4">
 			<div class="thumbnail">
 				<div class="row">
-					<div class="col-md-4" id="teams">
+					<div class="col-lg-4" id="teams">
                         <img id="icon" src="https://mcyprian.fedorapeople.org/flags/{{ team.code }}" class="img-circle center-block">
 					</div>
-					<div class="col-md-8" id="teams">
+					<div class="col-lg-8" id="teams">
                         <h2 id="team_name" class="text-left"><b>{{ team.name }}</b></h2>
 					</div>
+				</div>
 					
-				</div>
-				<div class="caption" id="team_caption">
-                    <a href="/teams/{{ team.name }}" class="btn btn-primary" role="button">Know more</a>
-				</div>
-			</div>
+						<div class="caption"  id="team_caption">
+                    	<a href="/teams/{{ team.name }}" class="btn btn-primary" role="button">Know more</a>
+						</div>
+					
+					</div>
 		</div>
 
 		<div class="col-md-4">
 				<div class="thumbnail">
 				<img src="https://mcyprian.fedorapeople.org/avatar.png" class="imgBorder" width="200" height="200" >
+				<h3 id="playa">{{ player.name }} {{ player.surname }} ({{player.team.code}})</h3>
 				<div class="caption">
-                    <h3>{{ player.name }} {{ player.surname }} ({{player.team.code}})</h3>
-					<a href="/players/{{ player.id }}" class="btn btn-primary" role="button">Know more</a>
+					<a href="/players/{{ player.id }}" class="btn btn-primary" role="button" id="btnn">Know more</a>
 				</div>
 			</div>
 		</div>
 	
 
 	<div class="col-md-4">
-		<div class="thumbnail">
-			<div class="topic"> </div>
+		<div class="thumbnail">		
 			<div class="caption">
-				<p>"text of topic"</p>
-                <a href="#" class="btn btn-primary" role="button">Know more</a>
+				<h1>Results of match</h1>
+				<hr></hr>
+				<h3 id="rand_match">{{rand_match.home_team.name}} - {{rand_match.away_team.name}}</h3>
+				<h4>{{rand_match.datetime}}</h4>
+                <a href="#" class="btn btn-primary" role="button" id="rand_button">Know more</a>
 				</div>
 			</div>
 		</div>

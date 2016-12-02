@@ -33,11 +33,6 @@
   margin-top: 7%;
   margin-bottom: 7%;
   padding: 15px 15px 0;
-  background-color: white;
-  box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
-  -moz-box-shadow: 0 1px 2px rgba(34,25,25,0.4);
-  -webkit-box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
-
 }
 
 .thumbnail{
@@ -47,10 +42,14 @@
 
 #team_name {
 	margin-right: 50%;
+	top: 50%;
+	position: absolute;
+
 }
 
 #icon {
-	 margin-left: 65%;
+	 margin-left: 50%;
+	 position: absolute;
 }
 
 #teams {
@@ -59,9 +58,33 @@
 }
 
 #team_caption {
-	margin-top: 35%;
+	margin-top: 52.5%;
 }
+
 
 #head{
 	margin-top: 2%;
+}
+
+#btnn {
+	margin-top: 6%;
+}
+
+#playa {
+text-align: center
+}
+
+#rand_match{
+	margin-top: 20%;
+
+}
+
+#rand_button {
+	margin-top:22.5%; 
+}
+
+hr {
+	border: 0;
+	height: 1px;
+	background-image: linear-gradient(to right, #ffffff, #178ACC, #ffffff);
 }
