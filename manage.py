@@ -52,7 +52,7 @@ def recreate_db():
 
 @manager.command
 def init_db():
-    db.session.create_all()
+    db.create_all()
     print("DB tables created.")
     fill_db()
     print("Example data inserted.")

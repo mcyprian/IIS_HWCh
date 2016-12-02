@@ -403,7 +403,7 @@ def team_management(team_name, user=None):
 @main.route("/team_management/<team_name>/new_player", methods=['GET', 'POST'])
 @login_required
 @check_current_user
-@requires_role('EMPLOYEE')
+@requires_role('MANAGER')
 def new_player(team_name, user=None):
     form = NewPlayer()
     team = get_team_by_name(db, team_name)
@@ -430,7 +430,7 @@ def new_player(team_name, user=None):
 @main.route("/team_management/<team_name>/new_member", methods=['GET', 'POST'])
 @login_required
 @check_current_user
-@requires_role('EMPLOYEE')
+@requires_role('MANAGER')
 def new_member(team_name, user=None):
     form = NewTeamMember()
     team = get_team_by_name(db, team_name)
@@ -514,25 +514,6 @@ def standings_data():
         }
         players.append(player_data)
     return jsonify(players)
-
-
-@main.route("/secret")
-@check_current_user
-@login_required
-def secret(user=None):
-    return render_template('blank.html',
-                           data="Secret content for logged in users...",
-                           user=user)
-
-
-@main.route("/championship_management")
-@login_required
-@check_current_user
-@requires_role('MANAGER')
-def championship_management(user=None):
-    return render_template('blank.html',
-                           data="Only managers can see this.",
-                           user=user)
 
 
 @main.route("/settings")
@@ -650,12 +631,11 @@ def manage_employees():
 
 
 def get_team_points(team, poi=True):
-
     wins = get_wins(db, team, 0)
     wins_o = get_wins(db, team, 1)
     losses_o = get_losses(db, team, 1)
 
-    if poi == True:
+    if poi is True:
         score = (wins * 3) + (wins_o * 2) + (losses_o)
         return score
     else:
@@ -666,7 +646,6 @@ def get_team_points(team, poi=True):
             "losses": losses,
             "losses_o": losses_o
         }
-
         return data
 
 
@@ -724,15 +703,15 @@ def match_profile(match_id, user=None):
         return abort(404)
 
     match = get_match_by_id(db, match_id)
-    if match != None:
+    if match is not None:
         home_score = get_score_or_none(db, match, home=True)
         away_score = get_score_or_none(db, match, home=False)
         events = get_events_of_match(db, match_id)
 
         return render_template('match_profile.html', match=match,
-                                                    events=events,
-                                                    home_score=home_score,
-                                                    away_score=away_score)
+                               events=events,
+                               home_score=home_score,
+                               away_score=away_score)
 
     else:
         return abort(404)
