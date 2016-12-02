@@ -43,7 +43,6 @@ from app.main import main
 from app.main.forms import (NameForm, UpdateEmployeeForm, NewEmployeeForm,
                             UpdateEventForm, NewEventForm, UpdateTeamsForm,
                             NewPlayer, NewTeamMember)
-from app.settings import START_DAY
 from app.storage import Player, TeamMember
 
 
@@ -54,7 +53,7 @@ def index(user=None):
     player = get_player_rand(db) or flexmock(name="Missing",
                                              surname="data",
                                              team=team)
-    difference = (datetime.today() - START_DAY).days
+    difference = 3
     games1 = get_matches_by_day(db, difference + 1)
     if not games1:
         games1 = [flexmock(home_team=flexmock(name="Missing data", code='EMP'),
