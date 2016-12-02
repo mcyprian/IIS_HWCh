@@ -108,8 +108,8 @@
 			<div class="caption">
 				<h1>Results of match</h1>
 				<hr></hr>
-				<h3 id="rand_match">{{rand_match.home_team.name}} - {{rand_match.away_team.name}}</h3>
-				<h4>{{rand_match.datetime}}</h4>
+				<h3 id="rand_match">{% if rand_match %}{{rand_match.home_team.name}} - {{rand_match.away_team.name}}{% else %} Missing data {% endif %}</h3>
+				<h4>{% if rand_match %}{{rand_match.datetime}}{% else %} Mising data {% endif %}</h4>
                 <a href="/match_profile/{{rand_match.id}}" class="btn btn-primary" role="button" id="rand_button">Know more</a>
 				</div>
 			</div>
