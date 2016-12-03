@@ -35,15 +35,18 @@ from app.queries import (get_player_by_surname,
                          can_be_removed,
                          get_team_rand,
                          get_all_groups,
-                         get_finished_match_rand)
+                         get_finished_match_rand,
+                         get_all_referees,
+                         get_ref_by_id)
 
 from app.storage import Employee, Event
 from app.roles import requires_role, check_current_user, roles
 from app.main import main
 from app.main.forms import (NameForm, UpdateEmployeeForm, NewEmployeeForm,
                             UpdateEventForm, NewEventForm, UpdateTeamsForm,
-                            NewPlayer, NewTeamMember, UpdateMatchTime)
-from app.storage import Player, TeamMember
+                            NewPlayer, NewTeamMember, UpdateMatchTime,
+                            RefereeUpdateForm)
+from app.storage import Player, TeamMember, Controls
 
 
 @main.route('/')
@@ -302,6 +305,53 @@ def update_match_time(match_id, user=None):
         return redirect(url_for(".schedule", day_num=1))
 
     title = "Set time of the match {}".format(match.id)
+    return render_template('quick_form.html',
+                           form=form,
+                           page_title=title,
+                           user=user)
+
+
+@main.route('/schedule/referees/<match_id>', methods=["GET", "POST"])
+@check_current_user
+@requires_role('MANAGER')
+def set_referees(match_id, user=None):
+    try:
+        match_id = int(match_id)
+    except ValueError:
+        return abort(404)
+    match = get_match_by_id(db, match_id)
+    if match is None:
+        return abort(404)
+
+    referees = []
+    for ref in get_all_referees(db):
+        referees.append((str(ref.id), '{} {}'.format(
+            ref.name, ref.surname)))
+
+    form = RefereeUpdateForm(referees=referees)
+    if form.validate_on_submit():
+        Controls.query.filter_by(match=match).delete()
+
+        c1 = Controls(match=match, referee=get_ref_by_id(
+            db, int(form.head.data)), role='head')
+
+        c2 = Controls(match=match, referee=get_ref_by_id(
+            db, int(form.first_line.data)), role='line')
+
+        c3 = Controls(match=match, referee=get_ref_by_id(
+            db, int(form.second_line.data)), role='line')
+
+        c4 = Controls(match=match, referee=get_ref_by_id(
+            db, int(form.video.data)), role='video')
+
+        control_list = [c1, c2, c3, c4]
+        match.controls = control_list
+
+        db.session.add_all(control_list)
+        db.session.commit()
+        return redirect(url_for(".schedule", day_num=1))
+
+    title = "Set referees of the match {}".format(match.id)
     return render_template('quick_form.html',
                            form=form,
                            page_title=title,

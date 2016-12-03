@@ -46,6 +46,21 @@ class NotEqualTo(object):
                 self.fieldname))
 
 
+class UniqueList(object):
+
+    def __init__(self, fieldslist):
+        self.fieldslist = fieldslist
+
+    def __call__(self, form, field):
+        try:
+            other_data = [form[item].data for item in self.fieldslist]
+        except KeyError:
+            raise ValidationError(
+                field.gettext("Invalid field name in list"))
+        if field.data in other_data:
+            raise ValidationError('Field must be unique in the list.')
+
+
 class NameForm(FlaskForm):
     name = StringField('Insert name', validators=[Required(), Length(0, 64)])
     submit = SubmitField('Search')
@@ -192,3 +207,21 @@ class NewTeamMember(FlaskForm):
 class UpdateMatchTime(FlaskForm):
     time = TimeField("* Time of the match:", description="Format: HH:MM")
     submit = SubmitField('Submit')
+
+
+class RefereeUpdateForm(FlaskForm):
+    head = SelectField('Head referee', choices=[], validators=[
+        UniqueList(['first_line', 'second_line', 'video'])])
+    first_line = SelectField('First line referee', choices=[], validators=[
+        UniqueList(['head', 'second_line', 'video'])])
+    second_line = SelectField('Second line referee', choices=[], validators=[
+        UniqueList(['head', 'first_line', 'video'])])
+    video = SelectField('Video referee', choices=[], validators=[
+        UniqueList(['head', 'first_line', 'second_line'])])
+
+    submit = SubmitField('Submit')
+
+    def __init__(self, *args, **kwargs):
+        super(RefereeUpdateForm, self).__init__(*args, **kwargs)
+        for attr in ['head', 'first_line', 'second_line', 'video']:
+            setattr(getattr(self, attr), 'choices', kwargs['referees'])

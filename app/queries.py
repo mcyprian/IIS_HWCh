@@ -10,7 +10,8 @@ from app.storage import (Player,
                          Formation,
                          PlayedIn,
                          Group,
-                         TeamMember)
+                         TeamMember,
+                         Referee)
 from app.settings import START_DAY
 
 
@@ -325,3 +326,16 @@ def get_all_groups(db):
     "Return list of all groups"
     return (db.session.query(Group)
               .all())
+
+
+def get_all_referees(db):
+    "Return list of all referees"
+    return (db.session.query(Referee)
+                      .all())
+
+
+def get_ref_by_id(db, ref_id):
+    "Return selected referee"
+    return (db.session.query(Referee)
+                      .filter_by(id=ref_id)
+                      .first())
