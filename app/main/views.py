@@ -5,6 +5,7 @@ from flask import (render_template, request, redirect, url_for,
 from flask_login import login_required, current_user
 
 from app import db
+from app.settings import START_DAY
 from app.queries import (get_player_by_surname,
                          get_player_by_surname_regex,
                          get_player_by_id,
@@ -276,7 +277,8 @@ def update_teams(match_id, user=None):
         match.home_team = get_team_by_name(db, form.home_team.data)
         match.away_team = get_team_by_name(db, form.away_team.data)
         db.session.commit()
-        return redirect(url_for(".schedule", day_num=1))
+        day_num = (match.datetime - START_DAY).days + 1
+        return redirect(url_for(".schedule", day_num=day_num))
 
     title = "Set teams of match {}".format(match.id)
     return render_template('quick_form.html',
@@ -302,7 +304,8 @@ def update_match_time(match_id, user=None):
         match.datetime = match.datetime.replace(hour=form.time.data.hour,
                                                 minute=form.time.data.minute)
         db.session.commit()
-        return redirect(url_for(".schedule", day_num=1))
+        day_num = (match.datetime - START_DAY).days + 1
+        return redirect(url_for(".schedule", day_num=day_num))
 
     title = "Set time of the match {}".format(match.id)
     return render_template('quick_form.html',
@@ -349,7 +352,8 @@ def set_referees(match_id, user=None):
 
         db.session.add_all(control_list)
         db.session.commit()
-        return redirect(url_for(".schedule", day_num=1))
+        day_num = (match.datetime - START_DAY).days + 1
+        return redirect(url_for(".schedule", day_num=day_num))
 
     title = "Set referees of the match {}".format(match.id)
     return render_template('quick_form.html',
@@ -358,6 +362,7 @@ def set_referees(match_id, user=None):
                            user=user)
 
 
+@main.route("/teams")
 @check_current_user
 def teams(user=None):
     return render_template('teams.html', user=user)
