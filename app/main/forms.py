@@ -1,12 +1,32 @@
+from datetime import datetime
 from flask_wtf import FlaskForm
 from wtforms import (StringField, SubmitField, PasswordField,
                      ValidationError, DateField, SelectField,
-                     IntegerField)
+                     IntegerField, DateTimeField)
 from wtforms.validators import (Required, Length, EqualTo,
                                 NumberRange, InputRequired)
 
 from app import db
 from app.queries import get_employee
+
+
+class TimeField(DateTimeField):
+    """
+    Same as DateTimeField, except stores a `time`.
+    """
+
+    def __init__(self, label=None, validators=None, format='%H:%M', **kwargs):
+        super(TimeField, self).__init__(label, validators, format, **kwargs)
+
+    def process_formdata(self, valuelist):
+        if valuelist:
+            time_str = ' '.join(valuelist)
+            try:
+                self.data = datetime.strptime(
+                    time_str, self.format).time()
+            except ValueError:
+                self.data = None
+                raise ValueError(self.gettext('Not a valid time value'))
 
 
 class NotEqualTo(object):
@@ -167,3 +187,8 @@ class NewTeamMember(FlaskForm):
             self.surname.default = kwargs['surname']
             self.date_of_birth.default = kwargs['birth']
             self.role.default = kwargs['role']
+
+
+class UpdateMatchTime(FlaskForm):
+    time = TimeField("* Time of the match:", description="Format: HH:MM")
+    submit = SubmitField('Submit')

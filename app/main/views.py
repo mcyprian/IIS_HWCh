@@ -1,4 +1,4 @@
-from datetime import date, timedelta, datetime
+from datetime import date, timedelta
 from flexmock import flexmock
 from flask import (render_template, request, redirect, url_for,
                    jsonify, flash, abort)
@@ -42,7 +42,7 @@ from app.roles import requires_role, check_current_user, roles
 from app.main import main
 from app.main.forms import (NameForm, UpdateEmployeeForm, NewEmployeeForm,
                             UpdateEventForm, NewEventForm, UpdateTeamsForm,
-                            NewPlayer, NewTeamMember)
+                            NewPlayer, NewTeamMember, UpdateMatchTime)
 from app.storage import Player, TeamMember
 
 
@@ -252,7 +252,7 @@ def delete_event():
 
 @main.route("/schedule/teams/<match_id>", methods=['GET', 'POST'])
 @check_current_user
-@requires_role('EMPLOYEE')
+@requires_role('MANAGER')
 def update_teams(match_id, user=None):
     try:
         match_id = int(match_id)
@@ -282,7 +282,32 @@ def update_teams(match_id, user=None):
                            user=user)
 
 
-@main.route("/teams")
+@main.route('/schedule/time/<match_id>', methods=["GET", "POST"])
+@check_current_user
+@requires_role('MANAGER')
+def update_match_time(match_id, user=None):
+    try:
+        match_id = int(match_id)
+    except ValueError:
+        return abort(404)
+    match = get_match_by_id(db, match_id)
+    if match is None:
+        return abort(404)
+
+    form = UpdateMatchTime()
+    if form.validate_on_submit():
+        match.datetime = match.datetime.replace(hour=form.time.data.hour,
+                                                minute=form.time.data.minute)
+        db.session.commit()
+        return redirect(url_for(".schedule", day_num=1))
+
+    title = "Set time of the match {}".format(match.id)
+    return render_template('quick_form.html',
+                           form=form,
+                           page_title=title,
+                           user=user)
+
+
 @check_current_user
 def teams(user=None):
     return render_template('teams.html', user=user)

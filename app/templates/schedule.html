@@ -85,9 +85,11 @@
             <a href="/schedule/events/{{match.id}}" id={{match.id}} class="btn
                 btn-primary">Events</a>
             {% endif %}
-            {% if user and not match.events %}
+            {% if user and user.role > 0 and not match.events %}
             <a href="/schedule/teams/{{match.id}}" id={{match.id}} class="btn
                 btn-primary">Set teams</a>
+            <a href="/schedule/time/{{match.id}}" id={{match.id}} class="btn
+                btn-primary">Reschedule</a>
             {% endif %}
 	  	</div>
 	  </div>
