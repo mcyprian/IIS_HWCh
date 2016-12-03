@@ -29,7 +29,7 @@
 	</dd>
 	<dd>Marián Ďurčo<!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
         <a href="mailto:xdurco00@stud.fit.vutbr.cz">xdurco00@stud.fit.vutbr.cz</a> -
-		TODO: popis cinnosti
+		kostra webového rozhrania, komunikácia frontend<->backend
 	</dd>
 	<dt>URL aplikace</dt>
     <dd><a href="http://iis-mcypriangmail.rhcloud.com">http://iis-mcypriangmail.rhcloud.com</a></dd>
@@ -45,7 +45,20 @@
 </table>
 
 <h2>Implementace</h2>
-<p>Stručná dokumentace k implementaci, která popisuje, které PHP skripty implementují jednotlivé případy použití uvedené v use-case diagramu z IDS. V případě, že bylo nutno při implementaci učinit změny v návrhu, musí být v dokumentaci zdůvodněny.</p>
+	<h3>Backend</h3>
+	<p> Celý backend infomačného systému je postavený na webovom mikroframeworku Flask.<br>
+		Databázový model je vytvorený pomocou objektovo orientovaného nástroja SQLAlchemy,<br>
+		ktorý sa používa za pomoci jazyka Python.<br>
+		Dáta v databáze boli vygenerované pomocou knižnice Faker.<br>
+	</p>
+	<h3>Frontend</h3>
+	<p> Základ tvorí šablónovací systém, ktorý je používaný spolu s Flaskom, tj. Jinja2.<br>
+		Je vytvorený pre jazyk Python a vychádza zo syntaxe Django. Umožňuje priamu komunikáciu s backendom.<br>
+		Samozrejmosťou je použitie HTML5 pre statické časti.<br>
+		Základom vizualizácie je webový framework Bootstrap.<br>
+		Pre dynamické časti je použitý jazyk JavaScript spolu s knihovňou JQuery.<br>
+		V niektorých častiach je použitý AJAX pre asynchronné získanie dát.<br>
+	</p>
 
 <h2>Instalace</h2>
 <ul>
