@@ -21,11 +21,11 @@
 	<dt>Autoři</dt>
 	<dd>Filip Barič<!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
         <a href="mailto:xbaric01@stud.fit.vutbr.cz">xbaric01@stud.fit.vutbr.cz</a> -
-		TODO: popis cinnosti
+		frontend, zobrazovanie a prezentácia dát
 	</dd>
 	<dd>Michal Cyprian<!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
         <a href="mailto:xcypri01@stud.fit.vutbr.cz">xcypri01@stud.fit.vutbr.cz</a> - 
-		databázový model, správa uživateľských rolí 
+		backend, databázový model, správa uživateľských rolí
 	</dd>
 	<dd>Marián Ďurčo<!-- Nahraďte skutečným jménem a e-mailem autora a popisem činnosti -->
         <a href="mailto:xdurco00@stud.fit.vutbr.cz">xdurco00@stud.fit.vutbr.cz</a> -
@@ -45,32 +45,56 @@
 </table>
 
 <h2>Implementace</h2>
+	<h3>Zadanie projektu</h3>
+    <p> Pri návrhu a následnej implementácií systému sme sa držali zadania a jeho upresnenia<br>
+        z predmetu IDS. Snažili sme sa pokryť všetky prípady použitia a poskytovať všetky informácie<br>
+        tak ako sú v zadaní špecifikované.<br>
+        Výsledný systém sa v niektorých aspektoch líši od diagramu prípadov použitia z predmetu IDS<br>
+        a to hlavne z dôvodu že prípady použitia v predchádzajúcom projekte neboli narhnuté optimálne.<br>
+        Ako príklad môžme uviesť úpravy štatistiky hráča, ktoré priamo vyplývajú zo zadaných <br>
+        udalostí zápasov, alebo zmenu stavu zápasu na "odohratý", táto informácia by bola redundantná,<br>
+        pretože ju je možné odvodiť z prítomnosti formácií alebo udalostí naviazaných na konkrétny zápas.<br>
+    </p>
 	<h3>Backend</h3>
 	<p> Celý backend infomačného systému je postavený na webovom mikroframeworku Flask.<br>
-		Databázový model je vytvorený pomocou objektovo orientovaného nástroja SQLAlchemy,<br>
-		ktorý sa používa za pomoci jazyka Python.<br>
-		Dáta v databáze boli vygenerované pomocou knižnice Faker.<br>
+        Pri implementácií typických súčastí webových aplikácií ako napríklad autorizácia,
+        založená na roliach uživateľov sú využité rozšírenia tohoto frameworku.<br>
+		Databázový model je vytvorený pomocou nástroja SQLAlchemy,<br>
+		ktorý umožňuje mapovanie tried jazyka Python na tabuľky databázy.<br>
+		Ukážkové mená, dátumy a čísla v databáze boli vygenerované pomocou knižnice Faker.<br>
 	</p>
 	<h3>Frontend</h3>
-	<p> Základ tvorí šablónovací systém, ktorý je používaný spolu s Flaskom, tj. Jinja2.<br>
-		Je vytvorený pre jazyk Python a vychádza zo syntaxe Django. Umožňuje priamu komunikáciu s backendom.<br>
+	<p> Základ tvorí šablónovací systém Jinja2, ktorý je používaný spolu s Flaskom.<br>
+		Bol vytvorený pre jazyk Python a vychádza zo syntaxe Django. Umožňuje priamu komunikáciu s backendom.<br>
 		Samozrejmosťou je použitie HTML5 pre statické časti.<br>
 		Základom vizualizácie je webový framework Bootstrap.<br>
 		Pre dynamické časti je použitý jazyk JavaScript spolu s knihovňou JQuery.<br>
 		V niektorých častiach je použitý AJAX pre asynchronné získanie dát.<br>
 	</p>
+	<h3>Popis zdrojových kódov aplikácie</h3>
+    <p> <b>IIS_HWCh/app/storage/</b> <col>- databázový model</col><br>
+        <b>IIS/IIS_HWCh/app/queries.py</b> - dotazy<br>
+        <b>IIS/IIS_HWCh/app/main/</b> - pohľady na jednotilivých URL, formy vstupu<br>
+        <b>IIS/IIS_HWCh/app/auth/</b> - autorizácia<br>
+        <b>IIS/IIS_HWCh/app/roles.py</b> - definícia uživateľských rolí<br>
+        <b>IIS/IIS_HWCh/app/templates/</b> - HTML šablóny<br>
+        <b>IIS/IIS_HWCh/app/static/</b> - statické súbory<br>
+        <b>IIS/IIS_HWCh/app/static/js/</b> - zdrojové súbory v jazyku JavaScript<br>
+        <b>IIS/IIS_HWCh/config.py</b> - konfiguračný skript<br>
+        <b>IIS/IIS_HWCh/manage.py</b> - skript na inicializáciu a spustenie aplikácie<br>
+        <b>IIS/IIS_HWCh/db_init.py</b> - skript obsahujúci funkcie na naplnenie databázy ukážkovými dátami<br>
+    </p>
 
 <h2>Instalace</h2>
 <ul>
 <li>Softwarové požadavky: Python &gt= 3.3, PostgreSQL 9.2/SQLite 3.13.0, npm 3.10.9</li>
+<li>Rozbalenie archívu: <code>unzip xbaric01.zip; cd IIS_HWCh</code></li>
 <li>Inštalácia Python balíkov: <code>pip3 install -r requirements.txt</code></li>
 <li>Inštalácia JavaScript balíkov: <code>npm install</code></li>
 <li>Zbundlovanie JavaScriptu: <code>webpack</code></li>
-<li>Jak rozbalit, konfigurovat, inicializovat databází, ...</li>
+<li>Inicializácia databázy a naplnenie ukážkovými dátami: <code>python3 manage.py init_db</code></li>
+<li>Lokálne spustenie aplikácie na porte 5000: <code>python3 manage.py runserver</code></li>
 </ul>
-
-<h2>Známé problémy</h2>
-<p>Zde popište, které body zadání (IDS a IIS) nejsou implementovány a z jakého důvodu. Např. &bdquo;Z časových důvodů nebyla implementována správa uživatelů.&rdquo; Pomůžete tím zrychlit opravování, když neimplementované funkce nebudeme muset dlouze hledat.</p>
 
 </body>
 </html>
