@@ -70,6 +70,11 @@ class UpdateEmployeeForm(FlaskForm):
     name = StringField('First name', [Length(0, 64)])
     surname = StringField('Last name', [Length(0, 64)])
     login = StringField('Login', [Length(0, 64)])
+    date_of_birth = DateField("Date of birth:",
+                              format='%d.%m.%Y',
+                              description="Format: DD.MM.YYYY",
+                              validators=[Required()])
+
     password = PasswordField('New Password', [
         EqualTo('confirm', message='Passwords must match'), Length(0, 128)])
     confirm = PasswordField('Repeat Password', [Length(0, 128)])
@@ -84,14 +89,10 @@ class UpdateEmployeeForm(FlaskForm):
         self.emp = kwargs['emp']
         for attr in ['name', 'surname', 'login']:
             setattr(getattr(self, attr), 'default', kwargs[attr])
+        self.date_of_birth.data = kwargs['date_of_birth']
 
 
 class NewEmployeeForm(UpdateEmployeeForm):
-    date_of_birth = DateField("* Date of birth:",
-                              format='%d.%m.%Y',
-                              description="Format: DD.MM.YYYY",
-                              validators=[Required()])
-
     role = SelectField('* Role', choices=[('EMPLOYEE', 'employee'),
                                           ('MANAGER', 'manager'),
                                           ('ADMINISTRATOR', 'administrator')])
@@ -99,7 +100,7 @@ class NewEmployeeForm(UpdateEmployeeForm):
 
     def __init__(self, *args, **kwargs):
         super(UpdateEmployeeForm, self).__init__(*args, **kwargs)
-        for attr in ['name', 'surname', 'login', 'password']:
+        for attr in ['name', 'surname', 'login', 'date_of_birth', 'password']:
             self[attr].validators.append(Required())
             self[attr].label.text = '* ' + self[attr].label.text
 
@@ -177,8 +178,8 @@ class NewPlayer(FlaskForm):
         if edit:
             self.name.default = kwargs['name']
             self.surname.default = kwargs['surname']
-            self.date_of_birth.default = kwargs['birth']
-            self.number.default = kwargs['jersey']
+            self.date_of_birth.data = kwargs['birth']
+            self.number.data = kwargs['jersey']
             self.position.default = kwargs['position']
             self.club.default = kwargs['club']
 
@@ -200,7 +201,7 @@ class NewTeamMember(FlaskForm):
         if edit:
             self.name.default = kwargs['name']
             self.surname.default = kwargs['surname']
-            self.date_of_birth.default = kwargs['birth']
+            self.date_of_birth.data = kwargs['birth']
             self.role.default = kwargs['role']
 
 

@@ -776,6 +776,7 @@ def update_employee(login, user=None):
     form = UpdateEmployeeForm(name=emp.name,
                               surname=emp.surname,
                               login=emp.login,
+                              date_of_birth=emp.date_of_birth,
                               emp=emp)
     if not emp:
         return abort(404)
