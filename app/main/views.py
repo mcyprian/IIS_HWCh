@@ -96,7 +96,7 @@ def redirect_to_first_day():
 def schedule(day_num, user=None):
     try:
         day_num = int(day_num)
-        if day_num > 10:
+        if day_num not in range(1, 11):
             raise ValueError
     except ValueError:
         return abort(404)
@@ -145,6 +145,8 @@ def match_formations(match_id, user=None):
     home_formations = get_formations_of_match(db, match_id, "home")
     away_formations = get_formations_of_match(db, match_id, "away")
     match = get_match_by_id(db, match_id)
+    if not match:
+        abort(404)
     return render_template('formations.html',
                            home_formations=home_formations,
                            away_formations=away_formations,
@@ -315,6 +317,8 @@ def match_events(match_id, user=None):
         return abort(404)
     events = get_events_of_match(db, match_id)
     match = get_match_by_id(db, match_id)
+    if not match:
+        abort(404)
     return render_template('events.html', events=events,
                            match=match, user=user)
 
@@ -720,6 +724,8 @@ def new_member(team_name, user=None):
 def edit_member(team_name, member_id, user=None):
     team = get_team_by_name(db, team_name)
     member = get_tm_by_id(db, member_id)
+    if not team or not member:
+        abort(404)
     if member.role != "player":
         form = NewTeamMember(
             name=member.name,
@@ -972,7 +978,6 @@ def match_profile(match_id, user=None):
                                events=events,
                                home_score=home_score,
                                away_score=away_score)
-
     else:
         return abort(404)
 
