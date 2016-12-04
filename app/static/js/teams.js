@@ -1,16 +1,16 @@
 import getData from "./data"
 import { keys } from "underscore"
 
-export function teams(){
+export function teams() {
 	getData("/list.json", createTeamList);
 }
 
-function createTeamList(data){
+function createTeamList(data) {
 	const teams = keys(data);
 	let html_result;
 	let flagUrl;
 	let team_body =  "";
-	for(let i = 0; i < teams.length; i++) {
+	for (let i = 0; i < teams.length; i++) {
 		let country_name = teams[i];
 		flagUrl = getCountryFlag(getCountryCode(country_name));
 		team_body = createTeamBody(data[country_name], country_name);
@@ -79,8 +79,8 @@ function createPersonDiv (country_data, position) {
 	</div>`;
 }
 
-function toggleTeamInfo(){
-	$(".team-in-list").click(function(){
+function toggleTeamInfo() {
+	$(".team-in-list").click(function() {
 		var id = $(this).attr("id");
 		$("#teamId" + id).slideToggle("slow");
 	});
@@ -100,11 +100,12 @@ function getCountryHeader(country) {
 
 	const key_flags = keys(flags);
 
-	for(let i = 0; i < key_flags.length; i++){
-		if(country.indexOf(key_flags[i]) !== -1)
+	for (let i = 0; i < key_flags.length; i++) {
+		if (country.indexOf(key_flags[i]) !== -1)
 			return flags[key_flags[i]];
 	}
 }
+
 function getCountryCode(country) {
 	const flags = {
 		Canada: "CAN",
@@ -118,8 +119,8 @@ function getCountryCode(country) {
 	};
 	const key_flags = keys(flags);
 
-	for(let i = 0; i < key_flags.length; i++){
-		if(country.indexOf(key_flags[i]) !== -1)
+	for(let i = 0; i < key_flags.length; i++) {
+		if (country.indexOf(key_flags[i]) !== -1)
 			return flags[key_flags[i]];
 	}
 }
