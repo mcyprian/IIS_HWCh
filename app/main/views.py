@@ -694,18 +694,16 @@ def edit_member(team_name, member_id, user=None):
     member = get_tm_by_id(db, member_id)
     if member.role != "player":
         form = NewTeamMember(
-            edit=True,
             name=member.name,
             surname=member.surname,
-            birth=member.date_of_birth,
+            date_of_birth=member.date_of_birth,
             role=member.role)
     else:
         form = NewPlayer(
-            edit=True,
             name=member.name,
             surname=member.surname,
-            birth=member.date_of_birth,
-            jersey=int(member.number),
+            date_of_birth=member.date_of_birth,
+            number=int(member.number),
             position=member.position,
             club=member.club)
     if team is not None and member is not None:
@@ -781,7 +779,7 @@ def update_employee(login, user=None):
     if not emp:
         return abort(404)
     if form.validate_on_submit():
-        for attr in ("name", "surname", "login", "password"):
+        for attr in ("name", "surname", "login", "password", "date_of_birth"):
             value = getattr(form, attr, None)
             if value and value.data:
                 setattr(emp, attr, value.data)
@@ -963,4 +961,5 @@ def groups(user=None):
     for i in datas:
         i.sort(key=lambda tup: tup[1], reverse=True)
 
-    return render_template('groups.html', groups=groups, datas=datas)
+    return render_template('groups.html', groups=groups,
+                           datas=datas, user=user)

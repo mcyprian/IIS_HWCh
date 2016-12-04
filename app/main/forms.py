@@ -87,9 +87,6 @@ class UpdateEmployeeForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         super(UpdateEmployeeForm, self).__init__(*args, **kwargs)
         self.emp = kwargs['emp']
-        for attr in ['name', 'surname', 'login']:
-            setattr(getattr(self, attr), 'default', kwargs[attr])
-        self.date_of_birth.data = kwargs['date_of_birth']
 
 
 class NewEmployeeForm(UpdateEmployeeForm):
@@ -173,16 +170,6 @@ class NewPlayer(FlaskForm):
     club = StringField('Club:', validators=[Length(0, 64)])
     submit = SubmitField('Add')
 
-    def __init__(self, edit=False, *args, **kwargs):
-        super(NewPlayer, self).__init__(*args, **kwargs)
-        if edit:
-            self.name.default = kwargs['name']
-            self.surname.default = kwargs['surname']
-            self.date_of_birth.data = kwargs['birth']
-            self.number.data = kwargs['jersey']
-            self.position.default = kwargs['position']
-            self.club.default = kwargs['club']
-
 
 class NewTeamMember(FlaskForm):
     name = StringField('* First name:', validators=[Required(), Length(0, 64)])
@@ -195,14 +182,6 @@ class NewTeamMember(FlaskForm):
         ('coach', 'Coach'),
         ('assistant', 'Assistant')])
     submit = SubmitField('Add')
-
-    def __init__(self, edit=False, *args, **kwargs):
-        super(NewTeamMember, self).__init__(*args, **kwargs)
-        if edit:
-            self.name.default = kwargs['name']
-            self.surname.default = kwargs['surname']
-            self.date_of_birth.data = kwargs['birth']
-            self.role.default = kwargs['role']
 
 
 class UpdateMatchTime(FlaskForm):
