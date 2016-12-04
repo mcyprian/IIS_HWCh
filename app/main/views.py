@@ -174,12 +174,20 @@ def update_goalie(role, fr_id, user=None):
         team_goalies = get_player_of_team(
             db, formation.match.away_team, "goalie")
 
+    goalie = [str(g.player.id)
+              for g in formation.playedins if g.role == "goalie"]
+
+    if isinstance(goalie, list) and len(goalie) > 0:
+        goalie = goalie.pop()
+    else:
+        goalie = None
+
     goalies = []
     for g in team_goalies:
         goalies.append((str(g.id), '{} {}'.format(
             g.name, g.surname)))
 
-    form = UpdateGoalieForm(goalies=goalies)
+    form = UpdateGoalieForm(goalies=goalies, goalie=goalie)
     if form.validate_on_submit():
         PlayedIn.query.filter_by(formation=formation).delete()
 
@@ -227,6 +235,17 @@ def update_formation(role, fr_id, user=None):
         team_defenders = get_player_of_team(
             db, formation.match.away_team, "defender")
 
+    fw = [str(p.player.id)
+          for p in formation.playedins if p.role == "forward"]
+
+    df = [str(p.player.id)
+          for p in formation.playedins if p.role == "defender"]
+
+    if (not isinstance(fw, list) or not isinstance(df, list) or
+            len(fw) != 3 or len(df) != 2):
+        fw = [None, None, None]
+        df = [None, None]
+
     forwards = []
     for f in team_forwards:
         forwards.append((str(f.id), '{} {}'.format(
@@ -237,7 +256,10 @@ def update_formation(role, fr_id, user=None):
         defenders.append((str(d.id), '{} {}'.format(
             d.name, d.surname)))
 
-    form = UpdateFormationForm(forwards=forwards, defenders=defenders)
+    form = UpdateFormationForm(forwards=forwards, defenders=defenders,
+                               first_forward=fw[0], second_forward=fw[1],
+                               third_forward=fw[2], first_defender=df[0],
+                               second_defender=df[1])
     if form.validate_on_submit():
         PlayedIn.query.filter_by(formation=formation).delete()
 
