@@ -222,7 +222,12 @@ def fill_db():
         c4.referee = picked_refs[3]
         matches[m].controls.append(c4)
 
-        if m < 7:
+        if m >= 7:
+            for id_str, team in zip(['home', 'away'], sel_teams):
+                for f in range(5):
+                    formation = add_row(Formation(
+                        team_role=id_str, match=matches[-1]), rows)
+        else:
             # Formations
             participants = {}
             for id_str, team in zip(['home', 'away'], sel_teams):
@@ -236,9 +241,7 @@ def fill_db():
                     team_role=id_str, match=matches[-1]),
                     rows)
                 g = add_row(PlayedIn(time=datetime.timedelta(
-                    minutes=randrange(5, 20),
-                            seconds=randrange(60)),
-                    role='goalie'),
+                    minutes=60, seconds=0), role='goalie'),
                     rows)
                 g.player = goalies.pop()
                 formation.playedins.append(g)

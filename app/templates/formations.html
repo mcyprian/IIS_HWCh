@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}HWCh - Formation management{% endblock %}
+
+{% block head %}
+    {{super()}}
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='events.css')}}">
+{% endblock head %}
+
+{% block page_head_content %}
+<div class="container">
+    <div class="jumbotron">
+        <h1>Formations of match {{ match.id }} ({{ match.home_team.code|default("EMP")}} vs {{
+                                match.away_team.code|default("EMP")}})</h1>
+    </div>
+</div>
+{% endblock page_head_content %}
+
+{% block page_content %}
+    {% if not match.home_team %}
+    <h3>Home team is empty</h3>
+    {% else %}
+    <h3>Home ({{ match.home_team.code|default("EMP")}})</h3>
+    <div class="list-group">
+        {% set num = 0 %}
+        {% for fr in home_formations %}
+            <div class="panel panel-primary" id={{ fr.id }}>
+                <div class="panel-heading events-list" id=ph{{ fr.id }}>
+                    {% if num == 0 %}
+                    <span class="fr-id"><b>Goalie (Formation</b> {{ num }})</span>
+                    {% else %}
+                    <span class="fr-id"><b>Formation</b> {{ num }}</span>
+                    {% endif %}
+                </div>
+
+                {% if user and user.role > 1 %}
+                <div class="panel-body" id="pb{{fr.id}}">
+                    {% if num == 0 %}
+                    <a href="/schedule/formations/update/home/goalie/{{ fr.id }}" id={{ fr.id }} class="btn btn-primary update">Update</a>
+                    {% else  %}
+                    <a href="/schedule/formations/update/home/{{ fr.id }}" id={{ fr.id }} class="btn btn-primary update">Update</a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+            {% set num = num + 1 %}
+        {% endfor %}
+    </div>
+    {% endif %}
+    {% if not match.home_team %}
+    <h3>Away team is empty</h3>
+    {% else %}
+    <h3>Away ({{ match.away_team.code|default("EMP")}} </h3>
+    <div class="list-group">
+        {% set num = 0 %}
+        {% for fr in away_formations%}
+            <div class="panel panel-primary" id={{ fr.id }}>
+                <div class="panel-heading events-list" id=ph{{ fr.id }}>
+                    {% if num == 0 %}
+                    <span class="fr-id"><b>Goalie (Formation</b> {{ num }})</span>
+                    {% else %}
+                    <span class="fr-id"><b>Formation</b> {{ num }}</span>
+                    {% endif %}
+                </div>
+
+                {% if user and user.role > 1 %}
+                <div class="panel-body" id="pb{{fr.id}}">
+                    {% if num == 0 %}
+                    <a href="/schedule/formations/update/away/goalie/{{ fr.id }}" id={{ fr.id }} class="btn btn-primary update">Update</a>
+                    {% else  %}
+                    <a href="/schedule/formations/update/away/{{ fr.id }}" id={{ fr.id }} class="btn btn-primary update">Update</a>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+            {% set num = num + 1 %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+{% endblock page_content %}

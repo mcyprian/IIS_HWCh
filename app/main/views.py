@@ -1,4 +1,5 @@
 from datetime import date, timedelta
+from random import randrange
 from flexmock import flexmock
 from flask import (render_template, request, redirect, url_for,
                    jsonify, flash, abort)
@@ -38,16 +39,19 @@ from app.queries import (get_player_by_surname,
                          get_all_groups,
                          get_finished_match_rand,
                          get_all_referees,
-                         get_ref_by_id)
+                         get_ref_by_id,
+                         get_formations_of_match,
+                         get_formation_by_id,
+                         get_player_of_team)
 
-from app.storage import Employee, Event
+from app.storage import Player, TeamMember, Controls, Employee, Event, PlayedIn
 from app.roles import requires_role, check_current_user, roles
 from app.main import main
 from app.main.forms import (NameForm, UpdateEmployeeForm, NewEmployeeForm,
                             UpdateEventForm, NewEventForm, UpdateTeamsForm,
                             NewPlayer, NewTeamMember, UpdateMatchTime,
-                            RefereeUpdateForm)
-from app.storage import Player, TeamMember, Controls
+                            RefereeUpdateForm, UpdateGoalieForm,
+                            UpdateFormationForm)
 
 
 @main.route('/')
@@ -127,6 +131,156 @@ def schedule(day_num, user=None):
                                                                     code='EMP')
 
     return render_template('schedule.html', data=data, day=day_num, user=user)
+
+
+@main.route("/schedule/formations/<match_id>")
+@check_current_user
+@requires_role('EMPLOYEE')
+def match_formations(match_id, user=None):
+    try:
+        match_id = int(match_id)
+    except ValueError:
+        return abort(404)
+
+    home_formations = get_formations_of_match(db, match_id, "home")
+    away_formations = get_formations_of_match(db, match_id, "away")
+    match = get_match_by_id(db, match_id)
+    return render_template('formations.html',
+                           home_formations=home_formations,
+                           away_formations=away_formations,
+                           match=match,
+                           user=user)
+
+
+@main.route('/schedule/formations/update/<role>/goalie/<fr_id>',
+            methods=["GET", "POST"])
+@check_current_user
+@requires_role('MANAGER')
+def update_goalie(role, fr_id, user=None):
+    try:
+        fr_id = int(fr_id)
+    except ValueError:
+        return abort(404)
+    if role not in ["home", "away"]:
+        abort(404)
+    formation = get_formation_by_id(db, fr_id)
+    if formation is None:
+        return abort(404)
+
+    if role == "home":
+        team_goalies = get_player_of_team(
+            db, formation.match.home_team, "goalie")
+    else:
+        team_goalies = get_player_of_team(
+            db, formation.match.away_team, "goalie")
+
+    goalies = []
+    for g in team_goalies:
+        goalies.append((str(g.id), '{} {}'.format(
+            g.name, g.surname)))
+
+    form = UpdateGoalieForm(goalies=goalies)
+    if form.validate_on_submit():
+        PlayedIn.query.filter_by(formation=formation).delete()
+
+        g = PlayedIn(time=timedelta(minutes=60, seconds=0),
+                     formation=formation, player=get_player_by_id(
+                     db, form.goalie.data), role="goalie")
+        db.session.add(g)
+        db.session.commit()
+
+        return redirect(url_for(".match_formations",
+                                match_id=formation.match.id))
+
+    title = "Set {} team goalie for the match {}".format(
+        role, formation.match.id)
+    return render_template('quick_form.html',
+                           form=form,
+                           page_title=title,
+                           user=user)
+
+
+@main.route('/schedule/formations/update/<role>/<fr_id>',
+            methods=["GET", "POST"])
+@check_current_user
+@requires_role('MANAGER')
+def update_formation(role, fr_id, user=None):
+
+    try:
+        fr_id = int(fr_id)
+    except ValueError:
+        return abort(404)
+    if role not in ["home", "away"]:
+        abort(404)
+    formation = get_formation_by_id(db, fr_id)
+    if formation is None:
+        return abort(404)
+
+    if role == "home":
+        team_forwards = get_player_of_team(
+            db, formation.match.home_team, "forward")
+        team_defenders = get_player_of_team(
+            db, formation.match.home_team, "defender")
+    else:
+        team_forwards = get_player_of_team(
+            db, formation.match.away_team, "forward")
+        team_defenders = get_player_of_team(
+            db, formation.match.away_team, "defender")
+
+    forwards = []
+    for f in team_forwards:
+        forwards.append((str(f.id), '{} {}'.format(
+            f.name, f.surname)))
+
+    defenders = []
+    for d in team_defenders:
+        defenders.append((str(d.id), '{} {}'.format(
+            d.name, d.surname)))
+
+    form = UpdateFormationForm(forwards=forwards, defenders=defenders)
+    if form.validate_on_submit():
+        PlayedIn.query.filter_by(formation=formation).delete()
+
+        f1 = PlayedIn(time=timedelta(minutes=randrange(5, 20),
+                                     seconds=randrange(60)),
+                      formation=formation, player=get_player_by_id(
+                     db, form.first_forward.data), role="forward")
+
+        f2 = PlayedIn(time=timedelta(minutes=randrange(5, 20),
+                                     seconds=randrange(60)),
+                      formation=formation, player=get_player_by_id(
+                     db, form.second_forward.data), role="forward")
+
+        f3 = PlayedIn(time=timedelta(minutes=randrange(5, 20),
+                                     seconds=randrange(60)),
+                      formation=formation, player=get_player_by_id(
+                     db, form.third_forward.data), role="forward")
+
+        d1 = PlayedIn(time=timedelta(minutes=randrange(5, 20),
+                                     seconds=randrange(60)),
+                      formation=formation, player=get_player_by_id(
+                     db, form.first_defender.data), role="defender")
+
+        d2 = PlayedIn(time=timedelta(minutes=randrange(5, 20),
+                                     seconds=randrange(60)),
+                      formation=formation, player=get_player_by_id(
+                     db, form.second_defender.data), role="defender")
+
+        player_list = [f1, f2, f3, d1, d2]
+        formation.palyedins = player_list
+
+        db.session.add_all(player_list)
+        db.session.commit()
+
+        return redirect(url_for(".match_formations",
+                                match_id=formation.match.id))
+
+    title = "Set {} team formation for the match {}".format(
+        role, formation.match.id)
+    return render_template('quick_form.html',
+                           form=form,
+                           page_title=title,
+                           user=user)
 
 
 @main.route("/schedule/events/<match_id>")

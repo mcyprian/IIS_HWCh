@@ -97,6 +97,16 @@ def get_player_rand(db):
                       .first())
 
 
+def get_player_of_team(db, team, position):
+    """Return list of players of selected team playing
+    on selected position.
+    """
+    return (db.session.query(Player)
+                      .filter_by(team=team)
+                      .filter_by(position=position)
+                      .all())
+
+
 def get_teams(db):
     """Return list of all Teams."""
     return (db.session.query(Team)
@@ -323,19 +333,34 @@ def can_be_removed(db, player):
 
 
 def get_all_groups(db):
-    "Return list of all groups"
+    """Return list of all groups"""
     return (db.session.query(Group)
               .all())
 
 
 def get_all_referees(db):
-    "Return list of all referees"
+    """Return list of all referees"""
     return (db.session.query(Referee)
                       .all())
 
 
 def get_ref_by_id(db, ref_id):
-    "Return selected referee"
+    """Return selected referee"""
     return (db.session.query(Referee)
                       .filter_by(id=ref_id)
+                      .first())
+
+
+def get_formations_of_match(db, match_id, role):
+    """Return formations for selected match and role"""
+    return (db.session.query(Formation)
+                      .filter_by(match_id=match_id)
+                      .filter_by(team_role=role)
+                      .all())
+
+
+def get_formation_by_id(db, fr_id):
+    """Return selected formatsion"""
+    return (db.session.query(Formation)
+                      .filter_by(id=fr_id)
                       .first())

@@ -48,9 +48,9 @@
             				{% if f.team_role == "home" %}
             				{% set number = number + 1 %}
             				{% if number == 1 %}
-                            <li class="active"><a href="#tab{{number}}primary" data-toggle="tab">{% if f.playedins|length > 1 %}Formation {{number}} {% else %} Goalie {% endif %}</a></li>
+                            <li class="active"><a href="#tab{{number}}primary" class="formation" data-toggle="tab">Formation {{number}}</a></li>
                             {% else %}
-                            <li><a href="#tab{{number}}primary" data-toggle="tab">{% if f.playedins|length > 1 %} Formation {{number}} {% else %} Goalie {% endif %}</a></li>
+                            <li><a href="#tab{{number}}primary" class="formation" data-toggle="tab">Formation {{number}}</a></li>
                             {% endif %}
                             {% endif %}
                             {% endfor %}
@@ -108,9 +108,10 @@
             				{% if f.team_role == "away" %}
             				{% set number = number + 1 %}
             				{% if number == 1 %}
-                            <li class="active"><a href="#tab{{number}}{{number}}primary" data-toggle="tab">{% if f.playedins|length > 1 %}Formation {{number}} {% else %} Goalie {% endif %}</a></li>
+                            <li class="active"><a href="#tab{{number}}{{number}}primary"
+                            class="formation" data-toggle="tab">Formation {{number}}</a></li>
                             {% else %}
-                            <li><a href="#tab{{number}}{{number}}primary" data-toggle="tab">{% if f.playedins|length > 1 %} Formation {{number}} {% else %} Goalie {% endif %}</a></li>
+                            <li><a href="#tab{{number}}{{number}}primary" class="formation" data-toggle="tab">Formation {{number}}</a></li>
                             {% endif %}
                             {% endif %}
                             {% endfor %}

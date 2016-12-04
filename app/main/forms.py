@@ -225,3 +225,40 @@ class RefereeUpdateForm(FlaskForm):
         super(RefereeUpdateForm, self).__init__(*args, **kwargs)
         for attr in ['head', 'first_line', 'second_line', 'video']:
             setattr(getattr(self, attr), 'choices', kwargs['referees'])
+
+
+class UpdateGoalieForm(FlaskForm):
+    goalie = SelectField('Goalie', choices=[])
+    submit = SubmitField('Submit')
+
+    def __init__(self, *args, **kwargs):
+        super(UpdateGoalieForm, self).__init__(*args, **kwargs)
+        self.goalie.choices = kwargs['goalies']
+
+
+class UpdateFormationForm(FlaskForm):
+    first_forward = SelectField('Forward 1', choices=[], validators=[
+        UniqueList(['second_forward', 'third_forward'])])
+
+    second_forward = SelectField('Forward 2', choices=[], validators=[
+        UniqueList(['first_forward', 'third_forward'])])
+
+    third_forward = SelectField('Forward 3', choices=[], validators=[UniqueList(
+        ['first_forward', 'second_forward'])])
+
+    first_defender = SelectField('Defender 1', choices=[], validators=[
+        NotEqualTo('second_defender')])
+
+    second_defender = SelectField('Defender 2', choices=[], validators=[
+        NotEqualTo('first_defender')])
+
+    submit = SubmitField('Submit')
+
+    def __init__(self, *args, **kwargs):
+        super(UpdateFormationForm, self).__init__(*args, **kwargs)
+        for attr in ['first', 'second', 'third']:
+            setattr(getattr(self, attr + '_forward'),
+                    'choices', kwargs['forwards'])
+
+        self.first_defender.choices = kwargs['defenders']
+        self.second_defender.choices = kwargs['defenders']

@@ -11,8 +11,8 @@
 {% block page_head_content %}
 <div class="container">
     <div class="jumbotron">
-        <h1>Events of match {{ match.id }} ({{ match.home_team.code }} vs {{ match.away_team.code
-            }})</h1>
+        <h1>Events of match {{ match.id }} ({{ match.home_team.code|default("EMP")}} vs {{
+            match.away_team.code|default("EMP")}})</h1>
     </div>
 </div>
 {% endblock page_head_content %}

@@ -85,14 +85,18 @@
             <a href="/schedule/events/{{match.id}}" id={{match.id}} class="btn
                 btn-primary">Events</a>
             {% endif %}
-            {% if user and user.role > 0 and not match.events %}
-            <a href="/schedule/teams/{{match.id}}" id={{match.id}} class="btn
-                btn-primary">Set teams</a>
-            <a href="/schedule/time/{{match.id}}" id={{match.id}} class="btn
-                btn-primary">Reschedule</a>
+            {% if user and user.role > 0 %}
+            <a href="/schedule/formations/{{match.id}}" id={{match.id}} class="btn
+                btn-primary">Formations</a>
             <a href="/schedule/referees/{{match.id}}" id={{match.id}} class="btn
                 btn-primary">Set referees</a>
-            {% endif %}
+            {% if not match.events %}
+           <a href="/schedule/teams/{{match.id}}" id={{match.id}} class="btn
+                btn-primary">Set teams</a>
+           <a href="/schedule/time/{{match.id}}" id={{match.id}} class="btn
+                btn-primary">Reschedule</a>
+           {% endif %}
+           {% endif %}
 	  	</div>
 	  </div>
 	</div>
