@@ -312,17 +312,18 @@ def update_event(event_id, user=None):
         return abort(404)
     teams = [("home", ev.match.home_team.name),
              ("away", ev.match.away_team.name)]
+
+    team = "home" if ev.team == ev.match.home_team else "away"
     match_participants = (
         get_members_of_team(db, ev.match.home_team, role='player') +
         get_members_of_team(db, ev.match.away_team, role='player'))
-    players = [((str(ev.player.id), '{} {} ({})'.format(
-        ev.player.name, ev.player.surname, ev.player.team.code)))]
+
+    players = []
     for player in match_participants:
-        if player == ev.player:
-            continue
         players.append((str(player.id), '{} {} ({})'.format(
             player.name, player.surname, player.team.code)))
-    form = UpdateEventForm(teams=teams, players=players)
+    form = UpdateEventForm(teams=teams, players=players,
+                           player=ev.player.id, team=team)
     title = "Update of event number {}".format(ev.id)
 
     if form.validate_on_submit():
@@ -422,11 +423,15 @@ def update_teams(match_id, user=None):
 
     teams = []
     for team in get_teams(db):
+        if team == match.home_team:
+            home = team.name
+        elif team == match.away_team:
+            away = team.name
         teams.append((team.name, '{} ({})'.format(
             team.name, team.group.code)))
 
     teams.append(('EMPTY', 'EMPTY'))
-    form = UpdateTeamsForm(teams=teams)
+    form = UpdateTeamsForm(teams=teams, home_team=home, away_team=away)
     if form.validate_on_submit():
         match.home_team = get_team_by_name(db, form.home_team.data)
         match.away_team = get_team_by_name(db, form.away_team.data)
