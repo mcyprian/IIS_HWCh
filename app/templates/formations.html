@@ -34,7 +34,7 @@
                     {% endif %}
                 </div>
 
-                {% if user and user.role > 1 %}
+                {% if user and user.role > 0 %}
                 <div class="panel-body" id="pb{{fr.id}}">
                     {% if num == 0 %}
                     <a href="/schedule/formations/update/home/goalie/{{ fr.id }}" id={{ fr.id }} class="btn btn-primary update">Update</a>
@@ -64,7 +64,7 @@
                     {% endif %}
                 </div>
 
-                {% if user and user.role > 1 %}
+                {% if user and user.role > 0 %}
                 <div class="panel-body" id="pb{{fr.id}}">
                     {% if num == 0 %}
                     <a href="/schedule/formations/update/away/goalie/{{ fr.id }}" id={{ fr.id }} class="btn btn-primary update">Update</a>

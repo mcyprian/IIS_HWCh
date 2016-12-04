@@ -145,7 +145,7 @@ def fill_db():
                      password='12345'), rows)
 
     add_row(Employee(name=fake.first_name(), surname=fake.last_name(),
-                     login='user', date_of_birth=fake_date(fake),
+                     login='employee', date_of_birth=fake_date(fake),
                      role=roles['EMPLOYEE'],
                      password='12345'), rows)
 

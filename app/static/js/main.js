@@ -12,7 +12,7 @@ var r = new Router();
 r.addRoute("/teams", teams);
 r.addRoute("/login", login);
 r.addRoute("/employees", employees);
-r.addRoute("/schedule/events/.", events);
+r.addRoute("/schedule/events/.+", events);
 r.addRoute("/standings", standings);
 r.addRoute("/match_profile/.+", match_profile);
 r.addRoute("/team_management/[^/]+", team_management);

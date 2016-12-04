@@ -81,7 +81,7 @@
             {% endif %}
             <div class="col-lg-4"><a href="/match_profile/{{match.id}}"><h4 class="text-center" id="result">Show details<h4></a></div>
 	  		<div class="col-lg-4"><h3 class="text-center">Time: {{match.match_date}}</h3></div>
-            {% if user %}
+            {% if user and match._home_team.code != "EMP" and match._away_team.code != "EMP"%}
             <a href="/schedule/events/{{match.id}}" id={{match.id}} class="btn
                 btn-primary">Events</a>
             {% endif %}

@@ -33,7 +33,7 @@
                     <span class="ev-tmb"><b>team:</b> {{ev.team.code}}</span>
                 </div>
 
-                {% if user and user.role > 1 %}
+                {% if user and user.role > 0 %}
                 <div class="panel-body" id="pb{{ev.id}}">
                     <a href="/schedule/events/update/{{ ev.id }}" id={{ ev.id }} class="btn btn-primary update">Update</a>
                     <button id={{ ev.id }} class="btn btn-danger remove">Remove</button>
