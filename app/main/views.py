@@ -421,6 +421,7 @@ def update_teams(match_id, user=None):
     if match is None:
         return abort(404)
 
+    home = away = None
     teams = []
     for team in get_teams(db):
         if team == match.home_team:
